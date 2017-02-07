@@ -1,29 +1,30 @@
 var context = require('./context');
-var vars = require('./helper/variables')
-var stringHelper = require('./helper/string')
+var vars = require('./helper/variables');
+var helperString = require('./helper/string');
+
 
 // var Hooks = function () {
 
-module.exports = function Hooks() {
+var Hooks = function(){
 
-    this.registerHandler('BeforeFeature', function (feature, callback) {        
-        context.setCurrentFeature(feature);        
-        vars.addVariable("feature_name", stringHelper.slugify(feature.getName()));
-        // console.log('current feature: ' + feature.getName());        
+    this.registerHandler('BeforeFeature', function (feature, callback) {
+        context.setCurrentFeature(feature);
+        vars.addVariable("feature_name", helperString.slugify(feature.getName()));
+        context.loadUIMap();
         callback();
     });
 
     this.registerHandler('BeforeScenario', function (scenario, callback) {
         context.setCurrentScenario(scenario);
-        vars.addVariable("scenario_name", stringHelper.slugify(scenario.getName()));
-        // console.log('current scenario: ' + scenario.getName());
+        vars.addVariable("scenario_name", helperString.slugify(scenario.getName()));
         callback();
     });
 
     this.registerHandler('BeforeStep', function (step, callback) {
         context.setCurrentStep(step);
-        vars.addVariable("step_name", stringHelper.slugify(step.getName()));
-        // console.log('current step: ' + step.getName());
+        vars.addVariable("step_name", helperString.slugify(step.getName()));
         callback();
     });
 };
+
+module.exports = Hooks;

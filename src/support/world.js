@@ -1,0 +1,87 @@
+var $q = require('q');
+var fs = require('fs');
+var context = require('./context');
+var helperString = require('./helper/string');
+
+module.exports = function () {
+
+    this.World = function World() {
+
+        /**
+       * Refresh the current url
+       * @returns {null}
+       */
+        this.refresh = function () {
+            return browser.driver.navigate().refresh();
+        };
+
+        /**
+        * Runs callback with a delay on dev environment
+        * @param callback
+        * @returns {exports}
+        */
+        this.delayCallback = function (callback) {
+            var _this = this;
+            setTimeout(callback, 1000);
+            return _this;
+        };
+
+        /**
+         * Error handler (take screenshot and call callback.fail())
+         * @param error
+         * @param callback
+         * @returns {exports}
+         */
+        this.handleError = function (error, callback) {
+            var _this = this;
+
+            browser.takeScreenshot().then(function (imageData) {
+                var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
+                var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
+
+                var token = formatFeature + '_' + formatScenario;
+                var path = process.cwd() + '/test/logs/';
+
+                var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
+
+                pngStream.write(new Buffer(imageData, 'base64'));
+                pngStream.end();
+
+                _this.delayCallback(function handleErrorCallback() {
+                    callback(new Error(error));
+                });
+            });
+
+            return _this;
+        };
+
+        /**
+       * Check if an element is present and visible
+       * @param {object} elementFinder
+       * @returns {Promise}
+       */
+        this.isPresentAndDisplayed = function (elementFinder) {
+            var deferred = $q.defer();
+
+            elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
+                if (isPresent === true) {
+                    elementFinder.isDisplayed().then(function isDisplayedSuccess(isVisible) {
+                        if (isVisible === true) {
+                            deferred.resolve();
+                        } else {
+                            deferred.reject("Element is present but not visible.");
+                        }
+                    }, function isDisplayedFailure() {
+                        deferred.reject("Element is present but not visible.");
+                    });
+                } else {
+                    deferred.reject("Unable to retrieve element. Binding: " + JSON.stringify(elementFinder.locator()));
+                    // deferred.reject("Unable to retrieve element.");
+                }
+            });
+
+            return deferred.promise;
+        };
+
+    };
+};
