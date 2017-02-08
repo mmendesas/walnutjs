@@ -16,6 +16,9 @@ var Variables = {
         return varMap;
     },
 
+    /**
+     * Replace variables marks with correspondent value
+     */
     nutParseVars: function (text) {
         if (text.includes('vars.')) {
             var list = text.match(/(vars.[\w]*)/g);

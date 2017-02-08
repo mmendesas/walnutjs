@@ -2,6 +2,7 @@ var $q = require('q');
 var fs = require('fs');
 var context = require('./context');
 var helperString = require('./helper/string');
+var EC = protractor.ExpectedConditions;
 
 module.exports = function () {
 
@@ -62,6 +63,10 @@ module.exports = function () {
        */
         this.isPresentAndDisplayed = function (elementFinder) {
             var deferred = $q.defer();
+            var waitElementTimeout = 10000;
+
+            //wait for presence of element before interact with him until 10 seconds
+            browser.driver.wait(EC.presenceOf(elementFinder), waitElementTimeout);
 
             elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
                 if (isPresent === true) {
@@ -69,14 +74,13 @@ module.exports = function () {
                         if (isVisible === true) {
                             deferred.resolve();
                         } else {
-                            deferred.reject("Element is present but not visible.");
+                            deferred.reject("Element is present but not visible. Binding: " + JSON.stringify(elementFinder.locator()));
                         }
                     }, function isDisplayedFailure() {
-                        deferred.reject("Element is present but not visible.");
+                        deferred.reject("Element is present but not visible. Binding: " + JSON.stringify(elementFinder.locator()));
                     });
                 } else {
                     deferred.reject("Unable to retrieve element. Binding: " + JSON.stringify(elementFinder.locator()));
-                    // deferred.reject("Unable to retrieve element.");
                 }
             });
 

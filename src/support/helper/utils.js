@@ -1,5 +1,4 @@
 var lastStyleValue = '';
-// var lastStyleElement;
 
 var utils = {
 

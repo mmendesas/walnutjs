@@ -29,6 +29,9 @@ module.exports = function StringHelper() {
             return text;
         },
 
+        /**
+         * Process expressions and vars in a text with walnut marks '${text}'
+         */
         getTreatedValue: function (text) {
             var content = this.removeQuotationMark(text);
 
@@ -47,7 +50,7 @@ module.exports = function StringHelper() {
                     newWord = this.removeQuotationMark(newWord);
                 }
 
-                //parse varss
+                //parse vars
                 newWord = helperVars.nutParseVars(newWord);
                 //replacement
                 content = content.replace(word, newWord);
@@ -56,6 +59,9 @@ module.exports = function StringHelper() {
             return content;
         },
 
+        /**
+         * Format string with parameters replacement
+         */
         formatString: function (text, args) {
             var mgroup = text.match((/{(\d+)}/g));
             for (var i = 0; i < mgroup.length; i++) {

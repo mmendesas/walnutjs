@@ -5,6 +5,24 @@ var helperString = require('../support/helper/string');
 var pageSteps = function () {
 
     /**
+     * Navigate to a page
+     */
+    this.Given(/^user navigates to '(.*)'$/, function (url) {
+        var gotourl = helperString.getTreatedValue(url);
+        return browser.get(gotourl);
+    });
+
+    /**
+     * Refreshes the page
+     */
+    this.Given(/^user refreshes the page$/, function (callback) {
+        var _this = this;
+        this.refresh().then(function () {
+            _this.delayCallback(callback);
+        });
+    });
+
+    /**
      * Validate if the element is enabled or disabled
      */
     this.Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, function (container, key, isOrNot, callback) {
@@ -95,6 +113,102 @@ var pageSteps = function () {
             }
         }
         _this.delayCallback(callback);
+    });
+
+    /**
+    * Validate text in element
+    */
+    this.When(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
+        var _this = this;
+        var elementFinder = helperElement.getElementFinder(container, key);
+
+        text = helperString.getTreatedValue(text);
+
+        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
+            elementFinder.getText().then(function getTextSuccess(elementText) {
+                var result;
+                var msg;
+                switch (comparison) {
+                    case 'which contains':
+                        result = elementText.includes(text);
+                        msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
+                        break;
+
+                    case 'which not contains':
+                        result = !elementText.includes(text);
+                        msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
+                        break;
+
+                    case 'equals to':
+                        result = elementText === text;
+                        msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
+                        break;
+
+                    case 'not equals to':
+                        result = elementText !== text;
+                        msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
+                        break;
+
+                    default:
+                        break;
+                }
+                if (!result) {
+                    _this.handleError(msg, callback);
+                } else {
+                    _this.delayCallback(callback);
+                }
+            });
+        }, function isPresentAndDisplayedError(errorMessage) {
+            _this.handleError(errorMessage, callback);
+        });
+    });
+
+    /**
+     * Validate value in element
+     */
+    this.When(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
+        var _this = this;
+        var elementFinder = helperElement.getElementFinder(container, key);
+
+        text = helperString.getTreatedValue(text);
+
+        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
+            elementFinder.getAttribute('value').then(function getTextSuccess(elementText) {
+                var result;
+                var msg;
+                switch (comparison) {
+                    case 'which contains':
+                        result = elementText.includes(text);
+                        msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
+                        break;
+
+                    case 'which not contains':
+                        result = !elementText.includes(text);
+                        msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
+                        break;
+
+                    case 'equals to':
+                        result = elementText === text;
+                        msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
+                        break;
+
+                    case 'not equals to':
+                        result = elementText !== text;
+                        msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
+                        break;
+
+                    default:
+                        break;
+                }
+                if (!result) {
+                    _this.handleError(msg, callback);
+                } else {
+                    _this.delayCallback(callback);
+                }
+            });
+        }, function isPresentAndDisplayedError(errorMessage) {
+            _this.handleError(errorMessage, callback);
+        });
     });
 
 };

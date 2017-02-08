@@ -10,6 +10,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
+        text = helperString.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.sendKeys(text).then(function sendKeysSuccess() {
@@ -27,6 +28,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
+        text = helperString.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             //elementFinder.clear().sendKeys(text).then(callback);
@@ -62,6 +64,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
+        value = helperString.getTreatedValue(value);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.all(by.css('option')).then(function getOptions(options) {
@@ -116,33 +119,6 @@ var formSteps = function () {
     });
 
     /**
-     * Higlights element in page
-     */
-    this.When(/^user highlights the '(.+)-(.+)'$/, function (container, key, callback) {
-        var _this = this;
-
-        var elementFinder = helperElement.getElementFinder(container, key);
-        var checkOrNot = (checkOrUncheck === 'checks') ? true : false;
-
-        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            elementFinder.isSelected().then(function isDisplayedSuccess(isSelected) {
-                if (checkOrNot) {
-                    if (!isSelected) {
-                        elementFinder.click();
-                    }
-                } else {
-                    if (isSelected) {
-                        elementFinder.click();
-                    }
-                }
-                _this.delayCallback(callback);
-            });
-        }, function isPresentAndDisplayedError(errorMessage) {
-            _this.handleError(errorMessage, callback);
-        });
-    });
-
-    /**
      * Accept or dismiss popup
      */
     this.When(/^user (accept|dismiss) the popup$/, function (action, callback) {
@@ -165,102 +141,6 @@ var formSteps = function () {
         }, 200);
 
         _this.handleError(errorMessage, callback);
-    });
-
-    /**
-    * Validate text in element
-    */
-    this.When(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
-        var _this = this;
-
-        var elementFinder = helperElement.getElementFinder(container, key);
-
-        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            elementFinder.getText().then(function getTextSuccess(elementText) {
-                // console.log("elementText: " + elementText);
-                var result;
-                var msg;
-                switch (comparison) {
-                    case 'which contains':
-                        result = elementText.includes(text);
-                        msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
-                        break;
-
-                    case 'which not contains':
-                        result = !elementText.includes(text);
-                        msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
-                        break;
-
-                    case 'equals to':
-                        result = elementText === text;
-                        msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
-                        break;
-
-                    case 'not equals to':
-                        result = elementText !== text;
-                        msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
-                        break;
-
-                    default:
-                        break;
-                }
-                if (!result) {
-                    _this.handleError(msg, callback);
-                } else {
-                    _this.delayCallback(callback);
-                }
-            });
-        }, function isPresentAndDisplayedError(errorMessage) {
-            _this.handleError(errorMessage, callback);
-        });
-    });
-
-    /**
-   * Validate value in element
-   */
-    this.When(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
-        var _this = this;
-
-        var elementFinder = helperElement.getElementFinder(container, key);
-
-        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            elementFinder.getAttribute('value').then(function getTextSuccess(elementText) {
-                // console.log("elementValue: " + elementText);
-                var result;
-                var msg;
-                switch (comparison) {
-                    case 'which contains':
-                        result = elementText.includes(text);
-                        msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
-                        break;
-
-                    case 'which not contains':
-                        result = !elementText.includes(text);
-                        msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
-                        break;
-
-                    case 'equals to':
-                        result = elementText === text;
-                        msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
-                        break;
-
-                    case 'not equals to':
-                        result = elementText !== text;
-                        msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
-                        break;
-
-                    default:
-                        break;
-                }
-                if (!result) {
-                    _this.handleError(msg, callback);
-                } else {
-                    _this.delayCallback(callback);
-                }
-            });
-        }, function isPresentAndDisplayedError(errorMessage) {
-            _this.handleError(errorMessage, callback);
-        });
     });
 
 };

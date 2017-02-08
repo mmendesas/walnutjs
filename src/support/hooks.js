@@ -2,10 +2,7 @@ var context = require('./context');
 var vars = require('./helper/variables');
 var helperString = require('./helper/string');
 
-
-// var Hooks = function () {
-
-var Hooks = function(){
+var Hooks = function () {
 
     this.registerHandler('BeforeFeature', function (feature, callback) {
         context.setCurrentFeature(feature);

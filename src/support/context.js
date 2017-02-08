@@ -55,7 +55,14 @@ var context = {
         var content = fs.readFileSync(files[0], 'utf8');
         this.locators = JSON.parse(content);
         return this;
+    },
+
+    loadFakeUIMap: function () {
+        var content = '{"containers":[{"name":"locAA","locators":[{"key":"key001","type":"type001","value":"value001"},{"key":"key002","type":"type002","value":"value002"},{"key":"key003","type":"type003","value":"value003"}]},{"name":"locBB","locators":[{"key":"key001","type":"type001","value":"value001"},{"key":"key002","type":"type002","value":"value002"}]}]}';
+        this.locators = JSON.parse(content);
+        return this;
     }
+
 };
 
 module.exports = context;

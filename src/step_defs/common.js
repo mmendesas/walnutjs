@@ -5,69 +5,64 @@ var helperElement = require('../support/helper/element');
 
 var CommonSteps = function () {
 
-    this.Given(/^user navigates to '(.*)'$/, function (url) {
-        var gotourl = helperString.getTreatedValue(url);
-        return browser.get(gotourl);
-    });
-
+    /**
+     * Sleeps the execution for a specific time in seconds
+     */
     this.Then(/^user waits for ([0-9]+) seconds$/, function (time, callback) {
-        console.log('MTESTE-> ' + time);
-        var _this = this;
-        setTimeout(function () {
-            _this.delayCallback(callback);
-        }, time * 1000);
+        browser.sleep(time * 1000).then(callback);
     });
 
-    this.Given(/^user refreshes the page$/, function (callback) {
-        var _this = this;
-        this.refresh().then(function () {
-            _this.delayCallback(callback);
-        });
-    });
-
+    /**
+     * Stores a value in a variable to use between scenarios
+     */
     this.Given(/^user stores the value '(.*)' in variable '(.*)'$/, function (value, name) {
         var varName = helperString.getTreatedValue(name);
         var varvalue = helperString.getTreatedValue(value);
         helperVars.addVariable(varName, varvalue);
     });
 
+    /**
+     * Prints a message to console, with or without walnut vars/expressions
+     */
     this.Given(/^user prints the message '(.*)' to console$/, function (text) {
         text = helperString.getTreatedValue(text);
         helperInfo.logInfo(text);
     });
 
+    /**
+     * Prints all variables stored at to console
+     */
     this.Given(/^user prints all variables to console$/, function () {
         helperInfo.logInfo('-------------------------------------------');
         console.log(helperVars.getAllVariables());
         helperInfo.logInfo('-------------------------------------------');
     });
 
-    this.Given(/^user stores the value from element '(.+)-(.+)' in variable '(.*)'$/, function (container, key, varName) {
-        // var _this = this;
+    /**
+     * Stores the value from element inside a variable
+     */
+    this.Given(/^user stores the (text|value) from element '(.+)-(.+)' in variable '(.*)'$/, function (type, container, key, varName) {
+
+        /**
+         * TODO: implementar meio de pegar valor fora da função callback
+         */
 
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        element(by.model('login.usuario')).sendKeys('asdf');
-        var text = element(by.model('login.usuario'));
-        var mteste = browser.findElement(by.xpath('//button'));
+        if (type.toLowerCase() === 'text') {
+            elementFinder.getText().then(function getTextSuccess(text) {
+                console.log('TEXT:', text);
+                helperVars.addVariable(varName, text);
+            });
+        } else {
+            elementFinder.getAttribute('value').then(function getValueSuccess(value) {
+                console.log('VALUE:', value);
+                helperVars.addVariable(varName, value);
+            });
+        }
 
-        console.log("MTESTE >" + mteste.getText());
-
-        // var button = element(by.ngClick('realizarLogin()'));
-        mteste.getText().then(function (text) {
-            console.log('texto do botão ', text);
-            helperVars.addVariable(varName, text);
-            helperVars.addVariable('ggg', '65478');
-        });
-
-        console.log('CHEGUEI AQUI555 _' + helperVars.getVariable('ggg'));
-        console.log('CHEGUEI AQUI _' + helperVars.getVariable(varName));
     });
 
-
-    this.Given(/^user waits for page to load$/, function () {
-        browser.waitForAngular();
-    });
 };
 
 module.exports = CommonSteps;

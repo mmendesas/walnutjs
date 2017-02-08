@@ -6,16 +6,20 @@ var helperInfo = require('./info');
 
 var Element = {
 
+    /**
+     * Returns the elementFinder object to interact with in protractor
+    */
     getElementFinder: function (container, name) {
+
         var result = this.findLocator(container, name);
         if (Object.keys(result).length !== 2) {
             throw "Locator element incorrect, please use {key, type, value}";
         }
+
         var type = result[0];
         var content = result[1];
 
         switch (type.toLowerCase()) {
-
             /** 
              * Locators by Extended webdriver.By
              */
@@ -64,14 +68,24 @@ var Element = {
                 return element(by.deepCss(content));
 
             default:
+                return 'Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>';
                 break;
         }
     },
 
+    /**
+     * Find the locator in json by container name and locator key
+     * @container {string}
+     * @name {string}
+     * @returns {string}
+     */
     findLocator: function (container, name) {
         var container_list = context.locators.containers;
         var result = {};
         var params;
+
+        // start time elapsed
+        console.time('findLocator');
 
         if (name.includes(':')) {
             params = name.substring(name.indexOf(":") + 1);
@@ -91,7 +105,7 @@ var Element = {
                         var mType = loc_list[j].type;
                         var mValue = loc_list[j].value;
 
-                        if (mType.startsWith('p:')) {
+                        if (mType.toLowerCase().startsWith('p:')) {
                             mValue = helperString.formatString(mValue, params);
                             mType = mType.substring(mType.indexOf(":") + 1);
                         }
@@ -99,7 +113,7 @@ var Element = {
                         result[0] = mType;
                         result[1] = mValue;
 
-                        helperInfo.logInfo(helperString.formatString('Current Locator --> using [{0}] value [{0}]', result));
+                        //  helperInfo.logInfo(helperString.formatString('Current Locator --> using [{0}] value [{0}]', result));
 
                         break;
                     }
@@ -107,6 +121,8 @@ var Element = {
                 break;
             }
         }
+        // prints the elapsed time
+        // console.timeEnd('findLocator');
 
         return result;
     }

@@ -10,8 +10,7 @@ module.exports = function Info() {
         },
         logError: function (text) {
             console.log(helperString.formatString('[{0}] - [ERROR] - {1}', [new Date().toLocaleString(), text]));
-            // console.log('[' + new Date().toLocaleString() + '] - [ERROR] - ' + text);
-        }
+        },
     }
 
 }();
