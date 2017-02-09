@@ -1,16 +1,37 @@
 'use strict'
 
 var helperString = require('./string');
+var config = require(process.cwd() + '/protractor.conf.js').config;
 
-module.exports = function Info() {
+var info = {
 
-    return {
-        logInfo: function (text) {
-            console.log(helperString.formatString('[{0}] - [INFO] - {1}', [new Date().toLocaleString(), text]));
-        },
-        logError: function (text) {
-            console.log(helperString.formatString('[{0}] - [ERROR] - {1}', [new Date().toLocaleString(), text]));
-        },
+    elapsedName: null,
+
+    logInfo: function (text) {
+        console.log(helperString.formatString('[{0}] - [INFO] - {1}', [new Date().toLocaleString(), text]));
+    },
+
+    logDebug: function (text) {
+        if (config.walnutjsOpts.enableDebugLog) {
+            console.log(helperString.formatString('[{0}] - [DEBUG] - {1}', [new Date().toLocaleString(), text]));
+        }
+    },
+
+    logError: function (text) {
+        console.log(helperString.formatString('[{0}] - [ERROR] - {1}', [new Date().toLocaleString(), text]));
+    },
+
+    logTimeElapsed: function (text) {
+        if (config.walnutjsOpts.enableDebugLog) {
+            if (text === this.elapsedName) {
+                console.timeEnd(text);
+                this.elapsedName = '';
+            } else {
+                console.time(text);
+                this.elapsedName = text;
+            }
+        }
     }
+}
 
-}();
+module.exports = info;

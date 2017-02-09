@@ -3,6 +3,7 @@
 var context = require('../context');
 var helperString = require('./string');
 var helperInfo = require('./info');
+var config = require(process.cwd() + '/protractor.conf.js').config;
 
 var Element = {
 
@@ -85,7 +86,7 @@ var Element = {
         var params;
 
         // start time elapsed
-        console.time('findLocator');
+        helperInfo.logTimeElapsed('findLocator');
 
         if (name.includes(':')) {
             params = name.substring(name.indexOf(":") + 1);
@@ -113,7 +114,7 @@ var Element = {
                         result[0] = mType;
                         result[1] = mValue;
 
-                        //  helperInfo.logInfo(helperString.formatString('Current Locator --> using [{0}] value [{0}]', result));
+                        helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{0}]', result));
 
                         break;
                     }
@@ -121,8 +122,8 @@ var Element = {
                 break;
             }
         }
-        // prints the elapsed time
-        // console.timeEnd('findLocator');
+        // prints the elapsed end time        
+        helperInfo.logTimeElapsed('findLocator');
 
         return result;
     }

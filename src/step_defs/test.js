@@ -1,16 +1,31 @@
 var context = require('../support/context');
 var element = require('../support/helper/element');
+var helperInfo = require('../support/helper/info');
+var config = require(process.cwd() + '/protractor.conf.js').config;
 
 var Test = function () {
     this.Given(/^user make the simple test$/, function () {
-        
+
         // context.setLocators('mc123654');
         // console.log("teste 001 " + context.locators);
         // console.log("JSON444421 " + context.getLocators());
-        // element.loadUIMap();
-        var list = element.findLocator('Container001','c1-loc1');
-        console.log('Minha Lista', Object.keys(list).length);
-        // context.loadPageInstance('Login');
+        // element.loadUIMap();        
+        // console.log('Meus params -->', JSON.stringify(browser.params.mteste));
+
+
+        helperInfo.logTimeElapsed("marcio");
+        // console.log('CONFIG DIRETO -->', config.walnutjsOpts.enable_debugLog);
+
+        if (config.walnutjsOpts.enableDebugLog) {
+            helperInfo.logInfo("MARCIO M<ENDES");
+        }
+        helperInfo.logTimeElapsed("marcio");
+
+        helperInfo.logTimeElapsed("MC");
+        if (config.walnutjsOpts.enableDebugLog) {
+            helperInfo.logInfo("98798789MARCIO M<ENDES");
+        }
+        helperInfo.logTimeElapsed("MC");
     });
 }
 
