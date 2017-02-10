@@ -1,7 +1,7 @@
 'use strict'
 
 var helperString = require('./string');
-var config = require(process.cwd() + '/protractor.conf.js').config;
+var config = require('../config');
 
 var info = {
 
@@ -12,7 +12,7 @@ var info = {
     },
 
     logDebug: function (text) {
-        if (config.walnutjsOpts.enableDebugLog) {
+        if (config.enableDebug) {
             console.log(helperString.formatString('[{0}] - [DEBUG] - {1}', [new Date().toLocaleString(), text]));
         }
     },
@@ -22,7 +22,7 @@ var info = {
     },
 
     logTimeElapsed: function (text) {
-        if (config.walnutjsOpts.enableDebugLog) {
+        if (config.enableDebug) {
             if (text === this.elapsedName) {
                 console.timeEnd(text);
                 this.elapsedName = '';

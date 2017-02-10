@@ -1,15 +1,11 @@
 var $q = require('q');
 var fs = require('fs');
 var context = require('./context');
+var config = require('./config');
 var helperString = require('./helper/string');
 var EC = protractor.ExpectedConditions;
-var config = require(process.cwd() + '/protractor.conf.js').config;
 
 module.exports = function () {
-
-    //default values from config file
-    var waitElementTimeout = config.walnutjsOpts.waitElementTimeout ? config.walnutjsOpts.waitElementTimeout : 10000;
-    var evidencesPath = config.walnutjsOpts.evidencesPath ? config.walnutjsOpts.evidencesPath : '/test/logs/';
 
     this.World = function World() {
 
@@ -40,6 +36,7 @@ module.exports = function () {
          */
         this.handleError = function (error, callback) {
             var _this = this;
+            var evidencesPath = config.evidencesPath;
 
             browser.takeScreenshot().then(function (imageData) {
                 var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
@@ -69,9 +66,10 @@ module.exports = function () {
        */
         this.isPresentAndDisplayed = function (elementFinder) {
             var deferred = $q.defer();
+            var waitElementTimeout = config.waitElementTimeout;
 
             //wait for presence of element before interact with him until 10 seconds
-            browser.driver.wait(EC.presenceOf(elementFinder), waitElementTimeout, "Expectation error: Timed out waiting for element. Binding: ");
+            browser.driver.wait(EC.presenceOf(elementFinder), waitElementTimeout);
 
             elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
                 if (isPresent === true) {

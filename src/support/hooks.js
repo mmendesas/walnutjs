@@ -1,4 +1,5 @@
 var context = require('./context');
+var config = require('./config');
 var vars = require('./helper/variables');
 var helperString = require('./helper/string');
 
@@ -8,6 +9,7 @@ var Hooks = function () {
         context.setCurrentFeature(feature);
         vars.addVariable("feature_name", helperString.slugify(feature.getName()));
         context.loadUIMap();
+        config.loadConfigs();
         callback();
     });
 

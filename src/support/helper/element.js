@@ -3,7 +3,6 @@
 var context = require('../context');
 var helperString = require('./string');
 var helperInfo = require('./info');
-var config = require(process.cwd() + '/protractor.conf.js').config;
 
 var Element = {
 
@@ -89,9 +88,7 @@ var Element = {
         helperInfo.logTimeElapsed('findLocator');
 
         if (name.includes(':')) {
-            params = name.substring(name.indexOf(":") + 1);
-            params = params.match(/([\w+|]+)/g).toString().replace(',', '');
-            params = params.split('|');
+            params = this.getParams(name);
             name = name.substring(0, name.indexOf(":"));
         }
 
@@ -126,6 +123,19 @@ var Element = {
         helperInfo.logTimeElapsed('findLocator');
 
         return result;
+    },
+
+    /**
+     * Mount the paramenters list from simple text
+     */
+    getParams: function (text) {
+        var params;
+        if (text.includes(':')) {
+            params = text.substring(text.indexOf(":") + 1);
+            params = params.match(/([\w+ |]+)/g).toString().replace(',', '');
+            params = params.split('|');
+        }
+        return params;
     }
 };
 

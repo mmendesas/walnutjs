@@ -1,7 +1,7 @@
 var context = require('../support/context');
 var element = require('../support/helper/element');
 var helperInfo = require('../support/helper/info');
-var config = require(process.cwd() + '/protractor.conf.js').config;
+var config = require('../support/config');
 
 var Test = function () {
     this.Given(/^user make the simple test$/, function () {
@@ -16,13 +16,13 @@ var Test = function () {
         helperInfo.logTimeElapsed("marcio");
         // console.log('CONFIG DIRETO -->', config.walnutjsOpts.enable_debugLog);
 
-        if (config.walnutjsOpts.enableDebugLog) {
+        if (config.enableDebug) {
             helperInfo.logInfo("MARCIO M<ENDES");
         }
         helperInfo.logTimeElapsed("marcio");
 
         helperInfo.logTimeElapsed("MC");
-        if (config.walnutjsOpts.enableDebugLog) {
+        if (config.enableDebug) {
             helperInfo.logInfo("98798789MARCIO M<ENDES");
         }
         helperInfo.logTimeElapsed("MC");
