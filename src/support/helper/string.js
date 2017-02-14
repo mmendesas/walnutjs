@@ -1,73 +1,79 @@
 'use strict';
 
 var helperVars = require('./variables');
+// var interpreter = require('../expressions/interpreter');
 
-module.exports = function StringHelper() {
-    return {
+var StringHelper = {
 
-        slugify: function (text) {
-            return text.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
-        },
 
-        hasQuotationMark: function (text) {
-            return text.startsWith('\"') && text.endsWith('\"');
-        },
+    slugify: function (text) {
+        return text.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
+    },
 
-        removeQuotationMark: function (text) {
-            if (this.hasQuotationMark(text))
-                text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"'));
-            return text;
-        },
+    hasQuotationMark: function (text) {
+        return text.startsWith('\"') && text.endsWith('\"');
+    },
 
-        hasBracketsMark: function (text) {
-            return text.startsWith('${') && text.endsWith('}');
-        },
+    removeQuotationMark: function (text) {
+        if (this.hasQuotationMark(text))
+            text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"'));
+        return text;
+    },
 
-        removeBracketsMark: function (text) {
-            if (this.hasBracketsMark(text))
-                text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}'));
-            return text;
-        },
+    hasBracketsMark: function (text) {
+        return text.startsWith('${') && text.endsWith('}');
+    },
 
-        /**
-         * Process expressions and vars in a text with walnut marks '${text}'
-         */
-        getTreatedValue: function (text) {
-            var content = this.removeQuotationMark(text);
+    removeBracketsMark: function (text) {
+        if (this.hasBracketsMark(text))
+            text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}'));
+        return text;
+    },
 
-            var list = text.match(/\${(.*?)}/g);
-            if (list === null) {
-                return content;
-            }
+    /**
+     * Process expressions and vars in a text with walnut marks '${text}'
+     */
+    getTreatedValue: function (text) {
+        var content = this.removeQuotationMark(text);
 
-            for (var i = 0; i < list.length; i++) {
-                var word = list[i];
-                var newWord = word;
-
-                //get only text content
-                while (this.hasBracketsMark(newWord) || this.hasQuotationMark(newWord)) {
-                    newWord = this.removeBracketsMark(newWord);
-                    newWord = this.removeQuotationMark(newWord);
-                }
-
-                //parse vars
-                newWord = helperVars.nutParseVars(newWord);
-                //replacement
-                content = content.replace(word, newWord);
-            }
-
+        var list = text.match(/\${(.*?)}/g);
+        if (list === null) {
             return content;
-        },
-
-        /**
-         * Format string with parameters replacement
-         */
-        formatString: function (text, args) {
-            var mgroup = text.match((/{(\d+)}/g));
-            for (var i = 0; i < mgroup.length; i++) {
-                text = text.replace(mgroup[i], args[i]);
-            }
-            return text;
         }
-    };
-}();
+
+        for (var i = 0; i < list.length; i++) {
+            var word = list[i];
+            var newWord = word;
+
+            //get only text content
+            while (this.hasBracketsMark(newWord) || this.hasQuotationMark(newWord)) {
+                newWord = this.removeBracketsMark(newWord);
+                newWord = this.removeQuotationMark(newWord);
+            }
+
+            //parse vars
+            newWord = helperVars.nutParseVars(newWord);
+
+            //solve expressions
+            //newWord = interpreter.resolveExpression(newWord);
+
+            //replacement
+            content = content.replace(word, newWord);
+        }
+
+        return content;
+    },
+
+    /**
+     * Format string with parameters replacement
+     */
+    formatString: function (text, args) {
+        var mgroup = text.match((/{(\d+)}/g));
+        for (var i = 0; i < mgroup.length; i++) {
+            text = text.replace(mgroup[i], args[i]);
+        }
+        return text;
+    }
+};
+
+module.exports = StringHelper;
