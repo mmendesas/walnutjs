@@ -9,7 +9,7 @@ var common = {
      * Process expressions and vars in a text with walnut marks '${text}'
      */
     getTreatedValue: function (text) {
-        var content = this.removeQuotationMark(text);
+        var content = helperString.removeQuotationMark(text);
 
         var list = text.match(/\${(.*?)}/g);
         if (list === null) {
@@ -21,9 +21,9 @@ var common = {
             var newWord = word;
 
             //get only text content
-            while (this.hasBracketsMark(newWord) || this.hasQuotationMark(newWord)) {
-                newWord = this.removeBracketsMark(newWord);
-                newWord = this.removeQuotationMark(newWord);
+            while (helperString.hasBracketsMark(newWord) || helperString.hasQuotationMark(newWord)) {
+                newWord = helperString.removeBracketsMark(newWord);
+                newWord = helperString.removeQuotationMark(newWord);
             }
 
             //parse vars

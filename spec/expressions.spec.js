@@ -1,5 +1,6 @@
 var helperString = require('../src/support/helper/string');
 var interpreter = require('../src/support/expressions/interpreter');
+var helperCommon = require('../src/support/helper/common');
 
 describe('Expressions Tests', () => {
 
@@ -95,6 +96,16 @@ describe('Expressions Tests', () => {
         var result = interpreter.resolveExpression('random(a|8)');
         expect(result.length).toEqual(8);
         expect(result).toMatch(/[a-zA-Z0-9]+/g);
+    });
+
+    it('should be validate the expression inside a text', () => {
+        var result = helperCommon.getTreatedValue('My email is ${concatenate(m|mendes|.|as|@|gmail.com)}');
+        expect(result).toEqual('My email is mmendes.as@gmail.com');
+    });
+
+    it('should be validate the expression inside a text without brackets mark', () => {
+        var result = helperCommon.getTreatedValue('My email is concatenate(m|mendes|.|as|@|gmail.com)');
+        expect(result).toEqual('My email is concatenate(m|mendes|.|as|@|gmail.com)');
     });
 
 });

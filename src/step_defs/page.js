@@ -1,5 +1,4 @@
 var helperElement = require('../support/helper/element');
-var helperUtils = require('../support/helper/utils');
 var helperString = require('../support/helper/string');
 var helperCommon = require('../support/helper/common');
 
@@ -67,7 +66,7 @@ var pageSteps = function () {
         var elementFinder = helperElement.getElementFinder(container, key);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            helperUtils.nutHighlightElement(elementFinder);
+            helperElement.nutHighlightElement(elementFinder);
             _this.delayCallback(callback);
         }, function isPresentAndDisplayedError(errorMessage) {
             _this.handleError(errorMessage, callback);
