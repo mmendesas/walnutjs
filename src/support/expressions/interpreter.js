@@ -2,51 +2,74 @@
 
 var helperString = require('../helper/string');
 var expNow = require('./expNow');
+var expConcatenate = require('./expConcatenate');
+var expCPF = require('./expCPF');
+var expMath = require('./expMath');
+var expToNumber = require('./expToNumber');
+var expRandom = require('./expRandom');
 
 var mInterpreter = {
 
-    expressionList: ['now', 'cpf', 'concatenate'],
-    list: {},
-    count: 0,
+    expressionList: ['now', 'cpf', 'concatenate', 'tonumber', 'math', 'random'],
+    melist: null,
+    count: null,
 
+    /**
+     * Solve a simple or chained expression in a string
+     */
     resolveExpression: function (chainExpression) {
+
+        this.meList = {};
+        this.count = 0;
 
         if (!this.isSyntaxCorrect(chainExpression))
             throw 'Syntax error, check the ( and ) characters to complete expression';
 
         var expAux = chainExpression;
-        console.log('chain: ', chainExpression);
 
         while (this.expressionNeedCracked(chainExpression)) {
             try {
                 this.parseExpressionChain(chainExpression);
                 chainExpression = this.resolveExpressionChain(chainExpression);
-                console.log('MARCIO', chainExpression);
             } catch (err) {
                 var res = helperString.formatString('Error in Expression: {0}. You need to inform correct arguments, try this: \n {1}', [expAux, err.message]);
-                // console.log('CAGOU >', res);            
-            } finally {
-                // this.list = [];
+                console.log('CAGOU >', res);
             }
             break;
         }
-
         return chainExpression;
     },
 
-    isSyntaxCorrect: function (chainExpression) {
-        return this.countLetters(chainExpression, '(') === this.countLetters(chainExpression, ')');
-    },
-
-    countLetters: function (haystack, needle) {
-        var count = 0;
-        for (var i = 0; i < haystack.length; i++) {
-            if (haystack[i] === needle)
-                count++;
+    /**
+     * Return a expression by name
+     */
+    findExpression: function (name) {
+        switch (name.toLowerCase()) {
+            case 'now':
+                return expNow;
+            case 'concatenate':
+                return expConcatenate;
+            case 'cpf':
+                return expCPF;
+            case 'math':
+                return expMath;
+            case 'tonumber':
+                return expToNumber;
+            case 'random':
+                return expRandom;
         }
-        return count;
     },
 
+    /**
+     * Validate the expression syntax
+     */
+    isSyntaxCorrect: function (chainExpression) {
+        return helperString.countLetters(chainExpression, '(') === helperString.countLetters(chainExpression, ')');
+    },
+
+    /**
+     * Check if current has expression to be cracked
+     */
     expressionNeedCracked: function (text) {
         for (var i = 0; i < this.expressionList.length; i++) {
             if (text.includes(this.expressionList[i] + '('))
@@ -55,17 +78,23 @@ var mInterpreter = {
         return false;
     },
 
+    /**
+     * Parse the chain of expression
+     */
     parseExpressionChain: function (text) {
         for (var i = 0; i < this.expressionList.length; i++) {
             var expName = this.expressionList[i];
             if (text.includes(expName)) {
                 var expCracked = this.crackExpression(expName, text);
-                this.list[this.count++] = expCracked;
+                this.meList[this.count++] = expCracked;
                 this.parseExpressionChain(expCracked[1]);
             }
         }
     },
 
+    /**
+     * Crack a specific expression
+     */
     crackExpression: function (expName, text) {
         var aExp = {};
         var sliceStart = 0, sliceEnd = 0, startPar = 0, endPar = 0;
@@ -73,16 +102,16 @@ var mInterpreter = {
         var expNameStart = text.indexOf(expName);
 
         for (var i = expNameStart; i < text.length; i++) {
-            var c = text[i];
+            var letter = text[i];
 
-            if (c === '(') {
+            if (letter === '(') {
                 startPar++;
                 if (startPar === 1) {
                     sliceStart = i;
                 }
             }
 
-            if (c === ')') {
+            if (letter === ')') {
                 endPar++;
             }
 
@@ -103,34 +132,31 @@ var mInterpreter = {
         return aExp;
     },
 
+    /**
+     * Solve a chain of expressions
+     */
     resolveExpressionChain: function (chainExpression) {
         var result = '';
 
         if (!chainExpression.includes('('))
             return chainExpression;
 
-        for (var i = Object.keys(this.list).length - 1; i >= 0; i--) {
+        for (var i = Object.keys(this.meList).length - 1; i >= 0; i--) {
 
-            var key = this.list[i][0];
-            var content = this.list[i][1];
-            var fullContent = this.list[i][2];
+            var key = this.meList[i][0];
+            var content = this.meList[i][1];
+            var fullContent = this.meList[i][2];
 
             var expression = this.findExpression(key);
 
-            console.log('key: ', key);
-            console.log('content: ', content);
-            console.log('fullContent: ', fullContent);
-            console.log('expression: ', expression.parseExpression(content));
-
             //solve expressions
             if (!this.expressionNeedCracked(content)) {
-                result = expression.parseExpression(expressionContent);
+                result = expression.parseExpression(content);
                 chainExpression = chainExpression.replace(fullContent, result);
 
                 // treat when var has signal
                 var itemSignal = helperString.formatString("${{0}}", [result]);
-
-                if (chainExpression.contains(itemSignal)) {
+                if (chainExpression.includes(itemSignal)) {
                     chainExpression = chainExpression.replace(itemSignal, result);
                 }
 
@@ -141,25 +167,21 @@ var mInterpreter = {
         return chainExpression;
     },
 
-    findExpression: function (name) {
-        switch (name.toLowerCase()) {
-            case 'now':
-                return expNow;
-        }
-    },
-
+    /**
+     * Update a cached list of expressions (for chain expressions)
+     */
     updateExpressionList: function (content, replacement) {
-        for (var i = 0; i < this.list.length; i++) {
-            if (this.list[i][1].includes(content)) {
-                var textContent = this.list[i][1].replace(content, replacement);
-                this.list[i][1] = textContent;
+        for (var i = 0; i < Object.keys(this.meList).length; i++) {
+            // console.log('mteste ', i, this.list[1][1]);
+            if (this.meList[i][1].includes(content)) {
+                var textContent = this.meList[i][1].replace(content, replacement);
+                this.meList[i][1] = textContent;
 
-                var fullContent = this.list[i][2].replace(content, replacement);
-                this.list[i][2] = fullContent;
+                var fullContent = this.meList[i][2].replace(content, replacement);
+                this.meList[i][2] = fullContent;
             }
         }
     }
-
 };
 
 module.exports = mInterpreter;

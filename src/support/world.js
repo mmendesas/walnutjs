@@ -18,13 +18,13 @@ module.exports = function () {
         };
 
         /**
-        * Runs callback with a delay on dev environment
+        * Runs callback with a delay
         * @param callback
         * @returns {exports}
         */
         this.delayCallback = function (callback) {
             var _this = this;
-            setTimeout(callback, 1000);
+            setTimeout(callback, 100);
             return _this;
         };
 

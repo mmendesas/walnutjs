@@ -1,7 +1,7 @@
 var helperVars = require('../support/helper/variables');
 var helperInfo = require('../support/helper/info');
-var helperString = require('../support/helper/string');
 var helperElement = require('../support/helper/element');
+var helperCommon = require('../support/helper/common');
 
 var CommonSteps = function () {
 
@@ -16,8 +16,8 @@ var CommonSteps = function () {
      * Stores a value in a variable to use between scenarios
      */
     this.Given(/^user stores the value '(.*)' in variable '(.*)'$/, function (value, name) {
-        var varName = helperString.getTreatedValue(name);
-        var varvalue = helperString.getTreatedValue(value);
+        var varName = helperCommon.getTreatedValue(name);
+        var varvalue = helperCommon.getTreatedValue(value);
         helperVars.addVariable(varName, varvalue);
     });
 
@@ -25,7 +25,7 @@ var CommonSteps = function () {
      * Prints a message to console, with or without walnut vars/expressions
      */
     this.Given(/^user prints the message '(.*)' to console$/, function (text) {
-        text = helperString.getTreatedValue(text);
+        text = helperCommon.getTreatedValue(text);
         helperInfo.logInfo(text);
     });
 
@@ -46,7 +46,6 @@ var CommonSteps = function () {
         /**
          * TODO: implementar meio de pegar valor fora da função callback
          */
-
         var elementFinder = helperElement.getElementFinder(container, key);
 
         if (type.toLowerCase() === 'text') {
@@ -60,7 +59,6 @@ var CommonSteps = function () {
                 helperVars.addVariable(varName, value);
             });
         }
-
     });
 
 };

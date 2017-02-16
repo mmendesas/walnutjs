@@ -4,14 +4,23 @@ var varMap = {};
 
 var Variables = {
 
+    /**
+     * Add variable to list
+     */
     addVariable: function (key, value) {
         varMap[key] = value;
     },
 
+    /**
+     * Get simple variable by name
+     */
     getVariable: function (key) {
         return varMap[key];
     },
 
+    /**
+     * Return a list of variables
+     */
     getAllVariables: function () {
         return varMap;
     },

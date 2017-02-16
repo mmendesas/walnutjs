@@ -9,7 +9,21 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceRoot}/node_modules/protractor/bin/protractor",
-            "args": ["${workspaceRoot}/protractorConfig.js"]
+            "args": [
+                "${workspaceRoot}/protractorConfig.js"
+            ]
+        },
+        {
+            "name": "Jasmine-Node Debugging",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/node_modules/jasmine/bin/jasmine.js",
+            "request": "launch",
+            "type": "node",
+            "args": [
+                "spec/*[sS]pec.js"
+                // "spec/interpreter.spec.js"
+                // "**/*[sS]pec.js"
+            ]
         }
     ]
 }

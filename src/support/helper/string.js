@@ -5,63 +5,43 @@ var helperVars = require('./variables');
 
 var StringHelper = {
 
-
+    /**
+     * Remove spaces, set tolower and put a dash between words
+     */
     slugify: function (text) {
         return text.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
     },
 
+    /**
+     * Check if text has Quotation Mark
+     */
     hasQuotationMark: function (text) {
         return text.startsWith('\"') && text.endsWith('\"');
     },
 
+    /**
+     * Remove Quotation Mark
+     */
     removeQuotationMark: function (text) {
         if (this.hasQuotationMark(text))
             text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"'));
         return text;
     },
 
+    /**
+     * Check if text has Brackets Mark
+     */
     hasBracketsMark: function (text) {
         return text.startsWith('${') && text.endsWith('}');
     },
 
+    /**
+     * Remove Brackets Mark
+     */
     removeBracketsMark: function (text) {
         if (this.hasBracketsMark(text))
             text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}'));
         return text;
-    },
-
-    /**
-     * Process expressions and vars in a text with walnut marks '${text}'
-     */
-    getTreatedValue: function (text) {
-        var content = this.removeQuotationMark(text);
-
-        var list = text.match(/\${(.*?)}/g);
-        if (list === null) {
-            return content;
-        }
-
-        for (var i = 0; i < list.length; i++) {
-            var word = list[i];
-            var newWord = word;
-
-            //get only text content
-            while (this.hasBracketsMark(newWord) || this.hasQuotationMark(newWord)) {
-                newWord = this.removeBracketsMark(newWord);
-                newWord = this.removeQuotationMark(newWord);
-            }
-
-            //parse vars
-            newWord = helperVars.nutParseVars(newWord);
-
-            //solve expressions
-            //newWord = interpreter.resolveExpression(newWord);
-
-            //replacement
-            content = content.replace(word, newWord);
-        }
-
-        return content;
     },
 
     /**
@@ -73,6 +53,34 @@ var StringHelper = {
             text = text.replace(mgroup[i], args[i]);
         }
         return text;
+    },
+
+    /**
+     * Put zero left of number if is lower than 10
+     */
+    addZero: function (i) {
+        if (i < 10)
+            i = '0' + i;
+        return i;
+    },
+
+    /**
+     * Check if char is a letter
+     */
+    isLetter: function (str) {
+        return str.length === 1 && str.match(/[a-z]/i);
+    },
+
+    /**
+     * Returns the number of occurrences of a letter
+     */
+    countLetters: function (haystack, needle) {
+        var count = 0;
+        for (var i = 0; i < haystack.length; i++) {
+            if (haystack[i] === needle)
+                count++;
+        }
+        return count;
     }
 };
 

@@ -1,7 +1,7 @@
 var helperString = require('../src/support/helper/string');
 var helperVars = require('../src/support/helper/variables');
 
-describe('String Helper Tests', () => {
+describe('Helper String Tests', () => {
 
     it('should be identify quotation mark', () => {
         var result = helperString.hasQuotationMark('"noQuotation"');
@@ -21,17 +21,6 @@ describe('String Helper Tests', () => {
     it('should be remove brackets mark', () => {
         var msg = helperString.removeBracketsMark('${noBrackets}');
         expect(msg).toEqual('noBrackets');
-    });
-
-    it('should be process text with expressions/vars correctly', () => {
-        helperVars.addVariable('nome', 'Armademônios');
-        var msg = helperString.getTreatedValue("Silasticos ${vars.nome} de Striterax");
-        expect(msg).toEqual("Silasticos Armademônios de Striterax");
-    });
-
-    it('should be process text without expressions/vars correctly', () => {
-        var msg = helperString.getTreatedValue("Silasticos Striterax");
-        expect(msg).toEqual("Silasticos Striterax");
     });
 
     it('should be format simple text with one parameter', () => {

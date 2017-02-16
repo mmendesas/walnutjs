@@ -1,5 +1,5 @@
 var helperElement = require('../support/helper/element');
-var helperString = require('../support/helper/string');
+var helperCommon = require('../support/helper/common');
 
 var formSteps = function () {
 
@@ -10,7 +10,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
-        text = helperString.getTreatedValue(text);
+        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.sendKeys(text).then(function sendKeysSuccess() {
@@ -28,7 +28,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
-        text = helperString.getTreatedValue(text);
+        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             //elementFinder.clear().sendKeys(text).then(callback);
@@ -64,7 +64,7 @@ var formSteps = function () {
         var _this = this;
 
         var elementFinder = helperElement.getElementFinder(container, key);
-        value = helperString.getTreatedValue(value);
+        value = helperCommon.getTreatedValue(value);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.all(by.css('option')).then(function getOptions(options) {

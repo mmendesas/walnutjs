@@ -47,6 +47,9 @@ var context = {
         return this;
     },
 
+    /**
+     * Load the locators file
+     */
     loadUIMap: function () {
         var files = glob.readdirSync('/test/locators/*.json');
         if (files.length === 0) {
@@ -57,12 +60,15 @@ var context = {
         return this;
     },
 
+    /**
+     * Load a fake ui map for unittests
+     */
     loadFakeUIMap: function () {
         var content = '{"containers":[{"name":"locAA","locators":[{"key":"key001","type":"type001","value":"value001"},{"key":"key002","type":"type002","value":"value002"},{"key":"key003","type":"type003","value":"value003"}]},{"name":"locBB","locators":[{"key":"key001","type":"type001","value":"value 00 1"},{"key":"key002","type":"type002","value":"value002"}]}]}';
         this.locators = JSON.parse(content);
         return this;
     }
-    
+
 };
 
 module.exports = context;

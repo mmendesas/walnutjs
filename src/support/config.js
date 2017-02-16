@@ -7,6 +7,9 @@ var config = {
 
     enableDebug: false,
 
+    /**
+     * Load the config parameters from protractor.confg.js
+     */
     loadConfigs: function () {
         if (ptoConfig.walnutjsOpts) {
 

@@ -1,6 +1,7 @@
 var helperElement = require('../support/helper/element');
 var helperUtils = require('../support/helper/utils');
 var helperString = require('../support/helper/string');
+var helperCommon = require('../support/helper/common');
 
 var pageSteps = function () {
 
@@ -8,7 +9,7 @@ var pageSteps = function () {
      * Navigate to a page
      */
     this.Given(/^user navigates to '(.*)'$/, function (url) {
-        var gotourl = helperString.getTreatedValue(url);
+        var gotourl = helperCommon.getTreatedValue(url);
         return browser.get(gotourl);
     });
 
@@ -122,7 +123,7 @@ var pageSteps = function () {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        text = helperString.getTreatedValue(text);
+        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getText().then(function getTextSuccess(elementText) {
@@ -170,7 +171,7 @@ var pageSteps = function () {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        text = helperString.getTreatedValue(text);
+        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getAttribute('value').then(function getTextSuccess(elementText) {
