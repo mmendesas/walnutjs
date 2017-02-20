@@ -132,7 +132,7 @@ var Element = {
         var params;
         if (text.includes(':')) {
             params = text.substring(text.indexOf(":") + 1);
-            params = params.match(/([\w+ |]+)/g).toString().replace(',', '');
+            params = params.match(/([\w+ |\u00C0-\u00FF]+)/g).toString().replace(',', '');
             params = params.split('|');
         }
         return params;

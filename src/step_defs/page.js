@@ -9,6 +9,7 @@ var pageSteps = function () {
      */
     this.Given(/^user navigates to '(.*)'$/, function (url) {
         var gotourl = helperCommon.getTreatedValue(url);
+        browser.driver.manage().window().maximize();
         return browser.get(gotourl);
     });
 
@@ -90,9 +91,8 @@ var pageSteps = function () {
     /**
     * scrolls to direction x times
     */
-    this.When(/^user scrolls (right|left|up|down) '([0-9]+)' times'$/, function (direction, times, callback) {
-        var _this = this;
-        var elementFinder = helperElement.getElementFinder(container, key);
+    this.When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, function (direction, times, callback) {
+        var _this = this;        
 
         for (var i = 0; i < times; i++) {
             switch (direction) {
