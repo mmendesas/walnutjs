@@ -74,7 +74,7 @@ var formSteps = function () {
                     option.getText().then(function getTextSuccess(textOption) {
                         textOptions += textOption + ", ";
                         if (textOption === value) {
-                            option.clik().then(function elementClickSuccess() {
+                            option.click().then(function elementClickSuccess() {
                                 _this.delayCallback(callback);
                             });
                         }
