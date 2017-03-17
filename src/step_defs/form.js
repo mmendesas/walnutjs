@@ -67,23 +67,25 @@ var formSteps = function () {
         value = helperCommon.getTreatedValue(value);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            elementFinder.all(by.css('option')).then(function getOptions(options) {
-                var num = options.length;
-                var textOptions = '';
-                elementFinder.all(by.css('option')).each(function forEachOption(option, index) {
-                    option.getText().then(function getTextSuccess(textOption) {
-                        textOptions += textOption + ", ";
-                        if (textOption === value) {
-                            option.click().then(function elementClickSuccess() {
-                                _this.delayCallback(callback);
-                            });
-                        }
-                        if (index + 1 == num) {
-                            _this.handleError("Not found '" + value + "' value in select box options : " + textOptions, callback);
-                        }
+            elementFinder.click().then(function elementClickSuccess() {
+                elementFinder.all(by.css('option')).then(function getOptions(options) {
+                    var num = options.length;
+                    var textOptions = '';
+                    elementFinder.all(by.css('option')).each(function forEachOption(option, index) {
+                        option.getText().then(function getTextSuccess(textOption) {
+                            textOptions += textOption + ", ";
+                            if (textOption === value) {
+                                option.click().then(function elementClickSuccess() {
+                                    _this.delayCallback(callback);
+                                });
+                            }
+                            if (index + 1 == num) {
+                                _this.handleError("Not found '" + value + "' value in select box options : " + textOptions, callback);
+                            }
+                        });
+                    }, function allOptionsError(errorMessage) {
+                        _this.handleError("Not found '" + selectBox + "' select box options", callback);
                     });
-                }, function allOptionsError(errorMessage) {
-                    _this.handleError("Not found '" + selectBox + "' select box options", callback);
                 });
             });
         }, function isPresentAndDisplayedError(errorMessage) {

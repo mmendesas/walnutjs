@@ -41,24 +41,23 @@ var CommonSteps = function () {
     /**
      * Stores the value from element inside a variable
      */
-    this.Given(/^user stores the (text|value) from element '(.+)-(.+)' in variable '(.*)'$/, function (type, container, key, varName) {
+    this.Given(/^user stores the (TEXT|VALUE) from element '(.+)-(.+)' in variable '(.*)'$/, function (type, container, key, varName) {
 
-        /**
-         * TODO: implementar meio de pegar valor fora da função callback
-         */
+        var deferred = protractor.promise.defer();
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        if (type.toLowerCase() === 'text') {
+        if (type.toLowerCase() === 'TEXT') {
             elementFinder.getText().then(function getTextSuccess(text) {
-                console.log('TEXT:', text);
                 helperVars.addVariable(varName, text);
+                deferred.fulfill();
             });
         } else {
-            elementFinder.getAttribute('value').then(function getValueSuccess(value) {
-                console.log('VALUE:', value);
+            elementFinder.getAttribute('VALUE').then(function getValueSuccess(value) {
                 helperVars.addVariable(varName, value);
+                deferred.fulfill();
             });
         }
+        return deferred.promise;
     });
 
 };
