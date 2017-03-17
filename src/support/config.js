@@ -3,7 +3,7 @@ var ptoConfig = require(process.cwd() + '/protractor.conf.js').config;
 var config = {
     waitElementTimeout: 10000,
 
-    evidencesPath: '/test/logs/',
+    evidencesPath: '',
 
     enableDebug: false,
 

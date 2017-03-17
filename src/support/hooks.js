@@ -2,6 +2,7 @@ var context = require('./context');
 var config = require('./config');
 var vars = require('./helper/variables');
 var helperString = require('./helper/string');
+var helperCommon = require('./helper/common');
 
 var Hooks = function () {
 
@@ -25,6 +26,11 @@ var Hooks = function () {
     this.registerHandler('BeforeScenario', function (scenario, callback) {
         context.setCurrentScenario(scenario);
         vars.addVariable("scenario_name", helperString.slugify(scenario.getName()));
+        vars.addVariable("img_num", "1");
+
+        var folder_default = helperCommon.getTreatedValue("${vars.feature_name}|${vars.scenario_name}");
+        vars.addVariable('folder_default', folder_default);
+        
         callback();
     });
 

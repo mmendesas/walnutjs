@@ -1,8 +1,9 @@
 var $q = require('q');
-var fs = require('fs');
 var context = require('./context');
 var config = require('./config');
 var helperString = require('./helper/string');
+var helperCommon = require('./helper/common');
+var helperFile = require('./helper/file');
 var EC = protractor.ExpectedConditions;
 
 module.exports = function () {
@@ -46,10 +47,12 @@ module.exports = function () {
                 //var path = process.cwd() + '/test/logs/';
                 var path = process.cwd() + evidencesPath;
 
-                var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
+                helperFile.writeToFile(imageData, path + token + '_screenshot.png');
 
-                pngStream.write(new Buffer(imageData, 'base64'));
-                pngStream.end();
+                // var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
+
+                // pngStream.write(new Buffer(imageData, 'base64'));
+                // pngStream.end();
 
                 _this.delayCallback(function handleErrorCallback() {
                     callback(new Error(error));
@@ -88,6 +91,17 @@ module.exports = function () {
             });
 
             return deferred.promise;
+        };
+
+        this.saveScreenshot = function (folder_path, name) {
+            var _this = this;
+            var filename = helperFile.getTreatedFilename(folder_path, name);
+
+            browser.takeScreenshot().then(function (imageData) {
+                helperFile.writeToFile(imageData, filename + '.png');
+            });
+
+            return _this;
         };
 
     };

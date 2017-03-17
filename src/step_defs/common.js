@@ -2,6 +2,7 @@ var helperVars = require('../support/helper/variables');
 var helperInfo = require('../support/helper/info');
 var helperElement = require('../support/helper/element');
 var helperCommon = require('../support/helper/common');
+var helperString = require('../support/helper/string');
 
 var CommonSteps = function () {
 
@@ -58,6 +59,30 @@ var CommonSteps = function () {
             });
         }
         return deferred.promise;
+    });
+
+    /**
+     * Stores a screenshot in the path, using pattern 'path|imageName'
+     */
+    this.Then(/^user saves a screenshot '(.*)'$/, function (path_list) {
+
+        path_list = helperCommon.getTreatedValue(path_list);
+
+        if (path_list.includes('|')) {
+            var split = path_list.split('|');
+            var name = split[split.length - 1];
+            split.pop();
+
+            var img_num = parseInt(helperVars.getVariable('img_num'));
+
+            // add format to 3 digits
+            var valWithDig = helperString.formatWitDigits(img_num, 3);
+            name = helperString.formatString('{0}_{1}', [valWithDig, name]);
+
+            this.saveScreenshot(split, name);
+
+            helperVars.addVariable('img_num', ++img_num);
+        }
     });
 
 };

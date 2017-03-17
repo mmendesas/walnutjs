@@ -3,6 +3,7 @@
 var helperVars = require('./variables');
 var helperString = require('./string');
 var interpreter = require('../expressions/interpreter');
+var context = require('../context');
 
 var common = {
     /**
