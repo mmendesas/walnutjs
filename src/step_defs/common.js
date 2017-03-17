@@ -46,13 +46,13 @@ var CommonSteps = function () {
         var deferred = protractor.promise.defer();
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        if (type.toLowerCase() === 'TEXT') {
+        if (type.toLowerCase() === 'text') {
             elementFinder.getText().then(function getTextSuccess(text) {
                 helperVars.addVariable(varName, text);
                 deferred.fulfill();
             });
         } else {
-            elementFinder.getAttribute('VALUE').then(function getValueSuccess(value) {
+            elementFinder.getAttribute('text').then(function getValueSuccess(value) {
                 helperVars.addVariable(varName, value);
                 deferred.fulfill();
             });
