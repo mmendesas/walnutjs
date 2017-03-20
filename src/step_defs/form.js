@@ -71,20 +71,22 @@ var formSteps = function () {
                 elementFinder.all(by.css('option')).then(function getOptions(options) {
                     var num = options.length;
                     var textOptions = '';
+                    var clickOk = false;
                     elementFinder.all(by.css('option')).each(function forEachOption(option, index) {
                         option.getText().then(function getTextSuccess(textOption) {
                             textOptions += textOption + ", ";
                             if (textOption === value) {
                                 option.click().then(function elementClickSuccess() {
+                                    clickOk = true;
                                     _this.delayCallback(callback);
                                 });
                             }
-                            if (index + 1 == num) {
+                            if ((index + 1 == num) && !clickOk) {
                                 _this.handleError("Not found '" + value + "' value in select box options : " + textOptions, callback);
                             }
                         });
                     }, function allOptionsError(errorMessage) {
-                        _this.handleError("Not found '" + selectBox + "' select box options", callback);
+                        _this.handleError("Not found '" + container + "-" + key + "' select box options", callback);
                     });
                 });
             });
