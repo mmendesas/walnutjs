@@ -42,17 +42,17 @@ module.exports = function () {
             browser.takeScreenshot().then(function (imageData) {
                 var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
                 var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
+                var formatStep = helperString.slugify(context.getCurrentStep().getName());
 
-                var token = formatFeature + '_' + formatScenario;
-                var path = process.cwd() + '/test/logs/';
-                // var path = process.cwd() + evidencesPath;                
+                var folder_path = [];
+                folder_path.push(config.projectName);
+                folder_path.push(formatFeature);
+                folder_path.push(formatScenario);
+                folder_path.push('errors');
 
-                helperFile.writeToFile(imageData, path + token + '_screenshot');
+                var filename = helperFile.getTreatedFilename(folder_path, formatStep + '_error');
 
-                // var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
-
-                // pngStream.write(new Buffer(imageData, 'base64'));
-                // pngStream.end();
+                helperFile.writeToFile(imageData, filename);
 
                 _this.delayCallback(function handleErrorCallback() {
                     callback(new Error(error));

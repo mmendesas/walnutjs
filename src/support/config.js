@@ -1,6 +1,9 @@
 var ptoConfig = require(process.cwd() + '/protractor.conf.js').config;
 
 var config = {
+
+    projectName: 'qaaut-test',
+
     waitElementTimeout: 10000,
 
     evidencesPath: '',
@@ -20,6 +23,9 @@ var config = {
             }
             if (ptoConfig.walnutjsOpts.evidencesPath) {
                 this.evidencesPath = ptoConfig.walnutjsOpts.evidencesPath;
+            }
+            if (ptoConfig.walnutjsOpts.projectName) {
+                this.projectName = ptoConfig.walnutjsOpts.projectName;
             }
         }
     }

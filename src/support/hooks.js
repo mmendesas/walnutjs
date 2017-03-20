@@ -11,11 +11,14 @@ var Hooks = function () {
      */
     this.registerHandler('BeforeFeature', function (feature, callback) {
         context.setCurrentFeature(feature);
-        vars.addVariable("feature_name", helperString.slugify(feature.getName()));
 
         //load UIMap and config file
         context.loadUIMap();
         config.loadConfigs();
+
+        //load defaults variables
+        vars.addVariable("feature_name", helperString.slugify(feature.getName()));
+        vars.addVariable("project_name", helperString.slugify(config.projectName));
 
         callback();
     });
@@ -28,9 +31,9 @@ var Hooks = function () {
         vars.addVariable("scenario_name", helperString.slugify(scenario.getName()));
         vars.addVariable("img_num", "1");
 
-        var folder_default = helperCommon.getTreatedValue("${vars.feature_name}|${vars.scenario_name}");
+        var folder_default = helperCommon.getTreatedValue("${vars.project_name}|${vars.feature_name}|${vars.scenario_name}");
         vars.addVariable('folder_default', folder_default);
-        
+
         callback();
     });
 
