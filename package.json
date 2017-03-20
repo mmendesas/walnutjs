@@ -24,6 +24,7 @@
   "dependencies": {
     "glob-fs": "^0.1.6",
     "protractor": "^5.1.0",
-    "protractor-cucumber": "^0.1.8"
+    "protractor-cucumber": "^0.1.8",
+    "protractor-cucumber-framework": "^1.0.2"
   }
 }
