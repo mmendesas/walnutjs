@@ -44,10 +44,10 @@ module.exports = function () {
                 var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
 
                 var token = formatFeature + '_' + formatScenario;
-                //var path = process.cwd() + '/test/logs/';
-                var path = process.cwd() + evidencesPath;
+                var path = process.cwd() + '/test/logs/';
+                // var path = process.cwd() + evidencesPath;                
 
-                helperFile.writeToFile(imageData, path + token + '_screenshot.png');
+                helperFile.writeToFile(imageData, path + token + '_screenshot');
 
                 // var pngStream = fs.createWriteStream(path + token + '_screenshot.png');
 
