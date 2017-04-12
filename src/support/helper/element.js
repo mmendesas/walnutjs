@@ -7,7 +7,15 @@ var lastStyleValue = '';
 
 var Element = {
 
+    /**
+     * Stores last style (highlight)
+     */
     lastStyleElement: null,
+
+    /**
+     * Stores last container|name
+     */
+    lastUsedLocator: null,
 
     /**
      * Returns the elementFinder object to interact with in protractor
@@ -21,6 +29,9 @@ var Element = {
 
         var type = result[0];
         var content = result[1];
+
+        //save current used container/name
+        this.lastUsedLocator = [container, name];
 
         switch (type.toLowerCase()) {
             /** 

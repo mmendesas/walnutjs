@@ -4,6 +4,7 @@ var config = require('./config');
 var helperString = require('./helper/string');
 var helperCommon = require('./helper/common');
 var helperFile = require('./helper/file');
+var helperElement = require('./helper/element');
 var EC = protractor.ExpectedConditions;
 
 module.exports = function () {
@@ -39,6 +40,8 @@ module.exports = function () {
             var _this = this;
             var evidencesPath = config.evidencesPath;
 
+            //console.error('\n' + err.name + ': ' + err.message + '\n');
+
             browser.takeScreenshot().then(function (imageData) {
                 var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
                 var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
@@ -71,8 +74,12 @@ module.exports = function () {
             var deferred = $q.defer();
             var waitElementTimeout = config.waitElementTimeout;
 
-            //wait for presence of element before interact with him until 10 seconds
-            browser.driver.wait(EC.presenceOf(elementFinder), waitElementTimeout);
+            //wait for presence of element before interact with him until timeout(10 sec)
+            browser
+                .driver.wait(EC.presenceOf(elementFinder), waitElementTimeout)
+                .catch(function (err) {
+                    _this.handleError(err, function () { });
+                });
 
             elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
                 if (isPresent === true) {
@@ -80,13 +87,13 @@ module.exports = function () {
                         if (isVisible === true) {
                             deferred.resolve();
                         } else {
-                            deferred.reject("Element is present but not visible. Binding: " + JSON.stringify(elementFinder.locator()));
+                            deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
                         }
                     }, function isDisplayedFailure() {
-                        deferred.reject("Element is present but not visible. Binding: " + JSON.stringify(elementFinder.locator()));
+                        deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
                     });
                 } else {
-                    deferred.reject("Unable to retrieve element. Binding: " + JSON.stringify(elementFinder.locator()));
+                    deferred.reject("Unable to find element in page. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
                 }
             });
 
