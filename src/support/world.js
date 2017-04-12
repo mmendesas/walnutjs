@@ -71,6 +71,7 @@ module.exports = function () {
        * @returns {Promise}
        */
         this.isPresentAndDisplayed = function (elementFinder) {
+            var _this = this;
             var deferred = $q.defer();
             var waitElementTimeout = config.waitElementTimeout;
 
