@@ -1,6 +1,6 @@
 {
   "name": "walnutjs",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Walnut Framework for angular.js based applications",
   "main": "index.js",
   "scripts": {
