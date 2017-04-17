@@ -37,4 +37,11 @@ describe('Helper Element Tests', () => {
         expect(params[1]).toEqual('Mteste');
     });
 
+    it('should be mount list with special characteres', () => {
+        var name = "SubMenu:[Atirei o pau, no gato/to|!@#$%*()_]";
+        var params = helperElement.getParams(name);
+        expect(params[0]).toEqual('Atirei o pau, no gato/to');
+        expect(params[1]).toEqual('!@#$%*()_');
+    });
+
 });

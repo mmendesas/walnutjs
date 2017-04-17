@@ -142,8 +142,8 @@ var Element = {
     getParams: function (text) {
         var params;
         if (text.includes(':')) {
-            params = text.substring(text.indexOf(":") + 1);
-            params = params.match(/([\w+ |\u00C0-\u00FF]+)/g).toString().replace(',', '');
+            params = text.substring(text.indexOf(":") + 1);            
+            params = params.match(/([^\[\]]+)/g).toString();
             params = params.split('|');
         }
         return params;
