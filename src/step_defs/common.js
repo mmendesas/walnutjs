@@ -3,6 +3,7 @@ var helperInfo = require('../support/helper/info');
 var helperElement = require('../support/helper/element');
 var helperCommon = require('../support/helper/common');
 var helperString = require('../support/helper/string');
+var _ = require('lodash');
 
 var CommonSteps = function () {
 
@@ -20,6 +21,17 @@ var CommonSteps = function () {
         var varName = helperCommon.getTreatedValue(name);
         var varvalue = helperCommon.getTreatedValue(value);
         helperVars.addVariable(varName, varvalue);
+    });
+
+    /**
+     * Stores a list of variables
+     */
+    this.Given(/^user stores the following list of variables:$/, function (data) {
+        _.forEach(data.raw(), function (item) {
+            var varName = helperCommon.getTreatedValue(item[0]);
+            var varvalue = helperCommon.getTreatedValue(item[1]);
+            helperVars.addVariable(varName, varvalue);
+        });
     });
 
     /**
@@ -83,6 +95,20 @@ var CommonSteps = function () {
 
             helperVars.addVariable('img_num', ++img_num);
         }
+    });
+
+    /**
+     * Clears the current cookies
+     */
+    this.When(/^user clears the cookies$/, function () {
+        browser.manage().deleteAllCookies();
+    });
+
+    /**
+     * Add a specific cookie to current session
+     */
+    this.When(/^user add a cookie '(.*)' with value '(.*)'$/, function (cname, cvalue) {
+        browser.manage().addCookie({ name: cname, value: cvalue });
     });
 
 };
