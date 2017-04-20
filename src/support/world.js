@@ -66,11 +66,11 @@ module.exports = function () {
         };
 
         /**
-       * Check if an element is present and visible
+       * Wait for element appears in page
        * @param {object} elementFinder
        * @returns {Promise}
        */
-        this.isPresentAndDisplayed = function (elementFinder) {
+        this.waitForElementToBePresent = function (elementFinder) {
             var _this = this;
             var deferred = $q.defer();
             var waitElementTimeout = config.waitElementTimeout;
@@ -81,21 +81,35 @@ module.exports = function () {
                 .catch(function (err) {
                     _this.handleError(err, function () { });
                 });
+            deferred.resolve();
+            return deferred.promise;
+        }
 
-            elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
-                if (isPresent === true) {
-                    elementFinder.isDisplayed().then(function isDisplayedSuccess(isVisible) {
-                        if (isVisible === true) {
-                            deferred.resolve();
-                        } else {
+        /**
+       * Check if an element is present and visible
+       * @param {object} elementFinder
+       * @returns {Promise}
+       */
+        this.isPresentAndDisplayed = function (elementFinder) {
+            var _this = this;
+            var deferred = $q.defer();
+
+            _this.waitForElementToBePresent(elementFinder).then(function elementPresent() {
+                elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
+                    if (isPresent === true) {
+                        elementFinder.isDisplayed().then(function isDisplayedSuccess(isVisible) {
+                            if (isVisible === true) {
+                                deferred.resolve();
+                            } else {
+                                deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
+                            }
+                        }, function isDisplayedFailure() {
                             deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                        }
-                    }, function isDisplayedFailure() {
-                        deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                    });
-                } else {
-                    deferred.reject("Unable to find element in page. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                }
+                        });
+                    } else {
+                        deferred.reject("Unable to find element in page. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
+                    }
+                });
             });
 
             return deferred.promise;
