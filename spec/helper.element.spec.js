@@ -8,15 +8,15 @@ describe('Helper Element Tests', () => {
     });
 
     it('should be read locator value from json', () => {
-        var result = helperElement.findLocator("locBB", "key002");
-        expect(result[0]).toEqual("type002");
-        expect(result[1]).toEqual("value002");
+        var result = helperElement.getLocator("locBB", "key002");
+        expect(result.type).toEqual("type002");
+        expect(result.value).toEqual("value002");
     });
 
     it('should be read locator value with spaces from json', () => {
-        var result = helperElement.findLocator("locBB", "key001");
-        expect(result[0]).toEqual("type001");
-        expect(result[1]).toEqual("value 00 1");
+        var result = helperElement.getLocator("locBB", "key001");
+        expect(result.type).toEqual("type001");
+        expect(result.value).toEqual("value 00 1");
     });
 
     it('should not be construct the element with a invalid type', () => {

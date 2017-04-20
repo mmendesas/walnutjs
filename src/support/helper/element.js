@@ -5,6 +5,13 @@ var helperString = require('./string');
 var helperInfo = require('./info');
 var lastStyleValue = '';
 
+
+function isEmptyObject(o) {
+    return Object.keys(o).every(function (x) {
+        return o[x] === '' || o[x] === null;
+    });
+}
+
 var Element = {
 
     /**
@@ -22,16 +29,23 @@ var Element = {
     */
     getElementFinder: function (container, name) {
 
-        var result = this.findLocator(container, name);
-        if (Object.keys(result).length !== 2) {
+        //save current used container/name
+        this.lastUsedLocator = [container, name];
+
+        var locator = this.getLocator(container, name);
+        if (isEmptyObject(locator)) {
             throw "Locator element incorrect, please use {key, type, value}";
         }
 
-        var type = result[0];
-        var content = result[1];
+        // construct the element
+        return this.mountElement(locator.type, locator.value);
+    },
 
-        //save current used container/name
-        this.lastUsedLocator = [container, name];
+
+    /**
+     * Return the real element from protractor method
+     */
+    mountElement: function (type, content) {
 
         switch (type.toLowerCase()) {
             /** 
@@ -90,13 +104,13 @@ var Element = {
     /**
      * Find the locator in json by container name and locator key  
      */
-    findLocator: function (container, name) {
+    getLocator: function (container, name) {
         var container_list = context.locators.containers;
         var result = {};
         var params;
 
         // start time elapsed
-        helperInfo.logTimeElapsed('findLocator');
+        helperInfo.logTimeElapsed('getLocator');
 
         if (name.includes(':')) {
             params = this.getParams(name);
@@ -119,10 +133,12 @@ var Element = {
                             mType = mType.substring(mType.indexOf(":") + 1);
                         }
 
-                        result[0] = mType;
-                        result[1] = mValue;
+                        //mount founded locator
+                        result.key = key;
+                        result.type = mType;
+                        result.value = mValue;
 
-                        helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{0}]', result));
+                        helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{0}]', [result.type, result.value]));
 
                         break;
                     }
@@ -131,7 +147,7 @@ var Element = {
             }
         }
         // prints the elapsed end time        
-        helperInfo.logTimeElapsed('findLocator');
+        helperInfo.logTimeElapsed('getLocator');
 
         return result;
     },
@@ -142,7 +158,7 @@ var Element = {
     getParams: function (text) {
         var params;
         if (text.includes(':')) {
-            params = text.substring(text.indexOf(":") + 1);            
+            params = text.substring(text.indexOf(":") + 1);
             params = params.match(/([^\[\]]+)/g).toString();
             params = params.split('|');
         }
