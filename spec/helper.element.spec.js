@@ -20,8 +20,9 @@ describe('Helper Element Tests', () => {
     });
 
     it('should not be construct the element with a invalid type', () => {
-        var result = helperElement.getElementFinder("locBB", "key002");
-        expect(result).toContain("Type not found.");
+        expect(function () {
+            helperElement.getElementFinder("locBB", "key002")
+        }).toThrow(new Error("Locator Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>"));
     });
 
     it('should be mount list with spaces', () => {

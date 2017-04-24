@@ -1,15 +1,35 @@
 'use strict'
 
+var _ = require('lodash');
 var context = require('../context');
 var helperString = require('./string');
 var helperInfo = require('./info');
 var lastStyleValue = '';
 
-
 function isEmptyObject(o) {
     return Object.keys(o).every(function (x) {
         return o[x] === '' || o[x] === null;
     });
+}
+
+function applyFilterInList(list, option) {
+
+    switch (option.toLowerCase()) {
+        case 'first':
+            return list.first();
+        case 'last':
+            return list.last();
+        case 'enabled':
+            return list.filter(function (elem) {
+                return elem.isEnabled();
+            });
+        case 'displayed':
+            return list.filter(function (elem) {
+                return elem.isDisplayed();
+            });
+        default:
+            return list;
+    }
 }
 
 var Element = {
@@ -37,8 +57,22 @@ var Element = {
             throw "Locator element incorrect, please use {key, type, value}";
         }
 
-        // construct the element
-        return this.mountElement(locator.type, locator.value);
+        // get list of elements based on type/value
+        var myList = this.mountElement(locator.type, locator.value);
+
+        // apply filter options if included
+        if (locator.options) {
+            var options = locator.options.split('|');
+            _.forEach(options, function (option) {
+                myList = applyFilterInList(myList, option);
+            });
+
+            //return filtered list
+            return myList;
+        }
+
+        // default: return first element of list
+        return myList.first();
     },
 
 
@@ -52,51 +86,51 @@ var Element = {
              * Locators by Extended webdriver.By
              */
             case 'classname':
-                return element(by.className(content));
+                return element.all(by.className(content));
             case 'css':
-                return element(by.css(content));
+                return element.all(by.css(content));
             case 'id':
-                return element(by.id(content));
+                return element.all(by.id(content));
             case 'linktext':
-                return element(by.linkText(content));
+                return element.all(by.linkText(content));
             case 'js':
-                return element(by.js(content));
+                return element.all(by.js(content));
             case 'name':
-                return element(by.name(content));
+                return element.all(by.name(content));
             case 'partiallinktext':
-                return element(by.partialLinkText(content));
+                return element.all(by.partialLinkText(content));
             case 'tagname':
-                return element(by.tagName(content));
+                return element.all(by.tagName(content));
             case 'xpath':
-                return element(by.xpath(content));
+                return element.all(by.xpath(content));
 
             /**
              * Locators by function in ProtractorBy
              */
 
             case 'binding':
-                return element(by.binding(content));
+                return element.all(by.binding(content));
             case 'exactbinding':
-                return element(by.exactBinding(content));
+                return element.all(by.exactBinding(content));
             case 'model':
-                return element(by.model(content));
+                return element.all(by.model(content));
             case 'buttontext':
-                return element(by.buttonText(content));
+                return element.all(by.buttonText(content));
             case 'partialbuttontext':
-                return element(by.partialButtonText(content));
+                return element.all(by.partialButtonText(content));
             case 'repeater':
-                return element(by.repeater(content));
+                return element.all(by.repeater(content));
             case 'exactrepeater':
-                return element(by.exactRepeater(content));
+                return element.all(by.exactRepeater(content));
             case 'csscontainingtext':
-                return element(by.cssContainingText(content));
+                return element.all(by.cssContainingText(content));
             case 'options':
-                return element(by.options(content));
+                return element.all(by.options(content));
             case 'deepcss':
-                return element(by.deepCss(content));
+                return element.all(by.deepCss(content));
 
             default:
-                return 'Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>';
+                throw Error('Locator Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>');
                 break;
         }
     },
@@ -127,6 +161,7 @@ var Element = {
                     if (key === name) {
                         var mType = loc_list[j].type;
                         var mValue = loc_list[j].value;
+                        var mOptions = loc_list[j].options;
 
                         if (mType.toLowerCase().startsWith('p:')) {
                             mValue = helperString.formatString(mValue, params);
@@ -137,8 +172,9 @@ var Element = {
                         result.key = key;
                         result.type = mType;
                         result.value = mValue;
+                        result.options = mOptions;
 
-                        helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{0}]', [result.type, result.value]));
+                        helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{1}] options[{2}]', [result.type, result.value, result.options]));
 
                         break;
                     }
