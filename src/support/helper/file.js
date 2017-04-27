@@ -32,7 +32,13 @@ var file = {
         var pngStream = fs.createWriteStream(filename + '.png');
         pngStream.write(new Buffer(data, 'base64'));
         pngStream.end();
+    },
+
+    readContentFromFile: function (filename) {
+        var content = fs.readFileSync(filename, 'utf8');
+        return content;
     }
+
 }
 
 module.exports = file;

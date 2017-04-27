@@ -9,7 +9,7 @@ var StringHelper = {
      * Remove spaces, set tolower and put a dash between words
      */
     slugify: function (text) {
-        return text.toLowerCase().replace(/[^a-z0-9]+/gi, '-');
+        return text.trim().toLowerCase().replace(/[^a-z0-9]+/gi, '-');
     },
 
     /**

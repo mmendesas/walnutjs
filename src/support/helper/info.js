@@ -14,6 +14,11 @@ var info = {
         console.log(helperString.formatString('[{0}] - [INFO] - {1}', [new Date().toLocaleString(), text]));
     },
 
+    logInfoFormat: function (text, args) {
+        var msg = helperString.formatString(text, args);
+        this.logInfo(msg);
+    },
+
     /**
      * Log simple information with DEBUG flag
      */
@@ -21,6 +26,11 @@ var info = {
         if (config.enableDebug) {
             console.log(helperString.formatString('[{0}] - [DEBUG] - {1}', [new Date().toLocaleString(), text]));
         }
+    },
+
+    logDebugFormat: function (text, args) {
+        var msg = helperString.formatString(text, args);
+        this.logDebug(msg);
     },
 
     /**
