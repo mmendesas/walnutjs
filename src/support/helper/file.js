@@ -19,26 +19,29 @@ var file = {
         fs.mkdirSync(dirname);
     },
 
-    getTreatedPath: function (path) {
-        if (path.startsWith('.') || path == '') {
-            path = path.replace('.', '');
-
-            return process.cwd() + '/test/logs' + path;
+    getTreatedPath: function (filepath) {
+        if (filepath.startsWith('{default}') || filepath == '') {
+            filepath = filepath.replace('{default}', '');
+            filepath = process.cwd() + '/test/' + filepath;
+        } else {
+            filepath = path.resolve(filepath);
         }
-        return path;
+        return filepath;
     },
 
-    writeToFile: function (data, filename) {
+    writePNGToFile: function (data, filename) {
         var pngStream = fs.createWriteStream(filename + '.png');
         pngStream.write(new Buffer(data, 'base64'));
         pngStream.end();
     },
 
     readContentFromFile: function (filename) {
-        var content = fs.readFileSync(filename, 'utf8');
-        return content;
-    }
+        return fs.readFileSync(filename, 'utf8');        
+    },
 
+    writeContentToFile: function (data, filename) {
+        fs.writeFile(filename, data, 'utf8');        
+    }
 }
 
 module.exports = file;

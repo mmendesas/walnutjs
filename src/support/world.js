@@ -55,7 +55,7 @@ module.exports = function () {
 
                 var filename = helperFile.getTreatedFilename(folder_path, formatStep + '_error');
 
-                helperFile.writeToFile(imageData, filename);
+                helperFile.writePNGToFile(imageData, filename);
 
                 _this.delayCallback(function handleErrorCallback() {
                     callback(new Error(error));
@@ -120,7 +120,7 @@ module.exports = function () {
             var filename = helperFile.getTreatedFilename(folder_path, name);
 
             browser.takeScreenshot().then(function (imageData) {
-                helperFile.writeToFile(imageData, filename + '.png');
+                helperFile.writePNGToFile(imageData, filename + '.png');
             });
 
             return _this;

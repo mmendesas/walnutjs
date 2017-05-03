@@ -45,6 +45,9 @@ var common = {
         var comparisson = { result: null, msg: null };
         type = type.trim().toLowerCase().replace(/\s/gi, '');
 
+        current = current.toString();
+        received = received.toString();
+
         switch (type) {
             case 'whichcontains':
                 comparisson.result = current.includes(received);
