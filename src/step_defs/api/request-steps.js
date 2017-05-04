@@ -14,44 +14,45 @@ var reqSteps = function () {
         baseURI = helperCommon.getTreatedValue(baseURI);
         trest.baseURI = baseURI;
 
-        helperInfo.logDebug("User uses the baseURI: " + baseURI);
+
         _this.delayCallback(callback);
     });
 
     /**
      * Create the request for a specific path
      */
-    this.Given(/^\(api\) user builds the (POST|GET|PUT|PATCH|DELETE|HEAD) request with the path '(.*)'$/, function (method, path, callback) {
+    this.Given(/^\(api\) user creates a (POST|GET|PUT|PATCH|DELETE|HEAD) request to '(.*)'$/, function (method, path, callback) {
         var _this = this;
         path = helperCommon.getTreatedValue(path);
         switch (method) {
             case "POST":
-                trest.request = unirest.post(trest.baseURI + path);
+                trest.request = unirest.post(path);
                 break;
 
             case "GET":
-                trest.request = unirest.get(trest.baseURI + path);
+                trest.request = unirest.get(path);
                 break;
 
             case "PUT":
-                trest.request = unirest.put(trest.baseURI + path);
+                trest.request = unirest.put(path);
                 break;
 
             case "DELETE":
-                trest.request = unirest.delete(trest.baseURI + path);
+                trest.request = unirest.delete(path);
                 break;
 
             case "PATCH":
-                trest.request = unirest.patch(trest.baseURI + path);
+                trest.request = unirest.patch(path);
                 break;
         }
+        helperInfo.logDebug("User creates the [{0}] request to [{1}] " + [method, path]);
         _this.delayCallback(callback);
     });
 
     /**
      * Executes the request
      */
-    this.When(/^\(api\) user executes the request$/, function (callback) {
+    this.When(/^\(api\) user sends the request$/, function (callback) {
         var _this = this;
         trest.request.end(function (response) {
             trest.response = response;

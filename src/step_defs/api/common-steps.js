@@ -16,6 +16,10 @@ var commonapi = function () {
         _this.delayCallback(callback);
     });
 
+
+    /**
+     * Add body content from resource
+     */
     this.When(/^\(api\) user add the (JSON|XML|HTML) BODY from the resource '(.*)'$/, function (type, filepath) {
         filepath = helperCommon.getTreatedValue(filepath);
         filepath = helperFile.getTreatedPath(filepath);
@@ -31,9 +35,16 @@ var commonapi = function () {
         //set the Content-Type 
         trest.request.type(type.toLowerCase());
 
-        helperInfo.logDebugFormat("Json Content Pattern used as body:\n{0}\n", [trest.jsonContentReq]);
-        trest.request.send(trest.jsonContentReq);
+        helperInfo.logDebugFormat("[{0}] Content Pattern used as body:\n{1}\n", [type, trest.requestContent]);
+        trest.request.send(trest.requestContent);
+    });
 
+    this.When(/^\(api\) user add the (JSON|XLM|HTML) BODY with following value:$/, function (type, fileContent) {
+        trest.requestContent = fileContent;
+        //set the Content-Type 
+        trest.request.type(type.toLowerCase());
+        helperInfo.logDebugFormat("Content Pattern used as body:\n{0}\n", [trest.requestContent]);
+        trest.request.send(trest.requestContent);
     });
 
 
