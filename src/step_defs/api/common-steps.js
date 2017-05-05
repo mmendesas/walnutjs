@@ -10,32 +10,36 @@ var commonapi = function () {
      */
     this.Given(/^\(api\) user prints the current (REQUEST|RESPONSE) body content$/, function (type, callback) {
         var _this = this;
-
         var content = type === 'REQUEST' ? trest.requestContent : trest.response.raw_body;
         helperInfo.logInfoFormat('[{0}] content:\n{1}\n', [type, content]);
         _this.delayCallback(callback);
     });
+    
+    /**
+     * Define a value for request headers [Accept, Content-Type]
+     */
+    this.Given(/^\(api\) user will send and accept (XML|JSON|HTML)$/, function (type) {
 
-    this.When(/^\(api\) user add the (JSON|XML|HTML) BODY from the resource '(.*)'$/, function (type, filepath) {
-        filepath = helperCommon.getTreatedValue(filepath);
-        filepath = helperFile.getTreatedPath(filepath);
+        var accept = 'application/json';
+        var contentType = 'application/json';
 
-        trest.requestContent = '';
+        switch (type) {
+            case 'XML':
+                accept = 'application/xml';
+                contentType = 'application/xml';
+                break;
 
-        if (filepath === "") {
-            helperInfo.logError('File [' + filepath + '] not found. Please set the complete path of the file.');
-        } else {
-            trest.requestContent = helperFile.readContentFromFile(filepath);
+            case 'HTML':
+                accept = 'text/html';
+                contentType = 'application/x-www-form-urlencoded';
+                break;
+
+            default:
+                break;
         }
-
-        //set the Content-Type 
-        trest.request.type(type.toLowerCase());
-
-        helperInfo.logDebugFormat("Json Content Pattern used as body:\n{0}\n", [trest.jsonContentReq]);
-        trest.request.send(trest.jsonContentReq);
-
+        trest.request.header('Accept', accept);
+        trest.request.header('Content-Type', contentType);
     });
-
 
 }
 

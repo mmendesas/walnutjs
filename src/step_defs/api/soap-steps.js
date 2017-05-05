@@ -12,11 +12,12 @@ var soapapi = function () {
      * User defines the wsdlPath
      */
     this.Given(/^\(soap\) user set the WSDL Path with value '(.*)'$/, function (wsdlPath, callback) {
+        var _this = this;
         wsdlPath = helperCommon.getTreatedValue(wsdlPath);
-        soapclient.wsdlPath = wsdlPath;
-
-        helperInfo.logDebug("User uses the WSDL PATH: " + soapclient.wsdlPath);
-        this.delayCallback(callback);
+        soapclient.startClient(wsdlPath).then(function () {
+            helperInfo.logDebug("User uses the WSDL PATH: " + soapclient.wsdlPath);
+            _this.delayCallback(callback);
+        });
     });
 
     /**
