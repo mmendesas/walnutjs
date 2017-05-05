@@ -11,14 +11,26 @@ var soapclient = {
 
     jsonResponse: null,
 
-    getAllMethods: function () {
+    client: null,
+
+    startClient: function (wsdlPath) {
+        var _this = this;
         var deferred = $q.defer();
-        soap.createClient(this.wsdlPath, function (err, client) {
-            var methods = Reflect.ownKeys(client).filter(function (p) {
-                return typeof client[p] === 'function';
-            });
-            deferred.resolve(methods);
+        soap.createClient(wsdlPath, function (err, client) {
+            _this.client = client;
+            _this.wsdlPath = wsdlPath;
+            deferred.resolve();
         });
+        return deferred.promise;
+    },
+
+    getAllMethods: function () {
+        var _this = this;
+        var deferred = $q.defer();
+        var methods = Reflect.ownKeys(_this.client).filter(function (p) {
+            return typeof _this.client[p] === 'function';
+        });
+        deferred.resolve(methods);
         return deferred.promise;
     },
 
@@ -35,14 +47,11 @@ var soapclient = {
     executeMethod: function (methodName) {
         var _this = this;
         var deferred = $q.defer();
-
-        soap.createClient(_this.wsdlPath, function (err, client) {
-            var methodToExec = _this.getMethodByName(client, methodName);
-            methodToExec(_this.jsonToSend, function (err, result) {
-                _this.jsonResponse = result;
-                helperInfo.logDebug('SOAP JSON Response:' + JSON.stringify(result));
-                deferred.resolve();
-            });
+        var methodToExec = _this.getMethodByName(this.client, methodName);
+        methodToExec(_this.jsonToSend, function (err, result) {
+            _this.jsonResponse = result;
+            helperInfo.logDebug('SOAP JSON Response:' + JSON.stringify(result));
+            deferred.resolve();
         });
         return deferred.promise;
     },
@@ -51,39 +60,14 @@ var soapclient = {
         var _this = this;
         var deferred = $q.defer();
 
-        soap.createClient(_this.wsdlPath, function (err, client) {
-            jsonparser.init(client.describe());
-            var methodToFind = '$..' + methodName;
-            var myObj = jsonparser.getValue(methodToFind)[0];
-            var result = type.toLowerCase() === 'input' ? myObj.input : myObj.output;            
-            deferred.resolve(result);
-        });
+        jsonparser.init(_this.client.describe());
+        var methodToFind = '$..' + methodName;
+        var myObj = jsonparser.getValue(methodToFind)[0];
+        var result = type.toLowerCase() === 'input' ? myObj.input : myObj.output;
+        deferred.resolve(result);
+        
         return deferred.promise;
     }
 }
 
 module.exports = soapclient;
-
-// soap.createClient('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl',
-//     function (err, client) {
-//         console.log('cliente soap criado');
-
-//         var myMethod = this.getMethodByName(client, 'CalcPrazo');
-//         myMethod({
-//             'nCdServico': '40010',
-//             'sCepOrigem': '04101300',
-//             'sCepDestino': '6500600'
-//         }, function (err, result) {
-//             console.log(JSON.stringify(result));
-//         });
-
-//         // client.CalcPrazo(
-//         //     {
-//         //         'nCdServico': '40010',
-//         //         'sCepOrigem': '04101300',
-//         //         'sCepDestino': '6500600'
-//         //     }, function (err, result) {
-//         //         console.log(JSON.stringify(result));
-//         //     })
-//     }
-// );

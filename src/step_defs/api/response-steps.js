@@ -10,7 +10,7 @@ var resSteps = function () {
     /**
      *  Validates the response status code
      */
-    this.Then(/^\(api\) user receives the status code equals to '(\d+)'$/, function (statusCode, callback) {
+    this.Then(/^\(api\) the response status should be '(\d+)'$/, function (statusCode, callback) {
         var _this = this;
         var result = statusCode === trest.response.code.toString();
         if (!result) {
@@ -22,16 +22,36 @@ var resSteps = function () {
     });
 
     /**
+     * Compare the full value of body response     
+     */
+    this.Then(/^\(api\) the (JSON|XML) response should be:$/, function (type, content, callback) {
+        var _this = this;
+        trest.responseContent = trest.responseContent.replace(/(\r\n|\n|\r|\s)/gm, "");
+        content = content.replace(/(\r\n|\n|\r|\s)/gm, "");
+
+        //compare
+        var compareRes = helperCommon.compare(trest.responseContent, 'equalsto', content);
+        if (!compareRes.result) {
+            _this.handleError(compareRes.msg, callback);
+        } else {
+            _this.delayCallback(callback);
+        }
+    });
+
+    /**
      * Validates a value in specific node in JSON response.body     
      */
-    this.Then(/^\(api\) the JSON \(jsonpath\) key '(.*)' has value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
+    this.Then(/^\(api\) the JSON response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
         var _this = this;
         keyPath = helperCommon.getTreatedValue(keyPath);
         expectedValue = helperCommon.getTreatedValue(expectedValue);
 
-        var valueFromFile = getValueFromJSON(keyPath);
-        var compareRes = helperCommon.compare(valueFromFile, comparissonType, expectedValue);
+        //get value from JSON using JSONPATH
+        jsonparser.init(trest.response.body);
+        var jsonValue = jsonparser.getValue(keyPath)[0] || '<path not found>';
 
+        //compare
+        var compareRes = helperCommon.compare(jsonValue, comparissonType, expectedValue);
         if (!compareRes.result) {
             _this.handleError(compareRes.msg, callback);
         } else {
@@ -42,31 +62,23 @@ var resSteps = function () {
     /**
      * Validates a value in specific node in XML response.body
      */
-    this.Then(/^\(api\) the XML \(xpath\) key '(.*)' has value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
+    this.Then(/^\(api\) the XML response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
         var _this = this;
         keyPath = helperCommon.getTreatedValue(keyPath);
         expectedValue = helperCommon.getTreatedValue(expectedValue);
 
-        //var valueFromFile = (type === 'XML (xpath)') ? getValueFromXML(keyPath) : getValueFromJSON(keyPath);
-        var valueFromFile = getValueFromXML(keyPath);
-        var compareRes = helperCommon.compare(valueFromFile, comparissonType, expectedValue);
+        //get value from XML using XPATH
+        xmlparser.init(trest.response.body);
+        var xmlValue = xmlparser.getTagValue(keyPath) || '<path not found>';
 
+        //compare
+        var compareRes = helperCommon.compare(xmlValue, comparissonType, expectedValue);
         if (!compareRes.result) {
             _this.handleError(compareRes.msg, callback);
         } else {
             _this.delayCallback(callback);
         }
     });
-}
-
-function getValueFromJSON(jsonpath) {
-    jsonparser.init(trest.response.body);
-    return jsonparser.getValue(jsonpath)[0] || '<path not found>';
-}
-
-function getValueFromXML(xpath) {
-    xmlparser.init(trest.response.body);
-    return xmlparser.getTagValue(xpath);
 }
 
 module.exports = resSteps;
