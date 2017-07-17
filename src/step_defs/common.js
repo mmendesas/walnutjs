@@ -74,6 +74,18 @@ var CommonSteps = function () {
     });
 
     /**
+     * Stores the elements count in variable
+     */
+    this.Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, function (container, key, varName) {        
+        var deferred = protractor.promise.defer();
+        helperElement.getElementFinderAll(container, key).count().then(function (count) {            
+            helperVars.addVariable(varName, count);
+            deferred.fulfill();
+        });
+        return deferred.promise;
+    });
+
+    /**
      * Stores a screenshot in the path, using pattern 'path|imageName'
      */
     this.Then(/^user saves a screenshot '(.*)'$/, function (path_list) {
