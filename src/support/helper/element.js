@@ -75,6 +75,36 @@ var Element = {
         return myList.first();
     },
 
+    /**
+     * Returns a list of elementFinders based in current findOptions
+     */
+    getElementFinderAll: function (container, name) {
+        //save current used container/name
+        this.lastUsedLocator = [container, name];
+
+        var locator = this.getLocator(container, name);
+        if (isEmptyObject(locator)) {
+            throw "Locator element incorrect, please use {key, type, value}";
+        }
+
+        // get list of elements based on type/value
+        var myList = this.mountElement(locator.type, locator.value);
+
+        // apply filter options if included
+        if (locator.options) {
+            var options = locator.options.split('|');
+            _.forEach(options, function (option) {
+                myList = applyFilterInList(myList, option);
+            });
+
+            //return filtered list
+            return myList;
+        }
+
+        // default: return all elements
+        return myList;
+    },
+
 
     /**
      * Return the real element from protractor method
