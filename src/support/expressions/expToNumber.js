@@ -1,31 +1,34 @@
-var expToNumber = {
+const sanitizeNumberBRL = x => x.replace(/[^0-9,]/g, '').replace(',', '.');
+const sanitizeNumberEN = x => x.replace(/[^0-9.]/g, '');
+
+const sanitizeMap = {
+    BRL: sanitizeNumberBRL,
+    EN: sanitizeNumberEN
+};
+
+const expToNumber = {
 
     /**
      * Used to return only number of string value
      */
     parseExpression: function (expression) {
+        const [number, typeDefinition = ':', format] = expression.split('|');
+        const [type, precision] = typeDefinition.split(':')
 
-        var parts = expression.split('|');
-
-        if (parts.length < 2) {
+        if (!number || !format || !type) {
             var sb = [];
-            sb.push("[1] - tonumber(text | format) - tonumber(R$16,70|d)  - 16.7");
-            sb.push("[2] - tonumber(text | format) - tonumber(R$16,70|i)  - 16");
-            throw sb.join('\n');
+            sb.push("[1] - tonumber(text | precision | format) - tonumber(R$16,70|d:2|BRL)  - 16.7");
+            sb.push("[2] - tonumber(text | precision | format) - tonumber(R$16,70|i|BRL)  - 16");
+            throw new Error(sb.join('\n'));
         }
 
-        var text = parts[0].trim();
-        var format = parts[1].trim();
+        const numberSanitize = sanitizeMap[format](number);
 
-        var mgroup = text.match((/\d+(.|,)\d+/g));
-        var item = (mgroup.length > 0) ? mgroup[0] : text;
-        item = item.replace(',', '.');
-
-        switch (format) {
+        switch (type) {
             case 'i':
-                return parseInt(item).toString();
+                return parseInt(numberSanitize).toString();
             case 'd':
-                return parseFloat(item).toString();
+                return parseFloat(numberSanitize).toFixed(precision);
             default:
                 break;
         }

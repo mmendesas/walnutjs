@@ -1,2 +1,14 @@
+### VSCODE ##
 .vscode
-node_modules
+
+### Node ###
+npm-debug.log*
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Dependency directories
+node_modules/
+
+# package.json Lock file
+package-lock.json
