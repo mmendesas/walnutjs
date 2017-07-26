@@ -51,12 +51,15 @@ var context = {
      * Load the locators file
      */
     loadUIMap: function () {
-        var files = glob.readdirSync('/test/locators/*.json');
-        if (files.length === 0) {
-            throw "Locators File Not Found";
-        }
-        var content = fs.readFileSync(files[0], 'utf8');
-        this.locators = JSON.parse(content);
+        const folder = './test/locators';
+        let content = { containers: [] };
+
+        fs.readdirSync(folder).forEach(file => {
+            const fileJson = fs.readFileSync(`${folder}/${file}`, 'utf8');
+            content.containers = content.containers.concat(JSON.parse(fileJson).containers);
+        });
+
+        this.locators = content;
         return this;
     },
 
