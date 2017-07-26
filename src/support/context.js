@@ -56,7 +56,13 @@ var context = {
 
         fs.readdirSync(folder).forEach(file => {
             const fileJson = fs.readFileSync(`${folder}/${file}`, 'utf8');
-            content.containers = content.containers.concat(JSON.parse(fileJson).containers);
+
+            try {
+                content.containers = content.containers.concat(JSON.parse(fileJson).containers);
+            } catch (err) {
+                const message = `Error in locators: ${folder}/${file}. You need to inform correct structure of locator file.`;
+                console.log(message);
+            }
         });
 
         this.locators = content;
