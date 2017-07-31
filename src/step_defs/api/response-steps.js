@@ -48,7 +48,7 @@ var resSteps = function () {
 
         //get value from JSON using JSONPATH
         jsonparser.init(trest.response.body);
-        var jsonValue = jsonparser.getValue(keyPath)[0] || '<path not found>';
+        var jsonValue = jsonparser.getValue(keyPath)[0];
 
         //compare
         var compareRes = helperCommon.compare(jsonValue, comparissonType, expectedValue);
