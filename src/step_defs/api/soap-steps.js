@@ -81,7 +81,7 @@ var soapapi = function () {
     /**
     * Stores the value from Request/Response
     */
-    this.Then(/^\(soap\) user stores the value '(.*)' from (REQUEST|RESPONSE) in variable (.*)$/, function (keyPath, type, varName, callback) {
+    this.Then(/^\(soap\) user stores the value '(.*)' from (REQUEST|RESPONSE) in variable '(.*)'$/, function (keyPath, type, varName, callback) {
         var varName = helperCommon.getTreatedValue(name);
         keyPath = helperCommon.getTreatedValue(keyPath);
 
