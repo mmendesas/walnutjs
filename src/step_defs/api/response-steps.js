@@ -79,6 +79,23 @@ var resSteps = function () {
             _this.delayCallback(callback);
         }
     });
+
+    /**
+    * Stores the value of the response field found by json path
+    */
+   this.Then(/^\(api\) user stores the value '(.*)' from response in variable '(.*)'$/, function(keyPath, name, callback) {
+
+       keyPath = helperCommon.getTreatedValue(keyPath);
+       var varName = helperCommon.getTreatedValue(name);
+
+       //get value from JSON using JSONPATH
+       jsonparser.init(trest.response.body);
+       var varValue = jsonparser.getValue(keyPath)[0];
+
+       // Add the value to variables
+       helperVars.addVariable(varName, varValue);
+       this.delayCallback(callback);
+   });
 }
 
 module.exports = resSteps;
