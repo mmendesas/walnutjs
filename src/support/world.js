@@ -86,11 +86,31 @@ module.exports = function () {
         }
 
         /**
+      * Check if an element or list of element is present and visible
+      * @param {object} elementFinder
+      * @returns {Promise}
+      */
+        this.isPresentAndDisplayed = function (elementFinder) {
+            const isPresents = [];
+            const isSingleElement = !elementFinder.count;
+
+            if (isSingleElement) {
+                return this._isPresentAndDisplayed(elementFinder);
+            }
+
+            elementFinder.each(el => {
+                isPresents.push(this._isPresentAndDisplayed(el))
+            });
+
+            return $q.all(isPresents);
+        };
+
+        /**
        * Check if an element is present and visible
        * @param {object} elementFinder
        * @returns {Promise}
        */
-        this.isPresentAndDisplayed = function (elementFinder) {
+        this._isPresentAndDisplayed = function (elementFinder) {
             var _this = this;
             var deferred = $q.defer();
 
