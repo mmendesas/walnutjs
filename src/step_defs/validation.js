@@ -304,7 +304,7 @@ var Validation = function () {
     /**
    * Compare two string values, can be used with expressions ${x}
    */
-    this.Then(/^the '(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (text1, comparison, text2, callback) {
+    this.Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (text1, comparison, text2, callback) {
         var _this = this;
         text1 = helperCommon.getTreatedValue(text1);
         text2 = helperCommon.getTreatedValue(text2);
