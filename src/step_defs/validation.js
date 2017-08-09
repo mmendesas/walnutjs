@@ -1,14 +1,13 @@
-
 var helperElement = require('../support/helper/element');
 var helperString = require('../support/helper/string');
 var helperCommon = require('../support/helper/common');
 
-var Validation = function () {
+var Validation = function() {
 
     /**
-      * Validate if the element is enabled or disabled
-      */
-    this.Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, function (container, key, isOrNot, callback) {
+     * Validate if the element is enabled or disabled
+     */
+    this.Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, function(container, key, isOrNot, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
@@ -30,7 +29,7 @@ var Validation = function () {
     /**
      * Validate if the element is not present or displayed on the screen
      */
-    this.Then(/^user does not sees the '(.+)-(.+)' on the screen$/, function (container, key, callback) {
+    this.Then(/^user does not sees the '(.+)-(.+)' on the screen$/, function(container, key, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
@@ -42,9 +41,9 @@ var Validation = function () {
     });
 
     /**
-    * Validate text in element
-    */
-    this.Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
+     * Validate text in element
+     */
+    this.Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, function(container, key, comparison, text, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
@@ -92,7 +91,7 @@ var Validation = function () {
     /**
      * Validate value in element
      */
-    this.Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
+    this.Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function(container, key, comparison, text, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
@@ -138,13 +137,11 @@ var Validation = function () {
     });
 
     /**
-    * Validate text length in element
-    */
-    this.Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function (container, key, comparison, count, callback) {
+     * Validate text length in element
+     */
+    this.Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function(container, key, comparison, count, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
-
-        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getText().then(function getTextSuccess(elementText) {
@@ -197,12 +194,10 @@ var Validation = function () {
 
     /**
      * Validate value length in element
-    */
-    this.Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function (container, key, comparison, count, callback) {
+     */
+    this.Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function(container, key, comparison, count, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
-
-        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getAttribute('value').then(function getTextSuccess(elementText) {
@@ -256,7 +251,7 @@ var Validation = function () {
     /**
      * Validate attribute in element
      */
-    this.Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, attributeName, comparison, text, callback) {
+    this.Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, function(container, key, attributeName, comparison, text, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
@@ -302,9 +297,9 @@ var Validation = function () {
     });
 
     /**
-   * Compare two string values, can be used with expressions ${x}
-   */
-    this.Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (text1, comparison, text2, callback) {
+     * Compare two string values, can be used with expressions ${x}
+     */
+    this.Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function(text1, comparison, text2, callback) {
         var _this = this;
         text1 = helperCommon.getTreatedValue(text1);
         text2 = helperCommon.getTreatedValue(text2);
