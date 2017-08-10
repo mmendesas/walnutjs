@@ -144,8 +144,6 @@ var Validation = function () {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
 
-        text = helperCommon.getTreatedValue(text);
-
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getText().then(function getTextSuccess(elementText) {
                 var result;
@@ -201,8 +199,6 @@ var Validation = function () {
     this.Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function (container, key, comparison, count, callback) {
         var _this = this;
         var elementFinder = helperElement.getElementFinder(container, key);
-
-        text = helperCommon.getTreatedValue(text);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
             elementFinder.getAttribute('value').then(function getTextSuccess(elementText) {
