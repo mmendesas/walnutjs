@@ -12,6 +12,10 @@ var config = {
 
     enableDebug: false,
 
+    cryptoAlgorithm: '',
+
+    cryptoKeycode: '',
+
     /**
      * Load the config parameters from protractor.confg.js
      */
@@ -31,6 +35,17 @@ var config = {
             }
             if (ptoConfig.walnutjsOpts.projectName) {
                 this.projectName = ptoConfig.walnutjsOpts.projectName;
+            }
+            if (ptoConfig.walnutjsOpts.projectName) {
+                this.projectName = ptoConfig.walnutjsOpts.projectName;
+            }
+            if (ptoConfig.walnutjsOpts.crypto) {
+                if (ptoConfig.walnutjsOpts.crypto.algorithm) {
+                    this.cryptoAlgorithm = ptoConfig.walnutjsOpts.crypto.algorithm;
+                }
+                if (ptoConfig.walnutjsOpts.crypto.keycode) {
+                    this.cryptoKeycode = ptoConfig.walnutjsOpts.crypto.keycode;
+                }
             }
         }
     }
