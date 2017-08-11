@@ -1,6 +1,7 @@
 'use strict'
 
 var helperVars = require('./variables');
+var helperParams = require('./params');
 var helperString = require('./string');
 var interpreter = require('../expressions/interpreter');
 var context = require('../context');
@@ -27,8 +28,9 @@ var common = {
                 newWord = helperString.removeQuotationMark(newWord);
             }
 
-            //parse vars
+            //parse vars and params
             newWord = helperVars.nutParseVars(newWord);
+            newWord = helperParams.nutParseParams(newWord);
 
             //solve expressions
             newWord = interpreter.resolveExpression(newWord);

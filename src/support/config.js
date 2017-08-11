@@ -8,6 +8,8 @@ var config = {
 
     evidencesPath: '',
 
+    parametersPath: '',
+
     enableDebug: false,
 
     /**
@@ -23,6 +25,9 @@ var config = {
             }
             if (ptoConfig.walnutjsOpts.evidencesPath) {
                 this.evidencesPath = ptoConfig.walnutjsOpts.evidencesPath;
+            }
+            if (ptoConfig.walnutjsOpts.parametersPath) {
+                this.parametersPath = ptoConfig.walnutjsOpts.parametersPath;
             }
             if (ptoConfig.walnutjsOpts.projectName) {
                 this.projectName = ptoConfig.walnutjsOpts.projectName;

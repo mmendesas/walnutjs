@@ -36,11 +36,11 @@ var file = {
     },
 
     readContentFromFile: function (filename) {
-        return fs.readFileSync(filename, 'utf8');        
+        return fs.readFileSync(filename, 'utf8');
     },
 
     writeContentToFile: function (data, filename) {
-        fs.writeFile(filename, data, 'utf8');        
+        fs.writeFile(filename, data, 'utf8');
     }
 }
 
