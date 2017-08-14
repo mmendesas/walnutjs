@@ -36,9 +36,9 @@ var expNow = {
         var mDate = new Date();
 
         if (oper) {
-            var isAdd = (oper[0] === '+');
-            var qtd = parseInt(oper[1]);
-            var operator = oper[2];
+            var isAdd = (oper.charAt(0) === '+');
+            var qtd = parseInt(oper.match(/\d+/)[0]);
+            var operator = oper.slice(-1);
             var newDate;
 
             //format based on operator
@@ -48,11 +48,17 @@ var expNow = {
                     dateFormat = dateFormat.replace('yyyy', helperString.addZero(newDate).toString());
                     break;
 
+                case 'M':
+                    newDate = isAdd ? mDate.getMonth() + qtd : mDate.getMonth() - qtd;
+                    dateFormat = dateFormat.replace('MM', helperString.addZero(newDate));
+                    break;
+
                 case 'd':
                     newDate = isAdd ? mDate.getDate() + qtd : mDate.getDate() - qtd;
                     dateFormat = dateFormat.replace('dd', helperString.addZero(newDate));
                     break;
 
+                case 'H':
                 case 'h':
                     newDate = isAdd ? mDate.getHours() + qtd : mDate.getHours() - qtd;
                     dateFormat = dateFormat.replace('HH', helperString.addZero(newDate).toString());
@@ -72,7 +78,7 @@ var expNow = {
 
         //default format
         dateFormat = dateFormat.replace('dd', mDate.getDate());
-        dateFormat = dateFormat.replace('MM', mDate.getMonth());
+        dateFormat = dateFormat.replace('MM', helperString.addZero(mDate.getMonth()));
         dateFormat = dateFormat.replace('yyyy', mDate.getFullYear());
         dateFormat = dateFormat.replace('HH', helperString.addZero(mDate.getHours()));
         dateFormat = dateFormat.replace('mm', helperString.addZero(mDate.getMinutes()));
