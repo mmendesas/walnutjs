@@ -40,6 +40,23 @@ var formSteps = function () {
         });
     });
 
+     /**
+     * Fills the element in page by javascript value
+     */
+    this.Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, function (container, key, text, callback) {
+        var _this = this;
+        var elementFinder = helperElement.getElementFinder(container, key);
+        text = helperCommon.getTreatedValue(text);
+
+        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
+            browser.executeScript('arguments[0].value=arguments[1]', elementFinder, text).then(function () {
+                _this.delayCallback(callback);
+            });
+        }, function isPresentAndDisplayedError(errorMessage) {
+            _this.handleError(errorMessage, callback);
+        });
+    });
+
     /**
      * Clicks on element in page
      */
