@@ -123,6 +123,16 @@ var CommonSteps = function () {
         browser.manage().addCookie({ name: cname, value: cvalue });
     });
 
+    /**
+     * Executes a simple JS script
+     */
+    this.Given(/^user executes the JS '(.*)'$/, function (code, callback) {
+        var _this = this;
+        browser.executeScript(code).then(function () {
+            _this.delayCallback(callback);
+        });
+    });
+    
 };
 
 module.exports = CommonSteps;
