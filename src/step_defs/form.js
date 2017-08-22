@@ -62,7 +62,6 @@ var formSteps = function () {
      */
     this.When(/^user clicks on '(.+)-(.+)'$/, function (container, key, callback) {
         var _this = this;
-
         var elementFinder = helperElement.getElementFinder(container, key);
 
         _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
@@ -71,6 +70,17 @@ var formSteps = function () {
             });
         }, function isPresentAndDisplayedError(errorMessage) {
             _this.handleError(errorMessage, callback);
+        });
+    });
+
+    /**
+     * Clicks on element in page using pure JS
+     */
+    this.When(/^user clicks by JS on '(.+)-(.+)'$/, function (container, key, callback) {
+        var _this = this;
+        var elementFinder = helperElement.getElementFinder(container, key);
+        browser.executeScript('arguments[0].click();', elementFinder).then(function () {
+            _this.delayCallback(callback);
         });
     });
 
