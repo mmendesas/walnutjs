@@ -4,6 +4,23 @@ var vars = require('./helper/variables');
 var helperString = require('./helper/string');
 var helperCommon = require('./helper/common');
 
+const clearEnvVariable = text => text.replace("${", "").replace("}", "")
+const getEnvVariable = variable => process.env[clearEnvVariable(variable)] || ''
+const setVariables = parameters => {
+    for (entrie of Object.entries(parameters)) {
+        const key = entrie[0];
+        let text = entrie[1];
+
+        let er = /\$\{([^${}]+)\}/g;
+
+        var matchs = text.match(er) || [];
+
+        matchs.forEach(envVariable => text = text.replace(envVariable, getEnvVariable(envVariable)))
+
+        vars.addVariable(key, text)
+    }
+}
+
 var Hooks = function () {
 
     /**
@@ -15,8 +32,7 @@ var Hooks = function () {
         //load UIMap and config file
         config.loadConfigs();
         context.loadUIMap();
-        context.loadParamsFile();                
-
+        setVariables(context.loadParamsFile().parameters)
         //load defaults variables
         vars.addVariable("feature_name", helperString.slugify(feature.getName()));
         vars.addVariable("project_name", helperString.slugify(config.projectName));
