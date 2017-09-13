@@ -3,24 +3,18 @@ var config = require('./config');
 var vars = require('./helper/variables');
 var helperString = require('./helper/string');
 var helperCommon = require('./helper/common');
+var flatten = require('./helper/flattenObject');
 
 const clearEnvVariable = text => text.replace("${", "").replace("}", "")
 const getEnvVariable = variable => process.env[clearEnvVariable(variable)] || ''
 const setVariables = parameters => {
+    parameters = flatten(parameters);
     Object.keys(parameters).forEach((key) => {
         let text = parameters[key];
-        if (parameters[key] instanceof Object) {
-            // recursive iteration for look at child nodes
-            setVariables(parameters[key]);
-        } else {
-            let regExp = /\$\{([^${}]+)\}/g;
-            var matches = text.match(regExp) || [];
-            // add vars if they exist
-            if (matches.length > 0) {
-                matches.forEach(envVariable => text = text.replace(envVariable, getEnvVariable(envVariable)))
-                vars.addVariable(key, text)
-            }
-        }
+        let regExp = /\$\{([^${}]+)\}/g;
+        var matches = text.match(regExp) || [];
+        matches.forEach(envVariable => text = text.replace(envVariable, getEnvVariable(envVariable)));
+        vars.addVariable(key, text);
     });
 }
 
