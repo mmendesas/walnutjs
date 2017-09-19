@@ -1,8 +1,10 @@
 var unirest = require('unirest');
 var helperCommon = require('../../support/helper/common');
+var helperFile = require('../../support/helper/file');
 var helperInfo = require('../../support/helper/info');
 var helperString = require('../../support/helper/string');
 var trest = require('../../support/api/trest');
+var jsonparser = require('../../support/parser/jsonparser');
 var _ = require('lodash');
 
 var reqSteps = function () {
@@ -31,6 +33,7 @@ var reqSteps = function () {
      */
     this.When(/^\(api\) user sends the request$/, function (callback) {
         var _this = this;
+        trest.request.send(trest.requestContent);
         trest.sendRequest(function () {
             _this.delayCallback(callback);
         });
@@ -63,7 +66,7 @@ var reqSteps = function () {
     /**
      * Add body content from resource
      */
-    this.When(/^\(api\) user add the request BODY from the resource '(.*)'$/, function (type, filepath, callback) {
+    this.When(/^\(api\) user add the request BODY from the resource '(.*)'$/, function (filepath, callback) {
         filepath = helperCommon.getTreatedValue(filepath);
         filepath = helperFile.getTreatedPath(filepath);
 
@@ -74,8 +77,7 @@ var reqSteps = function () {
             trest.requestContent = helperFile.readContentFromFile(filepath);
         }
 
-        helperInfo.logDebugFormat("[{0}] Content Pattern used as body:\n{1}\n", [type, trest.requestContent]);
-        trest.request.send(trest.requestContent);
+        helperInfo.logDebugFormat("Content Pattern used as body:\n{0}\n", [trest.requestContent]);
         this.delayCallback(callback);
     });
 
@@ -86,7 +88,24 @@ var reqSteps = function () {
     this.When(/^\(api\) user add the following value to BODY request:$/, function (fileContent, callback) {
         trest.requestContent = fileContent;
         helperInfo.logDebugFormat("Content Pattern used as body:\n{0}\n", [trest.requestContent]);
-        trest.request.send(trest.requestContent);
+        this.delayCallback(callback);
+    });
+
+    /**
+    * User update current json body in request
+    */
+    this.Then(/^\(api\) user fills '(.*)' with '(.*)'$/, function (keyPath, newValue, callback) {
+
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var varName = helperCommon.getTreatedValue(newValue);
+
+        // change field value in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.setValue(keyPath, newValue);
+
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+
         this.delayCallback(callback);
     });
 
