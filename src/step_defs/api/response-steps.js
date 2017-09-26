@@ -1,5 +1,6 @@
 var helperCommon = require("../../support/helper/common");
 var helperInfo = require('../../support/helper/info')
+var helperVars = require('../../support/helper/variables');
 var trest = require('../../support/api/trest');
 
 var jsonparser = require('../../support/parser/jsonparser');
@@ -83,19 +84,19 @@ var resSteps = function () {
     /**
     * Stores the value of the response field found by json path
     */
-   this.Then(/^\(api\) user stores the value '(.*)' from response in variable '(.*)'$/, function(keyPath, name, callback) {
+    this.Then(/^\(api\) user stores the value '(.*)' from response in variable '(.*)'$/, function (keyPath, name, callback) {
 
-       keyPath = helperCommon.getTreatedValue(keyPath);
-       var varName = helperCommon.getTreatedValue(name);
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var varName = helperCommon.getTreatedValue(name);
 
-       //get value from JSON using JSONPATH
-       jsonparser.init(trest.response.body);
-       var varValue = jsonparser.getValue(keyPath)[0];
+        //get value from JSON using JSONPATH
+        jsonparser.init(trest.response.body);
+        var varValue = jsonparser.getValue(keyPath)[0];
 
-       // Add the value to variables
-       helperVars.addVariable(varName, varValue);
-       this.delayCallback(callback);
-   });
+        // Add the value to variables
+        helperVars.addVariable(varName, varValue);
+        this.delayCallback(callback);
+    });
 }
 
 module.exports = resSteps;
