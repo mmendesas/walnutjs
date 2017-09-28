@@ -41,6 +41,15 @@ var commonapi = function () {
         trest.request.header('Content-Type', contentType);
     });
 
+    /**
+     * Define value for Authorization header
+     */
+    this.Given(/^\(api\) user set Authorization header with value '(.*)'$/, function (value){
+
+        trest.request.header('Authorization', value);
+        
+    })
+
 }
 
 module.exports = commonapi;
