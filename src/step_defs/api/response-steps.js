@@ -11,9 +11,11 @@ var resSteps = function () {
     /**
      *  Validates the response status code
      */
-    this.Then(/^\(api\) the response status should be '(\d+)'$/, function (statusCode, callback) {
+    this.Then(/^\(api\) the response (status|statusText) should be '(\d+)'$/, function (type, statusCode, callback) {
         var _this = this;
-        var result = statusCode === trest.response.code.toString();
+        var recStatus = type === 'status' ? trest.response.code.toString() : trest.response.statusMessage;
+
+        var result = statusCode === recStatus;
         if (!result) {
             _this.handleError(trest.response.code.toString(), callback);
         } else {

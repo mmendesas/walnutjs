@@ -92,20 +92,38 @@ var reqSteps = function () {
     });
 
     /**
-    * User update current json body in request
-    */
+     * User update current json body in request
+     */
     this.Then(/^\(api\) user fills '(.*)' with '(.*)'$/, function (keyPath, newValue, callback) {
 
         keyPath = helperCommon.getTreatedValue(keyPath);
-        var varName = helperCommon.getTreatedValue(newValue);
+        var value = helperCommon.getTreatedValue(newValue);
 
         // change field value in json
         jsonparser.init(JSON.parse(trest.requestContent));
-        jsonparser.setValue(keyPath, newValue);
+        jsonparser.setValue(keyPath, value);
 
         // update the value in request content file
         trest.requestContent = JSON.stringify(jsonparser.jsonObj);
 
+        this.delayCallback(callback);
+    });
+
+    /**
+     * User update current json body in request with multiple fields
+     */
+    this.When(/^\(api\) user fills the request body with the following fields:$/, function (data, callback) {
+        _.forEach(data.raw(), function (item) {
+            var keyPath = helperCommon.getTreatedValue(item[0]);
+            var value = helperCommon.getTreatedValue(item[1]);
+
+            // change field value in json
+            jsonparser.init(JSON.parse(trest.requestContent));
+            jsonparser.setValue(keyPath, value);
+
+            // update the value in request content file
+            trest.requestContent = JSON.stringify(jsonparser.jsonObj);            
+        });
         this.delayCallback(callback);
     });
 
