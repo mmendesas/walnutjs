@@ -44,41 +44,41 @@ var expNow = {
             //format based on operator
             switch (operator) {
                 case 'y':
-                    newDate = isAdd ? mDate.getFullYear() + qtd : mDate.getFullYear() - qtd;
-                    dateFormat = dateFormat.replace('yyyy', helperString.addZero(newDate).toString());
+                    isAdd ? mDate.setFullYear(mDate.getFullYear() + qtd) : mDate.setFullYear(mDate.getFullYear() - qtd);
+                    dateFormat = dateFormat.replace('yyyy', mDate.getFullYear().toString());
                     break;
 
                 case 'M':
-                    newDate = isAdd ? mDate.getMonth() + qtd : mDate.getMonth() - qtd;
-                    dateFormat = dateFormat.replace('MM', helperString.addZero(newDate));
+                    isAdd ? mDate.setMonth(mDate.getMonth() + qtd) : mDate.setMonth(mDate.getMonth() - qtd);
+                    dateFormat = dateFormat.replace('MM', helperString.addZero(mDate.getMonth() + 1).toString());
                     break;
 
                 case 'd':
-                    newDate = isAdd ? mDate.getDate() + qtd : mDate.getDate() - qtd;
-                    dateFormat = dateFormat.replace('dd', helperString.addZero(newDate));
+                    isAdd ? mDate.setDate(mDate.getDate() + qtd) : mDate.setDate(mDate.getDate() - qtd);
+                    dateFormat = dateFormat.replace('dd', helperString.addZero(mDate.getDate()).toString());
                     break;
 
                 case 'H':
                 case 'h':
-                    newDate = isAdd ? mDate.getHours() + qtd : mDate.getHours() - qtd;
-                    dateFormat = dateFormat.replace('HH', helperString.addZero(newDate).toString());
+                    isAdd ? mDate.setHours(mDate.getHours() + qtd) : mDate.setHours(mDate.getHours() - qtd);
+                    dateFormat = dateFormat.replace('HH', helperString.addZero(mDate.getHours()).toString());
                     break;
 
                 case 'm':
-                    newDate = isAdd ? mDate.getMinutes() + qtd : mDate.getMinutes() - qtd;
-                    dateFormat = dateFormat.replace('mm', helperString.addZero(newDate));
+                    isAdd ? mDate.setMinutes(mDate.getMinutes() + qtd) : mDate.setMinutes(mDate.getMinutes() - qtd);
+                    dateFormat = dateFormat.replace('mm', helperString.addZero(mDate.getMinutes()));
                     break;
 
                 case 's':
-                    newDate = isAdd ? mDate.getSeconds() + qtd : mDate.getSeconds() - qtd;
-                    dateFormat = dateFormat.replace('ss', helperString.addZero(newDate));
+                    isAdd ? mDate.setSeconds(mDate.getSeconds() + qtd) : mDate(mDate.getSeconds() - qtd);
+                    dateFormat = dateFormat.replace('ss', helperString.addZero(mDate.getSeconds()));
                     break;
             }
         }
 
         //default format
         dateFormat = dateFormat.replace('dd', mDate.getDate());
-        dateFormat = dateFormat.replace('MM', helperString.addZero(mDate.getMonth()));
+        dateFormat = dateFormat.replace('MM', helperString.addZero(mDate.getMonth() + 1));
         dateFormat = dateFormat.replace('yyyy', mDate.getFullYear());
         dateFormat = dateFormat.replace('HH', helperString.addZero(mDate.getHours()));
         dateFormat = dateFormat.replace('mm', helperString.addZero(mDate.getMinutes()));
