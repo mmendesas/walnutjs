@@ -110,6 +110,40 @@ var reqSteps = function () {
     });
 
     /**
+     * User update current json body in request
+     */
+    this.Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type$/, function (keyPath, newValue, type, callback) {
+
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var value = helperCommon.getTreatedValue(newValue);
+        var newValue;
+
+        switch (type) {
+            case 'INT':
+                newValue = parseInt(value);
+                break;
+            case 'DOUBLE':
+                newValue = parseFloat(value);
+                break;
+            case 'BOOL':
+                newValue = Boolean(value);
+                break;            
+            default:
+                newValue = value;
+                break;
+        }
+
+        // change field value in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.setValue(keyPath, newValue);
+
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+
+        this.delayCallback(callback);
+    });
+
+    /**
      * User update current json body in request with multiple fields
      */
     this.When(/^\(api\) user fills the request body with the following fields:$/, function (data, callback) {
@@ -122,7 +156,7 @@ var reqSteps = function () {
             jsonparser.setValue(keyPath, value);
 
             // update the value in request content file
-            trest.requestContent = JSON.stringify(jsonparser.jsonObj);            
+            trest.requestContent = JSON.stringify(jsonparser.jsonObj);
         });
         this.delayCallback(callback);
     });
