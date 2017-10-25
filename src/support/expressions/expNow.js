@@ -39,7 +39,6 @@ var expNow = {
             var isAdd = (oper.charAt(0) === '+');
             var qtd = parseInt(oper.match(/\d+/)[0]);
             var operator = oper.slice(-1);
-            var newDate;
 
             //format based on operator
             switch (operator) {
