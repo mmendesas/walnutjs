@@ -65,6 +65,20 @@ describe('Expressions Tests', () => {
         expect(result).toContain('.');
     });
 
+    it('should be validate the expression CNPJ', () => {
+        var result = interpreter.resolveExpression('cnpj()');
+        expect(result).toContain('0001');
+        expect(result.length).toEqual(14);
+    });
+
+    it('should be validate the expression CNPJ with format', () => {
+        var result = interpreter.resolveExpression('cnpj(f)');
+        expect(result.length).toEqual(18);
+        expect(result).toContain('/0001');
+        expect(result).toContain('-');
+        expect(result).toContain('.');
+    });
+
     it('should be validate the expression TONUMBER with double', () => {
         var result = interpreter.resolveExpression('tonumber(R$16,70|d:2|BRL)');
         expect(result).toEqual('16.70');
