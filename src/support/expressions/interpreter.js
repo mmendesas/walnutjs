@@ -4,13 +4,14 @@ var helperString = require('../helper/string');
 var expNow = require('./expNow');
 var expConcatenate = require('./expConcatenate');
 var expCPF = require('./expCPF');
+var expCNPJ = require('./expCNPJ');
 var expMath = require('./expMath');
 var expToNumber = require('./expToNumber');
 var expRandom = require('./expRandom');
 
 var mInterpreter = {
 
-    expressionList: ['now', 'cpf', 'concatenate', 'tonumber', 'math', 'random'],
+    expressionList: ['now', 'cpf', 'cnpj', 'concatenate', 'tonumber', 'math', 'random'],
     melist: null,
     count: null,
 
@@ -51,6 +52,8 @@ var mInterpreter = {
                 return expConcatenate;
             case 'cpf':
                 return expCPF;
+            case 'cnpj':
+                return expCNPJ;
             case 'math':
                 return expMath;
             case 'tonumber':
