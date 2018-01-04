@@ -9,7 +9,6 @@ var pageSteps = function () {
      */
     this.Given(/^user navigates to '(.*)'$/, function (url) {
         var gotourl = helperCommon.getTreatedValue(url);
-        browser.driver.manage().window().maximize();
         return browser.get(gotourl);
     });
 
@@ -25,7 +24,6 @@ var pageSteps = function () {
         var server = gotourl.substring(gotourl.indexOf("//") + 2);
         var urlAuth = `http://${myuser}:${mypass}@${server}`;
 
-        browser.driver.manage().window().maximize();
         return browser.get(urlAuth);
     });
 
