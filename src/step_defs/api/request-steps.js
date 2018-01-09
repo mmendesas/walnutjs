@@ -127,7 +127,7 @@ var reqSteps = function () {
                 break;
             case 'BOOL':
                 newValue = Boolean(value);
-                break;            
+                break;
             default:
                 newValue = value;
                 break;
@@ -158,6 +158,23 @@ var reqSteps = function () {
             // update the value in request content file
             trest.requestContent = JSON.stringify(jsonparser.jsonObj);
         });
+        this.delayCallback(callback);
+    });
+
+    /**
+    * User delete key from the current json body in request
+    */
+    this.Then(/^\(api\) user deletes key '(.*)'$/, function (keyPath, callback) {
+
+        keyPath = helperCommon.getTreatedValue(keyPath);
+
+        // deçete the key in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.deleteKey(keyPath);
+
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+
         this.delayCallback(callback);
     });
 
