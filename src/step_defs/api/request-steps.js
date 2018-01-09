@@ -168,7 +168,7 @@ var reqSteps = function () {
 
         keyPath = helperCommon.getTreatedValue(keyPath);
 
-        // deçete the key in json
+        // delete the key in json
         jsonparser.init(JSON.parse(trest.requestContent));
         jsonparser.deleteKey(keyPath);
 
