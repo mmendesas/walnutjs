@@ -23,6 +23,13 @@ var jsonparser = {
     */
     setValue: function (path, value) {
         jp.value(this.jsonObj, path, value);
+    },
+
+    /**
+    * Delete the Key (find by jsonpath)
+    */
+    deleteKey: function (path) {
+        jp.apply(this.jsonObj, path, function () { delete key });
     }
 }
 
