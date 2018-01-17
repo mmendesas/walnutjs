@@ -144,6 +144,37 @@ var reqSteps = function () {
     });
 
     /**
+     * User update string with comma to array current json body in request
+     */
+    this.Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, function (keyPath, newValue, type, callback) {
+
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var value = helperCommon.getTreatedValue(newValue);
+        var newValue;
+
+        switch (type) {
+            case 'INT':
+                newValue = value.split(',').map(Number);
+                break;
+            case 'DOUBLE':
+                newValue = value.split(',').map(function(value){return parseFloat(value)});
+                break;
+            default:
+                newValue = value.split(',');
+                break;
+        }
+
+        // change field value in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.setValue(keyPath, newValue);
+
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+
+        this.delayCallback(callback);
+    });
+
+    /**
      * User update current json body in request with multiple fields
      */
     this.When(/^\(api\) user fills the request body with the following fields:$/, function (data, callback) {
