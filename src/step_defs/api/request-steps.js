@@ -144,6 +144,41 @@ var reqSteps = function () {
     });
 
     /**
+     * User update string from variable inside json body to request
+     */
+    this.Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) variable$/, function (keyPath, newValue,type,callback) {
+        
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var value = helperVars.getVariable(newValue);    
+
+        switch (type) {
+            case 'INT':
+                value = parseInt(value);
+                break;
+            case 'DOUBLE':
+                value = parseFloat(value);
+                break;
+            case 'BOOL':
+                value = Boolean(value);
+                break;            
+            default:
+                value = value.toString();
+                break;
+        }
+
+        // change field value in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.setValue(keyPath, value);
+                
+        
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+        
+        this.delayCallback(callback);
+
+        });
+        
+    /**
      * User update string with comma to array current json body in request
      */
     this.Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, function (keyPath, newValue, type, callback) {
