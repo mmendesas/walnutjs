@@ -33,6 +33,9 @@ var config = {
             if (ptoConfig.walnutjsOpts.parametersPath) {
                 this.parametersPath = ptoConfig.walnutjsOpts.parametersPath;
             }
+            if (ptoConfig.walnutjsOpts.locatorsPath) {
+                this.locatorsPath = ptoConfig.walnutjsOpts.locatorsPath;
+            }
             if (ptoConfig.walnutjsOpts.projectName) {
                 this.projectName = ptoConfig.walnutjsOpts.projectName;
             }
