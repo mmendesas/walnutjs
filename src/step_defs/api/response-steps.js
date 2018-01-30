@@ -84,7 +84,7 @@ var resSteps = function () {
     });
 
     // Validates a value in specific node in response header
-    this.Then(/^\(api\) the JSON header response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (header, comparissonType, expectedValue, callback) {
+    this.Then(/^\(api\) the header response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (header, comparissonType, expectedValue, callback) {
         var _this = this;
 
         //Treat the parameters informations
