@@ -54,7 +54,7 @@ var context = {
      * Load the locators file
      */
     loadUIMap: function () {
-        const folder = './test/locators';
+        const folder = config.locatorsPath;
         let content = { containers: [] };
 
         fs.readdirSync(folder).forEach(file => {
