@@ -76,7 +76,7 @@ var expNow = {
         }
 
         //default format
-        dateFormat = dateFormat.replace('dd', mDate.getDate());
+        dateFormat = dateFormat.replace('dd', helperString.addZero(mDate.getDate()));
         dateFormat = dateFormat.replace('MM', helperString.addZero(mDate.getMonth() + 1));
         dateFormat = dateFormat.replace('yyyy', mDate.getFullYear());
         dateFormat = dateFormat.replace('HH', helperString.addZero(mDate.getHours()));
