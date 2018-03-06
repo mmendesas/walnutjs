@@ -126,7 +126,7 @@ var reqSteps = function () {
                 newValue = parseFloat(value);
                 break;
             case 'BOOL':
-                newValue = Boolean(value);
+                newValue = (value.toLowerCase() == 'true');
                 break;
             default:
                 newValue = value;
