@@ -74,6 +74,14 @@ var common = {
                 comparisson.result = current !== received;
                 comparisson.msg = helperString.formatString('Current value [{0}] is equals to [{1}]', [current, received]);
                 break;
+            case 'whichstartswith':
+                comparisson.result = current.startsWith(received);
+                comparisson.msg = helperString.formatString('Current value [{0}] does not start with [{1}]', [current, received]);
+                break;
+            case 'whichendswith':
+                comparisson.result = current.endsWith(received);
+                comparisson.msg = helperString.formatString('Current value [{0}] does not end with [{1}]', [current, received]);
+                break;
 
             default:
                 break;
