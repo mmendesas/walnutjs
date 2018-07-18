@@ -144,6 +144,24 @@ var reqSteps = function () {
     });
 
     /**
+     * User update current json body in request with null type
+     */
+    this.Then(/^\(api\) user fills '(.*)' using NULL type$/, function (keyPath, callback) {
+
+        keyPath = helperCommon.getTreatedValue(keyPath);
+        var newValue = null;
+
+        // change field value in json
+        jsonparser.init(JSON.parse(trest.requestContent));
+        jsonparser.setValue(keyPath, newValue);
+
+        // update the value in request content file
+        trest.requestContent = JSON.stringify(jsonparser.jsonObj);
+
+        this.delayCallback(callback);
+    });
+
+    /**
      * User update string with comma to array current json body in request
      */
     this.Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, function (keyPath, newValue, type, callback) {
@@ -173,6 +191,7 @@ var reqSteps = function () {
 
         this.delayCallback(callback);
     });
+    
 
     /**
      * User update current json body in request with multiple fields
