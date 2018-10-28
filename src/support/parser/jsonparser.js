@@ -1,3 +1,5 @@
+'use strict';
+
 var jp = require('jsonpath');
 
 var jsonparser = {
@@ -29,7 +31,15 @@ var jsonparser = {
     * Delete the Key (find by jsonpath)
     */
     deleteKey: function (path) {
-        jp.apply(this.jsonObj, path, function () { delete key });
+        let parent = jp.parent(this.jsonObj, path);
+        const paths = jp.paths(this.jsonObj, path);
+        const item = paths[0].pop();
+
+        if (Array.isArray(parent)) {
+            parent.splice(item, 1);
+        } else {
+            delete parent[item];
+        }
     }
 }
 
