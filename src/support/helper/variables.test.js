@@ -2,17 +2,39 @@ var helperVars = require('./variables');
 
 describe('Helper Variables Tests', () => {
 
-    it('should be create simple variable', () => {
+    beforeAll(() => {
         helperVars.addVariable("myVar", "House");
-        var teste = helperVars.getVariable("myVar");
-        expect(teste).toEqual("House");
+        helperVars.addVariable("otherVar", "New Orleans");
+    });
+
+    it('should be create simple variable', () => {
+        var result = helperVars.getVariable("myVar");
+        expect(result).toEqual("House");
+    });
+
+    it('should read an invalida var', () => {
+        var result = helperVars.getVariable("grs");
+        expect(result).toEqual("unknown-var");
     });
 
     it('should be create simple variable and read with expression', () => {
-        helperVars.addVariable("myVar", "House");
-        helperVars.addVariable("otherVar", "New Orleans");
-        var teste = helperVars.nutParseVars("There is a vars.myVar in vars.otherVar");
-        expect(teste).toEqual("There is a House in New Orleans");
+        var result = helperVars.nutParseVars("There is a vars.myVar in vars.otherVar");
+        expect(result).toEqual("There is a House in New Orleans");
+    });
+
+    it('should read multiple vars in the same sentence', () => {
+        var result = helperVars.nutParseVars("There is a [vars.myVar] in [vars.otherVar]");
+        expect(result).toEqual("There is a [House] in [New Orleans]");
+    });
+
+    it('should read multiple invalid vars in the same sentence', () => {
+        var result = helperVars.nutParseVars("There is a [vars.test1] in [vars.test2]");
+        expect(result).toEqual("There is a [unknown-var] in [unknown-var]");
+    });
+
+    it('should return all variables', () => {
+        var result = helperVars.getAllVariables();
+        expect(result).toEqual({ myVar: "House", otherVar: "New Orleans" });
     });
 
 });

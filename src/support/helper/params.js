@@ -10,7 +10,8 @@ var Parameters = {
     nutParseParams(text) {
         if (config.parametersPath !== '') {
             while (text.includes('params.')) {
-                var list = text.match(/(params.[^,{}]+)/g);
+                // var list = text.match(/(params.[^,{}]+)/g);
+                var list = text.match(/params.\[(.*?)\]/g);
 
                 list.forEach(function (item) {
                     const keypath = item.substring(item.indexOf('[') + 1, item.length - 1);
