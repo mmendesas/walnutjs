@@ -104,11 +104,6 @@ describe('Expressions Tests', () => {
         expect(result).toEqual('1678');
     });
 
-    it('should be validate the expression MATH with integer', () => {
-        var result = interpreter.resolveExpression('math(5|add:d|3)');
-        expect(result).toEqual('8');
-    });
-
     it('should be validate the expression RANDOM with letters', () => {
         var result = interpreter.resolveExpression('random(l|6)');
         expect(result.length).toEqual(6);
