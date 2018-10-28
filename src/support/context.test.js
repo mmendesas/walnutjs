@@ -1,4 +1,4 @@
-var context = require('../src/support/context');
+var context = require('./context');
 
 describe('Context Tests', () => {
 

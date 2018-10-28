@@ -1,6 +1,6 @@
-var helperString = require('../src/support/helper/string');
-var interpreter = require('../src/support/expressions/interpreter');
-var helperCommon = require('../src/support/helper/common');
+var helperString = require('../helper/string');
+var interpreter = require('./interpreter');
+var helperCommon = require('../helper/common');
 
 describe('Expressions Tests', () => {
 

@@ -1,5 +1,5 @@
-var interpreter = require('../src/support/expressions/interpreter');
-var helperString = require('../src/support/helper/string');
+var interpreter = require('./interpreter');
+var helperString = require('../helper/string');
 
 describe('Interpreter Tests', () => {
 
