@@ -39,6 +39,7 @@
     "xpath": "0.0.24"
   },
   "devDependencies": {
+    "goodparts": "^1.2.1",
     "jest": "^20.0.4"
   },
   "jest": {

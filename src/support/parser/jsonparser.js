@@ -31,7 +31,7 @@ var jsonparser = {
     * Delete the Key (find by jsonpath)
     */
     deleteKey: function (path) {
-        let parent = jp.parent(this.jsonObj, path);
+        const parent = jp.parent(this.jsonObj, path);
         const paths = jp.paths(this.jsonObj, path);
         const item = paths[0].pop();
 
