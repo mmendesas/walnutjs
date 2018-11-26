@@ -27,7 +27,7 @@ var Hooks = function () {
         context.setCurrentFeature(feature);
 
         //load UIMap and config file
-        config.loadConfigs();
+        config.loadConfigs(null);
         context.loadUIMap();
         setVariables(context.loadParamsFile().parameters)
         //load defaults variables

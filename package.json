@@ -1,7 +1,7 @@
 {
   "name": "walnutjs",
   "version": "1.0.49",
-  "description": "Walnut Framework for angular.js based applications",
+  "description": "Walnut Framework - BDD Automated Tests for ES6 based applications",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -16,6 +16,8 @@
     "cucumber",
     "angular",
     "angularjs",
+    "reactjs",
+    "vuejs",
     "walnut",
     "walnutjs",
     "behaviour driven development",
