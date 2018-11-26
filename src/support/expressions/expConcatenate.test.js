@@ -2,6 +2,11 @@ const interpreter = require('./interpreter');
 const helperCommon = require('../helper/common');
 
 describe('CONCATENATE Tests', () => {
+    it('should be process invalid expression CONCATENATE', () => {
+        var teste = interpreter.resolveExpression('concatenate(asdf)');
+        expect(teste).toEqual('concatenate(asdf)');
+    });
+
     it('should be validate the expression CONCATENATE', () => {
         var teste = interpreter.resolveExpression('concatenate(marcio|mendes)');
         expect(teste).toEqual('marciomendes');

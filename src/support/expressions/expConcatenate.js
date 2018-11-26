@@ -13,7 +13,7 @@ var expConcatenate = {
       sb.push('[1] - concatenate(arg1|arg2)      - concatenate(teste|451)      - teste451');
       sb.push('[2] - concatenate(arg1|arg2|argN) - concatenate(teste|451|_abc) - teste451_abc');
 
-      throw sb.join('\n');
+      throw new Error(sb.join('\n'));
     }
 
     for (var i = 0; i < parts.length; i++) {

@@ -8,6 +8,7 @@ var expCNPJ = require('./expCNPJ');
 var expMath = require('./expMath');
 var expToNumber = require('./expToNumber');
 var expRandom = require('./expRandom');
+var dev = process.env.NODE_ENV !== 'production';
 
 var mInterpreter = {
 
@@ -31,9 +32,10 @@ var mInterpreter = {
         this.parseExpressionChain(chainExpression);
         chainExpression = this.resolveExpressionChain(chainExpression);
       } catch (err) {
-        var res = helperString.formatString('Error in Expression: {0}. You need to inform correct arguments, try this: \n {1}', [expAux, err.message]);
-
-        console.log('CAGOU >', res);
+        var res = helperString.formatString('Error in Expression: {0}. You need to inform correct arguments, try this: \n {1}', [expAux, err.message]);        
+        if(!dev){
+          console.error(res);
+        }        
       }
       break;
     }
