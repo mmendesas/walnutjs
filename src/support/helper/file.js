@@ -24,8 +24,8 @@ var file = {
 
   getTreatedPath: function (filepath) {
     if (filepath.startsWith('{default}') || filepath == '') {
-      filepath = filepath.replace('{default}', '');
-      filepath = process.cwd() + '/test/' + filepath;
+      filepath = filepath.replace('{default}', '');      
+      filepath = path.join(process.cwd(), "test", filepath );
     } else {
       filepath = path.resolve(filepath);
     }
@@ -45,7 +45,7 @@ var file = {
   },
 
   writeContentToFile: function (data, filename) {
-    fs.writeFile(filename, data, 'utf8');
+    fs.writeFileSync(filename, data, 'utf8');
   }
 };
 
