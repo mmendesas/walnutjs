@@ -1,0 +1,17 @@
+{
+    "containers":[
+        {
+            "name": "GoogleHome",
+            "locators":[
+                { "key": "SearchInput", "type": "name", "value": "q" },
+                { "key": "SearchButton", "type": "p:xpath", "value": "//input[@value='{0}']" }
+            ]            
+        },
+        {
+            "name": "GoogleResult",
+            "locators":[
+                { "key": "SiteLink", "type": "xpath", "value": "//a[text()='Led Zeppelin - Wikipedia']" }
+            ]            
+        }
+    ]
+}

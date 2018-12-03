@@ -5,7 +5,7 @@ const context = require('../context');
 describe('Params Tests', () => {
 
     beforeAll(() => {
-        config.parametersPath = "../../../tests/samples/params.json";
+        config.parametersPath = "../../../test/samples/params.json";
         context.parameters = require(config.parametersPath);
     });
 

@@ -1,5 +1,5 @@
 const jsonparser = require('./jsonparser');
-const store = require('../../../tests/samples/store.json');
+const store = require('../../../test/samples/store.json');
 
 describe('[JSONPARSER] Unit tests', () => {
 

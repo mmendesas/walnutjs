@@ -5,11 +5,11 @@ const config = {
 
   enableDebug: false,
 
-  evidencesPath: '/test/evidences',
+  evidencesPath: './test/evidences',
 
-  parametersPath: '/test/params',
+  parametersPath: './test/params',
 
-  locatorsPath: '/test/locators',
+  locatorsPath: './test/locators',
 
   cryptoAlgorithm: '',
 
