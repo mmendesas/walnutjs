@@ -24,8 +24,8 @@ var file = {
 
   getTreatedPath: function (filepath) {
     if (filepath.startsWith('{default}') || filepath == '') {
-      filepath = filepath.replace('{default}', '');      
-      filepath = path.join(process.cwd(), "test", filepath );
+      filepath = filepath.replace('{default}', '');
+      filepath = path.join(process.cwd(), 'test', filepath);
     } else {
       filepath = path.resolve(filepath);
     }

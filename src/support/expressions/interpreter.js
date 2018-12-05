@@ -32,10 +32,11 @@ var mInterpreter = {
         this.parseExpressionChain(chainExpression);
         chainExpression = this.resolveExpressionChain(chainExpression);
       } catch (err) {
-        var res = helperString.formatString('Error in Expression: {0}. You need to inform correct arguments, try this: \n {1}', [expAux, err.message]);        
-        if(!dev){
+        var res = helperString.formatString('Error in Expression: {0}. You need to inform correct arguments, try this: \n {1}', [expAux, err.message]);
+
+        if (!dev) {
           console.error(res);
-        }        
+        }
       }
       break;
     }
