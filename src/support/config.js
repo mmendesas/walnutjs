@@ -1,57 +1,41 @@
-var ptoConfig = require(process.cwd() + '/protractor.conf.js').config;
+const config = {
+  projectName: 'walnutjs-sample',
 
-var config = {
+  waitElementTimeout: 10000,
 
-    projectName: 'qaaut-test',
+  enableDebug: false,
 
-    waitElementTimeout: 10000,
+  evidencesPath: './test/evidences',
 
-    evidencesPath: '',
+  parametersPath: './test/params',
 
-    parametersPath: '',
+  locatorsPath: './test/locators',
 
-    enableDebug: false,
+  cryptoAlgorithm: '',
 
-    cryptoAlgorithm: '',
+  cryptoKeycode: '',
 
-    cryptoKeycode: '',
+  /**
+   * Load the config parameters from protractor.confg.js
+   */
+  loadConfigs: function(config) {
+    const ptoConfig = config !== null ? config : require(process.cwd() + '/protractor.conf.js').config;
 
-    /**
-     * Load the config parameters from protractor.confg.js
-     */
-    loadConfigs: function () {
-        if (ptoConfig.walnutjsOpts) {
+    if (ptoConfig.walnutjsOpts) {
+      this.projectName = ptoConfig.walnutjsOpts.projectName || 'walnutjs-sample';
+      this.enableDebug = ptoConfig.walnutjsOpts.enableDebugLog || false;
+      this.waitElementTimeout = ptoConfig.walnutjsOpts.waitElementTimeout || 10000;
+      this.evidencesPath = ptoConfig.walnutjsOpts.evidencesPath || '/test/evidences';
+      this.parametersPath = ptoConfig.walnutjsOpts.parametersPath || '/test/params';
+      this.locatorsPath = ptoConfig.walnutjsOpts.locatorsPath || '/test/locators';
 
-            this.enableDebug = ptoConfig.walnutjsOpts.enableDebugLog;
-
-            if (ptoConfig.walnutjsOpts.waitElementTimeout) {
-                this.waitElementTimeout = ptoConfig.walnutjsOpts.waitElementTimeout;
-            }
-            if (ptoConfig.walnutjsOpts.evidencesPath) {
-                this.evidencesPath = ptoConfig.walnutjsOpts.evidencesPath;
-            }
-            if (ptoConfig.walnutjsOpts.parametersPath) {
-                this.parametersPath = ptoConfig.walnutjsOpts.parametersPath;
-            }
-            if (ptoConfig.walnutjsOpts.locatorsPath) {
-                this.locatorsPath = ptoConfig.walnutjsOpts.locatorsPath;
-            }
-            if (ptoConfig.walnutjsOpts.projectName) {
-                this.projectName = ptoConfig.walnutjsOpts.projectName;
-            }
-            if (ptoConfig.walnutjsOpts.projectName) {
-                this.projectName = ptoConfig.walnutjsOpts.projectName;
-            }
-            if (ptoConfig.walnutjsOpts.crypto) {
-                if (ptoConfig.walnutjsOpts.crypto.algorithm) {
-                    this.cryptoAlgorithm = ptoConfig.walnutjsOpts.crypto.algorithm;
-                }
-                if (ptoConfig.walnutjsOpts.crypto.keycode) {
-                    this.cryptoKeycode = ptoConfig.walnutjsOpts.crypto.keycode;
-                }
-            }
-        }
+      if (ptoConfig.walnutjsOpts.crypto) {
+        const { algorithm, keycode } = ptoConfig.walnutjsOpts.crypto;
+        this.cryptoAlgorithm = algorithm;
+        this.cryptoKeycode = keycode;
+      }
     }
+  }
 };
 
 module.exports = config;

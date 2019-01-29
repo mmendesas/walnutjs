@@ -1,5 +1,5 @@
-var interpreter = require('../src/support/expressions/interpreter');
-var helperString = require('../src/support/helper/string');
+const interpreter = require('./interpreter');
+const helperString = require('../helper/string');
 
 describe('Interpreter Tests', () => {
 
@@ -21,6 +21,18 @@ describe('Interpreter Tests', () => {
         expect(list[0]).toEqual('now');
         expect(list[1]).toEqual('HHmmss|+2h');
         expect(list[2]).toEqual('now(HHmmss|+2h)');
+    });
+
+    it('should be validate the CHAINED expression', () => {
+        var date = new Date();
+        var hour = helperString.addZero(date.getHours());
+        var min = helperString.addZero(date.getMinutes());
+        var sec = helperString.addZero(date.getSeconds());
+
+        var expected = helperString.formatString('TIME NOW {0}:{1}:{2}', [hour, min, sec]);
+        var received = interpreter.resolveExpression('concatenate(TIME NOW |now(HH:mm:ss))');
+
+        expect(expected).toEqual(received);
     });
 
 });

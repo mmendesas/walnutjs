@@ -1,0 +1,30 @@
+{
+    "store": {
+        "book": [
+            {
+                "author": "Herman Melville",
+                "title": "Moby Dick",
+                "price": 8.99
+            },
+            {
+                "author": "J. R. R. Tolkien",
+                "title": "The Lord of the Rings",
+                "price": 22.99
+            }
+        ],
+        "bicycle": {
+            "color": "red",
+            "price": 19.95,
+            "strong": true,
+            "otherColors": [
+                "red",
+                "green",
+                "blue"
+            ],
+            "materials": {
+                "frame": "iron",
+                "wheels": "aluminium"
+            }
+        }
+    }
+}

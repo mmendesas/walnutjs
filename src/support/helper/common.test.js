@@ -1,5 +1,5 @@
-var helperCommon = require('../src/support/helper/common');
-var helperVars = require('../src/support/helper/variables');
+var helperCommon = require('./common');
+var helperVars = require('./variables');
 
 describe('Common Helper Tests', () => {
 
@@ -15,7 +15,6 @@ describe('Common Helper Tests', () => {
     });
 
     it('should be process compare with all combinations', () => {
-
         var data =
             [
                 // ['Current', 'Comparisson', 'Value', 'Result', 'Return MSG'],
@@ -34,7 +33,6 @@ describe('Common Helper Tests', () => {
             expect(comparisson.result).toEqual(data[i][3]);
             expect(comparisson.msg).toEqual(data[i][4]);
         }
-
     });
 
 });
