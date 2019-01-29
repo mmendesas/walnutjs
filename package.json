@@ -44,6 +44,8 @@
     "jest": "^20.0.4"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
