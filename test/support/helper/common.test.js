@@ -1,5 +1,5 @@
-var helperCommon = require('./common');
-var helperVars = require('./variables');
+var helperCommon = require('../../../src/support/helper/common');
+var helperVars = require('../../../src/support/helper/variables');
 
 describe('Common Helper Tests', () => {
 

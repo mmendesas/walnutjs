@@ -1,5 +1,5 @@
-var context = require('../context');
-var helperElement = require('./element');
+var context = require('../../../src/support/context');
+var helperElement = require('../../../src/support/helper/element');
 
 describe('Helper Element Tests', () => {
   beforeEach(function() {

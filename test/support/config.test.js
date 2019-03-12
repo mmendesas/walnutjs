@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('../../src/support/config');
 
 const allParams = {
   walnutjsOpts: {

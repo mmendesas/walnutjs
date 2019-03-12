@@ -1,11 +1,11 @@
-const helperParams = require('./params');
-const config = require('../config');
-const context = require('../context');
+const helperParams = require('../../../src/support/helper/params');
+const config = require('../../../src/support/config');
+const context = require('../../../src/support/context');
 
 describe('Params Tests', () => {
 
     beforeAll(() => {
-        config.parametersPath = "../../../test/samples/params.json";
+        config.parametersPath = "../../samples/params.json";
         context.parameters = require(config.parametersPath);
     });
 

@@ -1,4 +1,4 @@
-const interpreter = require('./interpreter');
+const interpreter = require('../../../src/support/expressions/interpreter');
 
 describe('TO NUMBER Tests', () => {
 

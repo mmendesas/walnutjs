@@ -1,4 +1,4 @@
-const file = require('./file');
+const file = require('../../../src/support/helper/file');
 const fs = require('fs');
 
 describe('FILE Tests', () => {

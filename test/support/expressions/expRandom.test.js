@@ -1,4 +1,4 @@
-const interpreter = require('./interpreter');
+const interpreter = require('../../../src/support/expressions/interpreter');
 
 describe('RANDOM Tests', () => {
     it('should be validate the expression RANDOM with letters', () => {

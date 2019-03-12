@@ -1,4 +1,4 @@
-var context = require('./context');
+var context = require('../../src/support/context');
 
 describe('Context Tests', () => {
   it('should set current feature', () => {

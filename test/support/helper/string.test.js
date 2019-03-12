@@ -1,5 +1,4 @@
-var helperString = require('./string');
-var helperVars = require('./variables');
+var helperString = require('../../../src/support/helper/string');
 
 describe('Helper String Tests', () => {
 

@@ -1,4 +1,4 @@
-var helperVars = require('./variables');
+var helperVars = require('../../../src/support/helper/variables');
 
 describe('Helper Variables Tests', () => {
 

@@ -1,5 +1,5 @@
-const interpreter = require('./interpreter');
-const helperCommon = require('../helper/common');
+const interpreter = require('../../../src/support/expressions/interpreter');
+const helperCommon = require('../../../src/support/helper/common');
 
 describe('CONCATENATE Tests', () => {
     it('should be process invalid expression CONCATENATE', () => {

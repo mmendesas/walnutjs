@@ -1,5 +1,5 @@
-const helperString = require('../helper/string');
-const interpreter = require('./interpreter');
+const helperString = require('../../../src/support/helper/string');
+const interpreter = require('../../../src/support/expressions/interpreter');
 
 describe('NOW Tests', () => {
     it('should be validate the expression NOW', () => {
