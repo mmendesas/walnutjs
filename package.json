@@ -1,6 +1,6 @@
 {
   "name": "walnutjs",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "Walnut Framework - BDD Automated Tests for ES6 based applications",
   "main": "index.js",
   "scripts": {
