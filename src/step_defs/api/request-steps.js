@@ -91,6 +91,8 @@ var reqSteps = function () {
      * Add body as string in current request
      */
   this.When(/^\(api\) user add the following value to BODY request:$/, function (fileContent, callback) {
+    fileContent = helperCommon.getTreatedValue(fileContent);
+    
     trest.requestContent = fileContent;
     helperInfo.logDebugFormat('Content Pattern used as body:\n{0}\n', [trest.requestContent]);
     this.delayCallback(callback);
