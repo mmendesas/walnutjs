@@ -3,7 +3,7 @@
 **walnutjs** is a simple collection of generic steps for interact with web elements in _**es6**_ sites.
 You only need to write some feature files using the **Gherkin** syntax and plan your tests with **BDD (Behavior Driven Development)** pattern.
 
-Please see [wiki](https://github.com/sednemm/walnutjs/wiki) for more details.
+Please see our wiki **[DOC](https://github.com/sednemm/walnutjs/wiki)** for more details.
 
 
 [![Npm version](https://img.shields.io/npm/v/walnutjs.svg?style=flat-square)](https://www.npmjs.com/package/walnutjs)
@@ -17,7 +17,7 @@ Please see [wiki](https://github.com/sednemm/walnutjs/wiki) for more details.
 ## Getting Started
 These instructions will give you a sample feature file to show you how easy is to make your own tests
 
-### Prerequisistes
+### Prerequisites
 Before continue, check that you have completed the following requirements:
 * [**nodejs**](https://nodejs.org/en/) - A JavaScript runtime
 * [**protractor**](https://www.protractortest.org/#/) - end-to-end test framework
