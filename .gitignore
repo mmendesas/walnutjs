@@ -12,3 +12,6 @@ node_modules/
 
 # package.json Lock file
 package-lock.json
+
+# ignore reports
+reports
