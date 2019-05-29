@@ -7,12 +7,24 @@ const { version, description } = require('../package.json');
 
 // set default configuration
 const config = {
-  steps: './steps',
-  browser: 'chrome',
-  browserTeardownStrategy: 'always',
-  reports: './reports',
-  timeout: 15000,
-  features: '/Users/mmendesas/Documents/mdocs/walnutjs/example/features/sample.feature'
+  cucumber: {
+    steps: './steps',
+    timeout: 15000,
+    features: '/Users/mmendesas/Documents/mdocs/walnutjs/example/features/sample.feature',
+  },
+  selenium: {
+    browser: 'chrome',
+    browserTeardownStrategy: 'always',
+    remoteURL: 'http://localhost:4444/wd/hub',
+    caps: {
+      browserName: 'chrome',
+      chromeOptions: {
+        // args: ['--headless', '--disable-gpu'] //headless
+        args: ['start-maximized', 'disable-extensions']
+      },
+    }
+  },
+  reports: './reports'
 };
 
 // start the CLI options
@@ -30,9 +42,12 @@ if (fs.isFileSync(configPath)) {
   config = Object.assign(config, require(configPath));
 }
 
+// set config globally
+global['config'] = config;
+
 // browser name globally
-global.browser = config.browser;
-global.browserTeardownStrategy = config.browserTeardownStrategy;
+global.browser = config.selenium.browser;
+global.browserTeardownStrategy = config.selenium.browserTeardownStrategy;
 
 // used within world.js to output reports
 global.reportsPath = path.resolve(config.reports);
@@ -41,7 +56,7 @@ if (!fs.existsSync(config.reports)) {
 }
 
 // set the default timeout
-global.DEFAULT_TIMEOUT = global.DEFAULT_TIMEOUT || config.timeout;
+global.DEFAULT_TIMEOUT = global.DEFAULT_TIMEOUT || config.cucumber.timeout;
 
 // rewrite command line switches for cucumber
 process.argv.splice(2, 100);
@@ -65,7 +80,7 @@ process.argv.push(path.resolve(__dirname, './step_defs'));
 
 // add strict option (fail if there are any undefined or pending steps)
 process.argv.push('-S');
-process.argv.push(config.features)
+process.argv.push(config.cucumber.features)
 
 console.log('my-args: ', process.argv)
 

@@ -9,7 +9,14 @@ var pageSteps = function () {
    */
   this.Given(/^user navigates to '(.*)'$/, function (url) {
     var gotourl = helperCommon.getTreatedValue(url);
-    return driver.get(gotourl);
+
+    return helpers.page.loadPage(gotourl)
+
+    return driver.get(gotourl)
+      .then(() => {
+        // now wait for the body element to be present
+        return driver.wait(until.elementLocated(by.css('body')), timeout);
+      })
   });
 
   /**
