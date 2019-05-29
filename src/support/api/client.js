@@ -1,5 +1,5 @@
-var helperCommon = require('../helper/common');
-var helperInfo = require('../helper/info');
+var helperCommon = require('../helpers/common');
+var helperInfo = require('../helpers/info');
 const axios = require('axios')
 
 class ApiClient {

@@ -1,6 +1,6 @@
 
 const api = require('../../../src/support/api/client')
-const helperVars = require('../../../src/support/helper/variables')
+const helperVars = require('../../../src/support/helpers/variables')
 
 describe('API Tests', () => {
   const baseURL = "https://httpbin.org/get"

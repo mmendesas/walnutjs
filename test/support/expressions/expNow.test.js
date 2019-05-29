@@ -1,4 +1,4 @@
-const helperString = require('../../../src/support/helper/string');
+const helperString = require('../../../src/support/helpers/string');
 const interpreter = require('../../../src/support/expressions/interpreter');
 
 describe('NOW Tests', () => {

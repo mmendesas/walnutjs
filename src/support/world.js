@@ -38,7 +38,7 @@ module.exports = function () {
   this.World = createWorld;
 
   // global helpers
-  global.helpers = require('../support/helper')
+  global.helpers = require('../support/helpers')
 
   // // set the default timeout for all tests
   this.setDefaultTimeout(global.DEFAULT_TIMEOUT);

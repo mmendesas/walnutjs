@@ -1,10 +1,10 @@
 var $q = require('q');
 var context = require('./context');
 var config = require('./config');
-var helperString = require('./helper/string');
-var helperCommon = require('./helper/common');
-var helperFile = require('./helper/file');
-var helperElement = require('./helper/element');
+var helperString = require('./helpers/string');
+var helperCommon = require('./helpers/common');
+var helperFile = require('./helpers/file');
+var helperElement = require('./helpers/element');
 // var EC = protractor.ExpectedConditions;
 
 module.exports = function () {

@@ -1,6 +1,6 @@
-var helperCommon = require('../../support/helper/common');
-var helperInfo = require('../../support/helper/info');
-var helperVars = require('../../support/helper/variables');
+var helperCommon = require('../../support/helpers/common');
+var helperInfo = require('../../support/helpers/info');
+var helperVars = require('../../support/helpers/variables');
 var trest = require('../../support/api/client');
 
 var jsonparser = require('../../support/parser/jsonparser');

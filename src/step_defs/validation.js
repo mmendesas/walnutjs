@@ -1,6 +1,6 @@
-var helperElement = require('../support/helper/element');
-var helperString = require('../support/helper/string');
-var helperCommon = require('../support/helper/common');
+var helperElement = require('../support/helpers/element');
+var helperString = require('../support/helpers/string');
+var helperCommon = require('../support/helpers/common');
 
 var Validation = function () {
     /**

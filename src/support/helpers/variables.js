@@ -4,30 +4,30 @@ var varMap = {};
 
 var Variables = {
 
-    /**
-     * Add variable to list
-     */
+  /**
+   * Add variable to list
+   */
   addVariable: function (key, value) {
     varMap[key] = value;
   },
 
-    /**
-     * Get simple variable by name
-     */
+  /**
+   * Get simple variable by name
+   */
   getVariable: function (key) {
     return varMap[key] || 'unknown-var';
   },
 
-    /**
-     * Return a list of variables
-     */
+  /**
+   * Return a list of variables
+   */
   getAllVariables: function () {
     return varMap;
   },
 
-    /**
-     * Replace variables marks with correspondent value
-     */
+  /**
+   * Replace variables marks with correspondent value
+   */
   nutParseVars: function (text) {
     if (text.includes('vars.')) {
       var list = text.match(/(vars.[\w]*)/g);

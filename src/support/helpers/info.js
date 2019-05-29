@@ -7,9 +7,9 @@ var info = {
 
   elapsedName: null,
 
-    /**
-     * Log simple information
-     */
+  /**
+   * Log simple information
+   */
   logInfo: function (text) {
     console.log(helperString.formatString('[{0}] - [INFO] - {1}', [new Date().toLocaleString(), text]));
   },
@@ -20,9 +20,9 @@ var info = {
     this.logInfo(msg);
   },
 
-    /**
-     * Log simple information with DEBUG flag
-     */
+  /**
+   * Log simple information with DEBUG flag
+   */
   logDebug: function (text) {
     if (config.enableDebug) {
       console.log(helperString.formatString('[{0}] - [DEBUG] - {1}', [new Date().toLocaleString(), text]));
@@ -35,16 +35,16 @@ var info = {
     this.logDebug(msg);
   },
 
-    /**
-     * Log simple information with ERROR flag
-     */
+  /**
+   * Log simple information with ERROR flag
+   */
   logError: function (text) {
     console.log(helperString.formatString('[{0}] - [ERROR] - {1}', [new Date().toLocaleString(), text]));
   },
 
-    /**
-     * Log time elapsed if enableDebug propertie is enabled
-     */
+  /**
+   * Log time elapsed if enableDebug propertie is enabled
+   */
   logTimeElapsed: function (text) {
     if (config.enableDebug) {
       if (text === this.elapsedName) {

@@ -1,5 +1,5 @@
 const interpreter = require('../../../src/support/expressions/interpreter');
-const helperString = require('../../../src/support/helper/string');
+const helperString = require('../../../src/support/helpers/string');
 
 describe('Interpreter Tests', () => {
 

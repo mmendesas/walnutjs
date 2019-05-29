@@ -1,4 +1,4 @@
-const helperParams = require('../../../src/support/helper/params');
+const helperParams = require('../../../src/support/helpers/params');
 const config = require('../../../src/support/config');
 const context = require('../../../src/support/context');
 

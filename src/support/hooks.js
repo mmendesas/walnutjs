@@ -1,9 +1,9 @@
 var context = require('./context');
 var config = require('./config');
-var vars = require('./helper/variables');
-var helperString = require('./helper/string');
-var helperCommon = require('./helper/common');
-var flatten = require('./helper/flattenObject');
+var vars = require('./helpers/variables');
+var helperString = require('./helpers/string');
+var helperCommon = require('./helpers/common');
+var flatten = require('./helpers/flattenObject');
 
 const clearEnvVariable = text => text.replace("${", "").replace("}", "")
 const getEnvVariable = variable => process.env[clearEnvVariable(variable)] || ''

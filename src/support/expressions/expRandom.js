@@ -1,4 +1,4 @@
-var helperString = require('../helper/string');
+var helperString = require('../helpers/string');
 
 var expRandom = {
 

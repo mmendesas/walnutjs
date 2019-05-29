@@ -1,4 +1,4 @@
-var helperFile = require('./helper/file');
+var helperFile = require('./helpers/file');
 var config = require('./config');
 var fs = require('fs');
 

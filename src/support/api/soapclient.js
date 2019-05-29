@@ -1,6 +1,6 @@
 var soap = require('soap');
 var $q = require('q');
-var helperInfo = require('../helper/info');
+var helperInfo = require('../helpers/info');
 var jsonparser = require('../parser/jsonparser');
 
 var soapclient = {

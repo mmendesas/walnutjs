@@ -1,6 +1,6 @@
 'use strict';
 
-var helperString = require('../helper/string');
+var helperString = require('../helpers/string');
 var expNow = require('./expNow');
 var expConcatenate = require('./expConcatenate');
 var expCPF = require('./expCPF');

@@ -1,8 +1,8 @@
-var helperVars = require('../support/helper/variables');
-var helperInfo = require('../support/helper/info');
-var helperElement = require('../support/helper/element');
-var helperCommon = require('../support/helper/common');
-var helperString = require('../support/helper/string');
+var helperVars = require('../support/helpers/variables');
+var helperInfo = require('../support/helpers/info');
+var helperElement = require('../support/helpers/element');
+var helperCommon = require('../support/helpers/common');
+var helperString = require('../support/helpers/string');
 var _ = require('lodash');
 
 var CommonSteps = function () {

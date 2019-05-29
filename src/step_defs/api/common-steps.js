@@ -1,4 +1,4 @@
-var helperInfo = require('../../support/helper/info');
+var helperInfo = require('../../support/helpers/info');
 var trest = require('../../support/api/client');
 
 var commonapi = function () {
