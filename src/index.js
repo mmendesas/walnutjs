@@ -82,7 +82,7 @@ process.argv.push(path.resolve(__dirname, './step_defs'));
 process.argv.push('-S');
 process.argv.push(config.cucumber.features)
 
-console.log('my-args: ', process.argv)
+// console.log('my-args: ', process.argv)
 
 //
 // execute cucumber
