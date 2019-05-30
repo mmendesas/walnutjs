@@ -57,7 +57,7 @@ var Element = {
     }
 
     // get list of elements based on type/value
-    var myList = this.mountElement(locator.type, locator.value);
+    var myList = this.getElements(locator.type, locator.value);
 
     // apply filter options if included
     if (locator.options) {
@@ -89,7 +89,7 @@ var Element = {
     }
 
     // get list of elements based on type/value
-    var myList = this.mountElement(locator.type, locator.value);
+    var myList = this.getElements(locator.type, locator.value);
 
     // apply filter options if included
     if (locator.options) {
@@ -111,58 +111,32 @@ var Element = {
   /**
    * Return the real element from protractor method
    */
-  mountElement: function (type, content) {
+  getElements: function (type, content) {
     switch (type.toLowerCase()) {
       /**
        * Locators by Extended webdriver.By
        */
       case 'classname':
-        return element.all(by.className(content));
+        return driver.findElements(by.className(content));
       case 'css':
-        return element.all(by.css(content));
+        return driver.findElements(by.css(content));
       case 'id':
-        return element.all(by.id(content));
+        return driver.findElements(by.id(content));
       case 'linktext':
-        return element.all(by.linkText(content));
+        return driver.findElements(by.linkText(content));
       case 'js':
-        return element.all(by.js(content));
+        return driver.findElements(by.js(content));
       case 'name':
-        return element.all(by.name(content));
+        return driver.findElements(by.name(content));
       case 'partiallinktext':
-        return element.all(by.partialLinkText(content));
+        return driver.findElements(by.partialLinkText(content));
       case 'tagname':
-        return element.all(by.tagName(content));
+        return driver.findElements(by.tagName(content));
       case 'xpath':
-        return element.all(by.xpath(content));
-
-      /**
-       * Locators by function in ProtractorBy
-       */
-
-      case 'binding':
-        return element.all(by.binding(content));
-      case 'exactbinding':
-        return element.all(by.exactBinding(content));
-      case 'model':
-        return element.all(by.model(content));
-      case 'buttontext':
-        return element.all(by.buttonText(content));
-      case 'partialbuttontext':
-        return element.all(by.partialButtonText(content));
-      case 'repeater':
-        return element.all(by.repeater(content));
-      case 'exactrepeater':
-        return element.all(by.exactRepeater(content));
-      case 'csscontainingtext':
-        return element.all(by.cssContainingText(content));
-      case 'options':
-        return element.all(by.options(content));
-      case 'deepcss':
-        return element.all(by.deepCss(content));
+        return driver.findElements(by.xpath(content));
 
       default:
         throw Error('Locator Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>');
-        break;
     }
   },
 
