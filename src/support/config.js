@@ -11,14 +11,10 @@ const config = {
 
   locatorsPath: './test/locators',
 
-  cryptoAlgorithm: '',
-
-  cryptoKeycode: '',
-
   /**
    * Load the config parameters from protractor.confg.js
    */
-  loadConfigs: function(config) {
+  loadConfigs: function (config) {
     const ptoConfig = config !== null ? config : require(process.cwd() + '/protractor.conf.js').config;
 
     if (ptoConfig.walnutjsOpts) {
@@ -28,12 +24,6 @@ const config = {
       this.evidencesPath = ptoConfig.walnutjsOpts.evidencesPath || '/test/evidences';
       this.parametersPath = ptoConfig.walnutjsOpts.parametersPath || '/test/params';
       this.locatorsPath = ptoConfig.walnutjsOpts.locatorsPath || '/test/locators';
-
-      if (ptoConfig.walnutjsOpts.crypto) {
-        const { algorithm, keycode } = ptoConfig.walnutjsOpts.crypto;
-        this.cryptoAlgorithm = algorithm;
-        this.cryptoKeycode = keycode;
-      }
     }
   }
 };

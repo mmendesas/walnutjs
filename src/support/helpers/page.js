@@ -1,3 +1,5 @@
+// Page Helpers
+
 module.exports = {
 
   loadPage: (url, waitInSeconds) => {
