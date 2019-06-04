@@ -1,13 +1,12 @@
-var helperElement = require('../support/helpers/element');
-var helperCommon = require('../support/helpers/common');
+const { common, element, page } = helpers;
 
-var formSteps = function () {
+module.exports = function () {
   /**
    * Fills the element in page
    */
   this.When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
-    const elementFinder = helperElement.getElementFinder(container, key);
-    text = helperCommon.getTreatedValue(text);
+    text = common.getTreatedValue(text);
+    const elementFinder = element.getElementFinder(container, key);
     elementFinder.sendKeys(text);
   });
 
@@ -15,8 +14,8 @@ var formSteps = function () {
    * Fills the element in page by replacing the existing text in that element
    */
   this.When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, text) => {
-    const elementFinder = helperElement.getElementFinder(container, key);
-    text = helperCommon.getTreatedValue(text);
+    text = common.getTreatedValue(text);
+    const elementFinder = element.getElementFinder(container, key);
     elementFinder.clear();
     elementFinder.sendKeys(text)
   });
@@ -24,139 +23,93 @@ var formSteps = function () {
   /**
   * Fills the element in page by javascript value
   */
-  this.Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, function (container, key, text, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    text = helperCommon.getTreatedValue(text);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      browser.executeScript('arguments[0].value=arguments[1]', elementFinder, text).then(function () {
-        _this.delayCallback(callback);
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
+  this.Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, text) => {
+    text = common.getTreatedValue(text);
+    const elementFinder = element.getElementFinder(container, key);
+    page.executeScriptArgs('arguments[0].value=arguments[1]', elementFinder, text);
   });
 
   /**
    * Clicks on element in page
    */
-  this.When(/^user clicks on '(.+)-(.+)'$/, function (container, key, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      elementFinder.click().then(function elementClickSuccess() {
-        _this.delayCallback(callback);
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
+  this.When(/^user clicks on '(.+)-(.+)'$/, (container, key) => {
+    const elementFinder = element.getElementFinder(container, key);
+    elementFinder.click();
   });
 
   /**
    * Clicks on element in page using pure JS
    */
-  this.When(/^user clicks by JS on '(.+)-(.+)'$/, function (container, key, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    browser.executeScript('arguments[0].click();', elementFinder).then(function () {
-      _this.delayCallback(callback);
-    });
+  this.When(/^user clicks by JS on '(.+)-(.+)'$/, (container, key) => {
+    const elementFinder = element.getElementFinder(container, key);
+    page.executeScript('arguments[0].click();', elementFinder);
   });
 
   /**
    * Selects a option in the combo-box element in page
    */
-  this.When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (container, key, value, callback) {
-    var _this = this;
+  this.When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (container, key, value) {
+    value = common.getTreatedValue(value);
+    const elementFinder = element.getElementFinder(container, key);
 
-    var elementFinder = helperElement.getElementFinder(container, key);
+    // click on element to open the box
+    elementFinder.click();
 
-    value = helperCommon.getTreatedValue(value);
+    driver.findElements(by.css('option')).then(options => {
+      let num = options.length;
+      let clickOk = false;
 
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      elementFinder.click().then(function elementClickSuccess() {
-        elementFinder.all(by.css('option')).then(function getOptions(options) {
-          var num = options.length;
-          var textOptions = '';
-          var clickOk = false;
-
-          elementFinder.all(by.css('option')).each(function forEachOption(option, index) {
-            option.getText().then(function getTextSuccess(textOption) {
-              textOptions += textOption + ', ';
-              if (textOption === value) {
-                option.click().then(function elementClickSuccess() {
-                  clickOk = true;
-                  _this.delayCallback(callback);
-                });
-              }
-              if ((index + 1 == num) && !clickOk) {
-                _this.handleError('Not found \'' + value + '\' value in select box options : ' + textOptions, callback);
-              }
-            });
-          }, function allOptionsError(errorMessage) {
-            _this.handleError('Not found \'' + container + '-' + key + '\' select box options', callback);
-          });
+      options.forEach((option, index) => {
+        option.getText().then(text => {
+          if (text === value) {
+            clickOk = true
+            option.click();
+          }
+          if (num === index + 1 && !clickOk) {
+            throw new Error(`Option ${text} not found in select!`)
+          }
         });
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
+      })
     });
   });
 
   /**
    * Check or Uncheck element in page
    */
-  this.When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, container, key, callback) {
-    var _this = this;
+  this.When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, container, key) {
+    const elementFinder = element.getElementFinder(container, key);
+    const checkOrNot = (checkOrUncheck === 'checks');
 
-    var elementFinder = helperElement.getElementFinder(container, key);
-    var checkOrNot = (checkOrUncheck === 'checks');
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      elementFinder.isSelected().then(function isDisplayedSuccess(isSelected) {
-        if (checkOrNot) {
-          if (!isSelected) {
-            elementFinder.click();
-          }
-        } else if (isSelected) {
+    elementFinder.isSelected().then(isSelected => {
+      if (checkOrNot) {
+        if (!isSelected) {
           elementFinder.click();
         }
-        _this.delayCallback(callback);
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
+      } else if (isSelected) {
+        elementFinder.click();
+      }
     });
   });
 
   /**
    * Accept or dismiss popup
    */
-  this.When(/^user (accept|dismiss) the popup$/, function (action, callback) {
-    var _this = this;
-
+  this.When(/^user (accept|dismiss) the popup$/, function (action) {
     // thread sleep before switch
-    setTimeout(function () {
+    setTimeout(() => {
       if (action !== 'accept' && action !== 'dismiss') {
-        browser.switchTo().alert().dismiss();
-        _this.handleError('Action ' + action + ' unknown', callback);
-
-        return;
+        driver.switchTo().alert().dismiss();
+        throw new Error(`Action ${action} unknown`);
       }
       if (action === 'accept') {
-        browser.switchTo().alert().accept();
+        driver.switchTo().alert().accept();
       }
       if (action === 'dismiss') {
-        browser.switchTo().alert().dismiss();
+        driver.switchTo().alert().dismiss();
       }
-      _this.delayCallback(callback);
+      // _this.delayCallback(callback);
     }, 200);
 
-    _this.handleError(errorMessage, callback);
+    // _this.handleError(errorMessage, callback);
   });
 };
-
-module.exports = formSteps;

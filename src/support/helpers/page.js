@@ -32,5 +32,9 @@ module.exports = {
 
   clearCookiesAndStorages: () => {
     return helpers.clearCookies().then(helpers.clearStorages());
+  },
+
+  executeScriptArgs: (script, ...args) => {
+    driver.executeScript(script, ...args);
   }
 };

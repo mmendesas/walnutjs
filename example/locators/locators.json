@@ -16,6 +16,31 @@
       ]
     },
     {
+      "name": "Grosa",
+      "locators": [
+        {
+          "key": "teste",
+          "type": "xpath",
+          "value": "//*[@id='forms']/article[1]/form/input[3]"
+        },
+        {
+          "key": "teste2",
+          "type": "id",
+          "value": "name"
+        },
+        {
+          "key": "combo",
+          "type": "id",
+          "value": "choose"
+        },
+        {
+          "key": "checkbox",
+          "type": "xpath",
+          "value": "//input[@type='checkbox']"
+        }
+      ]
+    },
+    {
       "name": "GoogleResult",
       "locators": [
         {
