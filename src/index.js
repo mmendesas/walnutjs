@@ -24,7 +24,9 @@ const config = {
       },
     }
   },
-  reports: './reports'
+  reports: './reports',
+  noScreenshot: false,
+  locatorsPath: '/Users/mmendesas/Documents/mdocs/walnutjs/example/locators'
 };
 
 // start the CLI options

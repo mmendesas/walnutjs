@@ -14,6 +14,7 @@ driver = new Builder()
   .build();
 
 driver.get('http://www.google.com/');
-driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
+const ele = driver.findElement(By.name('q'))
+ele.sendKeys('webdriver', Key.RETURN);
 driver.wait(until.titleContains('webdriver'), 1000);
 driver.quit();
