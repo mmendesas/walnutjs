@@ -13,6 +13,15 @@ module.exports = {
     });
   },
 
+  waitUntilElementIsPresent: (elementBy, timeout = DEFAULT_TIMEOUT) => {
+    const msg = `Element ${elementBy} was not located in page`
+    return driver.wait(until.elementLocated(elementBy), timeout, msg);
+  },
+
+  refresh: () => {
+    return driver.navigate().refresh();
+  },
+
   clearCookies: () => {
     return driver.manage().deleteAllCookies();
   },
