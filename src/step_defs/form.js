@@ -5,40 +5,20 @@ var formSteps = function () {
   /**
    * Fills the element in page
    */
-  this.When(/^user fills '(.+)-(.+)' with '(.*)'$/, function (container, key, text, callback) {
-    var _this = this;
-
-    var elementFinder = helperElement.getElementFinder(container, key);
-
+  this.When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
+    const elementFinder = helperElement.getElementFinder(container, key);
     text = helperCommon.getTreatedValue(text);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      elementFinder.sendKeys(text).then(function sendKeysSuccess() {
-        _this.delayCallback(callback);
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
+    elementFinder.sendKeys(text);
   });
 
   /**
    * Fills the element in page by replacing the existing text in that element
    */
-  this.When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, function (container, key, text, callback) {
-    var _this = this;
-
-    var elementFinder = helperElement.getElementFinder(container, key);
-
+  this.When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, text) => {
+    const elementFinder = helperElement.getElementFinder(container, key);
     text = helperCommon.getTreatedValue(text);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-      // elementFinder.clear().sendKeys(text).then(callback);
-      elementFinder.clear().sendKeys(text).then(function clearAndSendKeysSuccess() {
-        _this.delayCallback(callback);
-      });
-    }, function isPresentAndDisplayedError(errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
+    elementFinder.clear();
+    elementFinder.sendKeys(text)
   });
 
   /**

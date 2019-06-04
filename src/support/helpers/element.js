@@ -31,7 +31,7 @@ function applyFilterInList(list, option) {
   }
 }
 
-var Element = {
+const Element = {
 
   /**
    * Stores last style (highlight)
@@ -50,29 +50,38 @@ var Element = {
     // save current used container/name
     this.lastUsedLocator = [container, name];
 
-    var locator = this.getLocator(container, name);
+    const locator = this.getLocator(container, name);
 
     if (isEmptyObject(locator)) {
       throw 'Locator element incorrect, please use {key, type, value}';
     }
 
-    // get list of elements based on type/value
-    var myList = this.getElements(locator.type, locator.value);
+    // get Element By
+    const { type, value } = locator
+    const elementBy = this.getElementBy(type, value)
 
-    // apply filter options if included
-    if (locator.options) {
-      var options = locator.options.split('|');
+    // wait element displayed
+    return helpers.page.waitUntilElementIsPresent(elementBy)
 
-      _.forEach(options, function (option) {
-        myList = applyFilterInList(myList, option);
-      });
+    // return the element based on type/value
+    // return this.getElements(locator.type, locator.value);
 
-      // return filtered list
-      return myList;
-    }
+    // return myList
 
-    // default: return first element of list
-    return myList.first();
+    // // apply filter options if included
+    // if (locator.options) {
+    //   var options = locator.options.split('|');
+
+    //   _.forEach(options, function (option) {
+    //     myList = applyFilterInList(myList, option);
+    //   });
+
+    //   // return filtered list
+    //   return myList;
+    // }
+
+    // // default: return first element of list
+    // return myList[0];
   },
 
   /**
@@ -109,34 +118,31 @@ var Element = {
 
 
   /**
-   * Return the real element from protractor method
+   * Return the element By based on locator
    */
-  getElements: function (type, content) {
+  getElementBy: function (type, content) {
     switch (type.toLowerCase()) {
-      /**
-       * Locators by Extended webdriver.By
-       */
       case 'classname':
-        return driver.findElements(by.className(content));
+        return by.className(content);
       case 'css':
-        return driver.findElements(by.css(content));
+        return by.css(content);
       case 'id':
-        return driver.findElements(by.id(content));
+        return by.id(content);
       case 'linktext':
-        return driver.findElements(by.linkText(content));
+        return by.linkText(content);
       case 'js':
-        return driver.findElements(by.js(content));
+        return by.js(content);
       case 'name':
-        return driver.findElements(by.name(content));
+        return by.name(content);
       case 'partiallinktext':
-        return driver.findElements(by.partialLinkText(content));
+        return by.partialLinkText(content);
       case 'tagname':
-        return driver.findElements(by.tagName(content));
+        return by.tagName(content);
       case 'xpath':
-        return driver.findElements(by.xpath(content));
+        return by.xpath(content);
 
       default:
-        throw Error('Locator Type not found. Please see <http://www.protractortest.org/#/api?view=ProtractorBy>');
+        throw Error('Locator Type not found.');
     }
   },
 
@@ -144,41 +150,36 @@ var Element = {
    * Find the locator in json by container name and locator key
    */
   getLocator: function (container, name) {
-    var container_list = context.locators.containers;
+    var container_list = locators.containers;
     var result = {};
     var params;
-
-    // start time elapsed
-    helperInfo.logTimeElapsed('getLocator');
 
     if (name.includes(':')) {
       params = this.getParams(name);
       name = name.substring(0, name.indexOf(':'));
     }
 
+    // search a specific locator inside containers list
     for (var i = 0; i < container_list.length; i++) {
-      var container_name = container_list[i].name;
-      var loc_list = container_list[i].locators;
+      const { name: cname, locators } = container_list[i];
 
-      if (container_name == container) {
-        for (var j = 0; j < loc_list.length; j++) {
-          var key = loc_list[j].key;
+      if (cname == container) {
+        for (var j = 0; j < locators.length; j++) {
+          const { key } = locators[j]
 
+          // return locator info if exists
           if (key === name) {
-            var mType = loc_list[j].type;
-            var mValue = loc_list[j].value;
-            var mOptions = loc_list[j].options;
+            const { type, value, options } = locators[j];
 
-            if (mType.toLowerCase().startsWith('p:')) {
-              mValue = helperString.formatString(mValue, params);
-              mType = mType.substring(mType.indexOf(':') + 1);
+            if (type.toLowerCase().startsWith('p:')) {
+              value = helperString.formatString(value, params);
+              type = type.substring(type.indexOf(':') + 1);
             }
 
             // mount founded locator
-            result.key = key;
-            result.type = mType;
-            result.value = mValue;
-            result.options = mOptions;
+            result = {
+              key, type, value, options
+            }
 
             helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{1}] options[{2}]', [result.type, result.value, result.options]));
 
@@ -188,8 +189,6 @@ var Element = {
         break;
       }
     }
-    // prints the elapsed end time
-    helperInfo.logTimeElapsed('getLocator');
 
     return result;
   },
