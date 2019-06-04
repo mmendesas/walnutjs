@@ -9,7 +9,7 @@ module.exports = {
   /**
    * Process expressions and vars in a text with walnut marks '${text}'
    */
-  getTreatedValue: function (text) {
+  getTreatedValue: (text) => {
     var content = helperString.removeQuotationMark(text);
     var list = text.match(/\${(.*?)}/g);
 
@@ -41,7 +41,7 @@ module.exports = {
     return content;
   },
 
-  compare: function (current, type, received) {
+  compare: (current, type, received) => {
     var comparisson = { result: null, msg: null };
 
     type = type.trim().toLowerCase().replace(/\s/gi, '');
