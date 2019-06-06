@@ -1,7 +1,7 @@
 
 const fs = require('fs-plus');
 const path = require('path');
-const cucumber = require('cucumber');
+const Cucumber = require('cucumber');
 const program = require('commander');
 const { version, description } = require('../package.json');
 
@@ -63,13 +63,16 @@ global.DEFAULT_TIMEOUT = global.DEFAULT_TIMEOUT || config.cucumber.timeout;
 // rewrite command line switches for cucumber
 process.argv.splice(2, 100);
 
+// 1 define cucumber output format
 // add switch to tell cucumber to produce json report files
 process.argv.push('-f');
-process.argv.push('pretty');
+process.argv.push('progress');
 process.argv.push('-f');
 process.argv.push('json:' + path.resolve(__dirname, global.reportsPath, 'cucumber-report.json'));
 
+// 2 define the required scripts
 // add cucumber world as first required script (this sets up the globals)
+
 process.argv.push('-r');
 process.argv.push(path.resolve(__dirname, './support/world.js'));
 
@@ -78,33 +81,42 @@ process.argv.push(path.resolve(__dirname, './step_defs'));
 
 // // add path to import custom step definitions
 // process.argv.push('-r');
-// process.argv.push(path.resolve(config.steps));
+// process.argv.push(path.resolve(config.cucumber.steps));
 
-// add strict option (fail if there are any undefined or pending steps)
-process.argv.push('-S');
-process.argv.push(config.cucumber.features)
+process.argv.push('features/**/*.feature');
+
+// process.argv.push('--require-module')
+// process.argv.push('@babel/register')
 
 // console.log('my-args: ', process.argv)
 
 //
 // execute cucumber
 //
-var cucumberCli = cucumber.Cli(process.argv);
-global.cucumber = cucumber;
+const cucumberInfo = {
+  argv: process.argv,
+  cwd: process.cwd(),
+  stdout: process.stdout
+}
 
-cucumberCli.run(function (succeeded) {
+const cucumberCli = new Cucumber.Cli(cucumberInfo);
+// global.cucumber = cucumber;
 
-  var code = succeeded ? 0 : 1;
+cucumberCli.run()
+  .then((succeeded) => {
+    var code = succeeded ? 0 : 1;
+    function exitNow() {
+      process.exit(code);
+    }
 
-  function exitNow() {
-    process.exit(code);
-  }
-
-  if (process.stdout.write('')) {
-    exitNow();
-  }
-  else {
-    // write() returned false, kernel buffer is not empty yet...
-    process.stdout.on('drain', exitNow);
-  }
-});
+    if (process.stdout.write('')) {
+      exitNow();
+    }
+    else {
+      // write() returned false, kernel buffer is not empty yet...
+      process.stdout.on('drain', exitNow);
+    }
+  })
+  .catch((error) => {
+    console.error(`\n[ walnutjs ] -> ${error.stack}`)
+  })

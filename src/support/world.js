@@ -1,6 +1,13 @@
 const webdriver = require('selenium-webdriver');
 const { logging } = require('selenium-webdriver');
 const fs = require('fs-plus');
+const {
+  setWorldConstructor,
+  setDefaultTimeout,
+  BeforeAll,
+  AfterAll,
+  After
+} = require('cucumber');
 
 const expect = require('chai').expect;
 const assert = require('chai').assert;
@@ -85,56 +92,52 @@ function loadUIMap() {
 
 }
 
-// export the "World" required by cucumber to allow it to expose methods within step def's
-module.exports = function () {
+// set a default world
+setWorldConstructor(createWorld());
+this.World = createWorld;
 
-  // set a default world
-  createWorld();
-  this.World = createWorld;
+// global helpers
+global.helpers = require('../support/helpers')
 
-  // global helpers
-  global.helpers = require('../support/helpers')
+// // set the default timeout for all tests
+// setDefaultTimeout(global.DEFAULT_TIMEOUT);
 
-  // // set the default timeout for all tests
-  this.setDefaultTimeout(global.DEFAULT_TIMEOUT);
+// create the driver and applitools eyes before scenario if it's not instantiated
+BeforeAll((done) => {
+  // set loging level
+  logging.installConsoleHandler();
+  logging.getLogger('webdriver.http').setLevel(logging.Level.INFO);
 
-  // create the driver and applitools eyes before scenario if it's not instantiated
-  this.registerHandler('BeforeScenario', (scenario) => {
+  // load UIMap
+  loadUIMap();
 
-    // set loging level
-    logging.installConsoleHandler();
-    logging.getLogger('webdriver.http').setLevel(logging.Level.ALL);
+  if (!global.driver) {
+    global.driver = getDriverInstance();
+    done();
+  }
+});
 
-    // load UIMap
-    loadUIMap();
+AfterAll((done) => {
+  if (browserTeardownStrategy !== 'always') {
+    closeBrowser().then(() => done());
+  }
+  else {
+    new Promise((resolve) => resolve(done()));
+  }
+})
 
-    if (!global.driver) {
-      global.driver = getDriverInstance();
-    }
-  });
+// execute after each scenario
+After((scenario) => {
 
-  this.registerHandler('AfterFeatures', (done) => {
-    if (browserTeardownStrategy !== 'always') {
-      closeBrowser().then(() => done());
-    }
-    else {
-      new Promise((resolve) => resolve(done()));
-    }
-  })
+  if (scenario.isFailed() && !config.noScreenshot) {
 
-  // execute after each scenario
-  this.After((scenario) => {
+    return driver.takeScreenshot((screenShot) => {
 
-    if (scenario.isFailed() && !config.noScreenshot) {
+      scenario.attach(new Buffer(screenShot, 'base64'), 'image/png');
 
-      return driver.takeScreenshot((screenShot) => {
+      return tearDownBrowser();
+    })
+  }
 
-        scenario.attach(new Buffer(screenShot, 'base64'), 'image/png');
-
-        return tearDownBrowser();
-      })
-    }
-
-    return tearDownBrowser();
-  })
-}
+  return tearDownBrowser();
+})

@@ -1,6 +1,17 @@
 var helperElement = require('../support/helpers/element');
 var helperCommon = require('../support/helpers/common');
 
+const { Given, When, Then } = require("cucumber");
+
+/**
+ * Navigate to a page
+ */
+Given(/^user navigates to '(.*)'$/, (url) => {
+  var gotourl = helperCommon.getTreatedValue(url);
+  return helpers.page.loadPage(gotourl)
+});
+
+
 var pageSteps = function () {
 
   /**
