@@ -79,14 +79,13 @@ process.argv.push(path.resolve(__dirname, './support/world.js'));
 process.argv.push('-r');
 process.argv.push(path.resolve(__dirname, './step_defs'));
 
-// // add path to import custom step definitions
-// process.argv.push('-r');
-// process.argv.push(path.resolve(config.cucumber.steps));
+// add path to import custom step definitions
+process.argv.push('-r');
+process.argv.push(path.resolve(config.cucumber.steps));
 
-process.argv.push('features/**/*.feature');
-
-// process.argv.push('--require-module')
-// process.argv.push('@babel/register')
+// process.argv.push(path.resolve(__dirname, '../example/features/**/*.feature'));
+// add path to import custom features
+process.argv.push(config.cucumber.features)
 
 // console.log('my-args: ', process.argv)
 
@@ -100,7 +99,6 @@ const cucumberInfo = {
 }
 
 const cucumberCli = new Cucumber.Cli(cucumberInfo);
-// global.cucumber = cucumber;
 
 cucumberCli.run()
   .then((succeeded) => {

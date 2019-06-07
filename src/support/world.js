@@ -92,16 +92,6 @@ function loadUIMap() {
 
 }
 
-// set a default world
-setWorldConstructor(createWorld());
-this.World = createWorld;
-
-// global helpers
-global.helpers = require('../support/helpers')
-
-// // set the default timeout for all tests
-// setDefaultTimeout(global.DEFAULT_TIMEOUT);
-
 // create the driver and applitools eyes before scenario if it's not instantiated
 BeforeAll((done) => {
   // set loging level
@@ -141,3 +131,15 @@ After((scenario) => {
 
   return tearDownBrowser();
 })
+
+module.exports = function () {
+  // set a default world
+  createWorld();
+  this.World = createWorld;
+
+  // global helpers
+  global.helpers = require('../support/helpers')
+
+  // // set the default timeout for all tests
+  setDefaultTimeout(global.DEFAULT_TIMEOUT);
+}()
