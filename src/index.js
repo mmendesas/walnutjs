@@ -7,6 +7,10 @@ const { version, description } = require('../package.json');
 
 // set default configuration
 const config = {
+  walnut: {
+    parametersPath: '',
+    locatorsPath: '/Users/mmendesas/Documents/mdocs/walnutjs/example/locators'
+  },
   cucumber: {
     steps: './steps',
     timeout: 15000,
@@ -26,7 +30,7 @@ const config = {
   },
   reports: './reports',
   noScreenshot: false,
-  locatorsPath: '/Users/mmendesas/Documents/mdocs/walnutjs/example/locators'
+
 };
 
 // start the CLI options

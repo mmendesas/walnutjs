@@ -2,33 +2,33 @@
 
 var varMap = {};
 
-var Variables = {
+module.exports = {
 
   /**
    * Add variable to list
    */
-  addVariable: function (key, value) {
+  addVariable: (key, value) => {
     varMap[key] = value;
   },
 
   /**
    * Get simple variable by name
    */
-  getVariable: function (key) {
+  getVariable: (key) => {
     return varMap[key] || 'unknown-var';
   },
 
   /**
    * Return a list of variables
    */
-  getAllVariables: function () {
+  getAllVariables: () => {
     return varMap;
   },
 
   /**
    * Replace variables marks with correspondent value
    */
-  nutParseVars: function (text) {
+  nutParseVars: (text) => {
     if (text.includes('vars.')) {
       var list = text.match(/(vars.[\w]*)/g);
 
@@ -43,5 +43,3 @@ var Variables = {
     return text;
   }
 };
-
-module.exports = Variables;

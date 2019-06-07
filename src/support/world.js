@@ -2,7 +2,6 @@ const webdriver = require('selenium-webdriver');
 const { logging } = require('selenium-webdriver');
 const fs = require('fs-plus');
 const {
-  setWorldConstructor,
   setDefaultTimeout,
   BeforeAll,
   AfterAll,
@@ -71,7 +70,7 @@ function tearDownBrowser() {
  */
 function loadUIMap() {
   let uimap = { containers: [] }
-  const folder = config.locatorsPath;
+  const folder = config.walnut.locatorsPath;
 
   try {
     fs.readdirSync(folder)

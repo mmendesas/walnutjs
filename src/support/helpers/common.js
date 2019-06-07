@@ -1,35 +1,33 @@
-'use strict';
-
-var helperVars = require('./variables');
-var helperParams = require('./params');
-var helperString = require('./string');
-var interpreter = require('../expressions/interpreter');
+const interpreter = require('../expressions/interpreter');
+const string = require('./string');
+const vars = require('./variables');
+const params = require('./params');
 
 module.exports = {
   /**
    * Process expressions and vars in a text with walnut marks '${text}'
    */
   getTreatedValue: (text) => {
-    var content = helperString.removeQuotationMark(text);
-    var list = text.match(/\${(.*?)}/g);
+    let content = string.removeQuotationMark(text);
+    const list = text.match(/\${(.*?)}/g);
 
     if (list === null) {
       return content;
     }
 
-    for (var i = 0; i < list.length; i++) {
-      var word = list[i];
-      var newWord = word;
+    for (let i = 0; i < list.length; i++) {
+      const word = list[i];
+      let newWord = word;
 
       // get only text content
-      while (helperString.hasBracketsMark(newWord) || helperString.hasQuotationMark(newWord)) {
-        newWord = helperString.removeBracketsMark(newWord);
-        newWord = helperString.removeQuotationMark(newWord);
+      while (string.hasBracketsMark(newWord) || string.hasQuotationMark(newWord)) {
+        newWord = string.removeBracketsMark(newWord);
+        newWord = string.removeQuotationMark(newWord);
       }
 
       // parse vars and params
-      newWord = helperVars.nutParseVars(newWord);
-      newWord = helperParams.nutParseParams(newWord);
+      newWord = vars.nutParseVars(newWord);
+      newWord = params.nutParseParams(newWord);
 
       // solve expressions
       newWord = interpreter.resolveExpression(newWord);
@@ -52,30 +50,30 @@ module.exports = {
     switch (type) {
       case 'whichcontains':
         comparisson.result = current.includes(received);
-        comparisson.msg = helperString.formatString('Current value [{0}] not contains [{1}]', [current, received]);
+        comparisson.msg = `Current value [$${current}] not contains [${received}]`;
         break;
 
       case 'whichnotcontains':
         comparisson.result = !current.includes(received);
-        comparisson.msg = helperString.formatString('Current value [{0}] contains [{1}]', [current, received]);
+        comparisson.msg = `Current value [${current}] contains [${received}]`;
         break;
 
       case 'equalsto':
         comparisson.result = current === received;
-        comparisson.msg = helperString.formatString('Current value [{0}] not equals to [{1}]', [current, received]);
+        comparisson.msg = `Current value [${current}] not equals to [${received}]`;
         break;
 
       case 'notequalsto':
         comparisson.result = current !== received;
-        comparisson.msg = helperString.formatString('Current value [{0}] is equals to [{1}]', [current, received]);
+        comparisson.msg = `Current value [${current}] is equals to [${received}]`;
         break;
       case 'whichstartswith':
         comparisson.result = current.startsWith(received);
-        comparisson.msg = helperString.formatString('Current value [{0}] does not start with [{1}]', [current, received]);
+        comparisson.msg = `Current value [${current}] does not start with [${received}]`;
         break;
       case 'whichendswith':
         comparisson.result = current.endsWith(received);
-        comparisson.msg = helperString.formatString('Current value [{0}] does not end with [{1}]', [current, received]);
+        comparisson.msg = `Current value [${current}] does not end with [${received}]`;
         break;
 
       default:

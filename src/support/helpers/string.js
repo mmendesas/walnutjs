@@ -20,7 +20,7 @@ module.exports = {
    * Remove Quotation Mark
    */
   removeQuotationMark: (text) => {
-    if (this.hasQuotationMark(text)) { text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"')) }
+    if (helpers.string.hasQuotationMark(text)) { text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"')) }
     return text;
   },
 
@@ -35,7 +35,7 @@ module.exports = {
    * Remove Brackets Mark
    */
   removeBracketsMark: (text) => {
-    if (this.hasBracketsMark(text)) { text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}')) }
+    if (helpers.string.hasBracketsMark(text)) { text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}')) }
 
     return text;
   },
