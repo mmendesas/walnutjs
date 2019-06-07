@@ -1,12 +1,13 @@
 var helperElement = require('../support/helpers/element');
 
 const { Given, When } = require("cucumber");
+const { common, page } = helpers;
 
 /**
  * Navigate to a page
  */
 Given(/^user navigates to '(.*)'$/, (url) => {
-  const gotourl = helpers.common.getTreatedValue(url);
+  const gotourl = common.getTreatedValue(url);
   return helpers.page.loadPage(gotourl)
 });
 
@@ -14,13 +15,13 @@ Given(/^user navigates to '(.*)'$/, (url) => {
  * Navigate to page with simple authentication
  */
 Given(/^user open url '(.*)' with user '(.*)' and pass '(.*)'$/, (url, user, pass) => {
-  var gotourl = helpers.common.getTreatedValue(url);
-  var myuser = helpers.common.getTreatedValue(myuser);
-  var mypass = helpers.common.getTreatedValue(mypass);
+  const gotourl = common.getTreatedValue(url);
+  const myuser = common.getTreatedValue(myuser);
+  const mypass = common.getTreatedValue(mypass);
 
   // http://username:password@server
-  var server = gotourl.substring(gotourl.indexOf("//") + 2);
-  var urlAuth = `http://${myuser}:${mypass}@${server}`;
+  const server = gotourl.substring(gotourl.indexOf("//") + 2);
+  const urlAuth = `http://${myuser}:${mypass}@${server}`;
 
   return driver.get(urlAuth);
 });
@@ -28,11 +29,8 @@ Given(/^user open url '(.*)' with user '(.*)' and pass '(.*)'$/, (url, user, pas
 /**
  * Refreshes the page
  */
-Given(/^user refreshes the page$/, (callback) => {
-  var _this = this;
-  this.refresh().then(function () {
-    _this.delayCallback(callback);
-  });
+Given(/^user refreshes the page$/, () => {
+  return page.refresh();
 });
 
 /**

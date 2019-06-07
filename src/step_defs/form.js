@@ -1,115 +1,116 @@
+const { Given, When } = require("cucumber");
 const { common, element, page } = helpers;
 
-module.exports = function () {
-  /**
-   * Fills the element in page
-   */
-  this.When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
-    text = common.getTreatedValue(text);
-    const elementFinder = element.getElementFinder(container, key);
-    elementFinder.sendKeys(text);
-  });
+/**
+ * Fills the element in page
+ */
+When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
+  text = common.getTreatedValue(text);
+  const elementFinder = element.getElementFinder(container, key);
+  return elementFinder.sendKeys(text);
+});
 
-  /**
-   * Fills the element in page by replacing the existing text in that element
-   */
-  this.When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, text) => {
-    text = common.getTreatedValue(text);
-    const elementFinder = element.getElementFinder(container, key);
-    elementFinder.clear();
-    elementFinder.sendKeys(text)
-  });
 
-  /**
-  * Fills the element in page by javascript value
-  */
-  this.Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, text) => {
-    text = common.getTreatedValue(text);
-    const elementFinder = element.getElementFinder(container, key);
-    page.executeScriptArgs('arguments[0].value=arguments[1]', elementFinder, text);
-  });
 
-  /**
-   * Clicks on element in page
-   */
-  this.When(/^user clicks on '(.+)-(.+)'$/, (container, key) => {
-    const elementFinder = element.getElementFinder(container, key);
-    elementFinder.click();
-  });
+/**
+ * Fills the element in page by replacing the existing text in that element
+ */
+When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, text) => {
+  text = common.getTreatedValue(text);
+  const elementFinder = element.getElementFinder(container, key);
+  elementFinder.clear();
+  return elementFinder.sendKeys(text);
+});
 
-  /**
-   * Clicks on element in page using pure JS
-   */
-  this.When(/^user clicks by JS on '(.+)-(.+)'$/, (container, key) => {
-    const elementFinder = element.getElementFinder(container, key);
-    page.executeScript('arguments[0].click();', elementFinder);
-  });
+/**
+* Fills the element in page by javascript value
+*/
+Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, text) => {
+  text = common.getTreatedValue(text);
+  const elementFinder = element.getElementFinder(container, key);
+  page.executeScriptArgs('arguments[0].value=arguments[1]', elementFinder, text);
+});
 
-  /**
-   * Selects a option in the combo-box element in page
-   */
-  this.When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (container, key, value) {
-    value = common.getTreatedValue(value);
-    const elementFinder = element.getElementFinder(container, key);
+/**
+ * Clicks on element in page
+ */
+When(/^user clicks on '(.+)-(.+)'$/, (container, key) => {
+  const elementFinder = element.getElementFinder(container, key);
+  elementFinder.click();
+});
 
-    // click on element to open the box
-    elementFinder.click();
+/**
+ * Clicks on element in page using pure JS
+ */
+When(/^user clicks by JS on '(.+)-(.+)'$/, (container, key) => {
+  const elementFinder = element.getElementFinder(container, key);
+  page.executeScript('arguments[0].click();', elementFinder);
+});
 
-    driver.findElements(by.css('option')).then(options => {
-      let num = options.length;
-      let clickOk = false;
+/**
+ * Selects a option in the combo-box element in page
+ */
+When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (container, key, value) {
+  value = common.getTreatedValue(value);
+  const elementFinder = element.getElementFinder(container, key);
 
-      options.forEach((option, index) => {
-        option.getText().then(text => {
-          if (text === value) {
-            clickOk = true
-            option.click();
-          }
-          if (num === index + 1 && !clickOk) {
-            throw new Error(`Option ${text} not found in select!`)
-          }
-        });
-      })
-    });
-  });
+  // click on element to open the box
+  elementFinder.click();
 
-  /**
-   * Check or Uncheck element in page
-   */
-  this.When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, container, key) {
-    const elementFinder = element.getElementFinder(container, key);
-    const checkOrNot = (checkOrUncheck === 'checks');
+  driver.findElements(by.css('option')).then(options => {
+    let num = options.length;
+    let clickOk = false;
 
-    elementFinder.isSelected().then(isSelected => {
-      if (checkOrNot) {
-        if (!isSelected) {
-          elementFinder.click();
+    options.forEach((option, index) => {
+      option.getText().then(text => {
+        if (text === value) {
+          clickOk = true
+          option.click();
         }
-      } else if (isSelected) {
+        if (num === index + 1 && !clickOk) {
+          throw new Error(`Option ${text} not found in select!`)
+        }
+      });
+    })
+  });
+});
+
+/**
+ * Check or Uncheck element in page
+ */
+When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, container, key) {
+  const elementFinder = element.getElementFinder(container, key);
+  const checkOrNot = (checkOrUncheck === 'checks');
+
+  elementFinder.isSelected().then(isSelected => {
+    if (checkOrNot) {
+      if (!isSelected) {
         elementFinder.click();
       }
-    });
+    } else if (isSelected) {
+      elementFinder.click();
+    }
   });
+});
 
-  /**
-   * Accept or dismiss popup
-   */
-  this.When(/^user (accept|dismiss) the popup$/, function (action) {
-    // thread sleep before switch
-    setTimeout(() => {
-      if (action !== 'accept' && action !== 'dismiss') {
-        driver.switchTo().alert().dismiss();
-        throw new Error(`Action ${action} unknown`);
-      }
-      if (action === 'accept') {
-        driver.switchTo().alert().accept();
-      }
-      if (action === 'dismiss') {
-        driver.switchTo().alert().dismiss();
-      }
-      // _this.delayCallback(callback);
-    }, 200);
+/**
+ * Accept or dismiss popup
+ */
+When(/^user (accept|dismiss) the popup$/, function (action) {
+  // thread sleep before switch
+  setTimeout(() => {
+    if (action !== 'accept' && action !== 'dismiss') {
+      driver.switchTo().alert().dismiss();
+      throw new Error(`Action ${action} unknown`);
+    }
+    if (action === 'accept') {
+      driver.switchTo().alert().accept();
+    }
+    if (action === 'dismiss') {
+      driver.switchTo().alert().dismiss();
+    }
+    // _this.delayCallback(callback);
+  }, 200);
 
-    // _this.handleError(errorMessage, callback);
-  });
-};
+  // _this.handleError(errorMessage, callback);
+});
