@@ -1,7 +1,7 @@
 var helperElement = require('../support/helpers/element');
 
 const { Given, When } = require("cucumber");
-const { common, page } = helpers;
+const { common, element, page } = helpers;
 
 /**
  * Navigate to a page
@@ -37,15 +37,8 @@ Given(/^user refreshes the page$/, () => {
  * Highlight element on the screen
  */
 When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key, callback) => {
-  var _this = this;
-  var elementFinder = helperElement.getElementFinder(container, key);
-
-  _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-    helperElement.nutHighlightElement(elementFinder);
-    _this.delayCallback(callback);
-  }, function isPresentAndDisplayedError(errorMessage) {
-    _this.handleError(errorMessage, callback);
-  });
+  const elementFinder = element.getElementFinder(container, key);
+  return element.nutHighlightElement(elementFinder);
 });
 
 /**

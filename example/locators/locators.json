@@ -29,6 +29,11 @@
           "value": "name"
         },
         {
+          "key": "email",
+          "type": "id",
+          "value": "email"
+        },
+        {
           "key": "combo",
           "type": "id",
           "value": "choose"
