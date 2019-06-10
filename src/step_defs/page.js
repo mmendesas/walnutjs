@@ -1,5 +1,3 @@
-var helperElement = require('../support/helpers/element');
-
 const { Given, When } = require("cucumber");
 const { common, element, page } = helpers;
 
@@ -45,13 +43,11 @@ When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key, callbac
 * scroll to element
 */
 When(/^user scrolls to '(.+)-(.+)'$/, (container, key, callback) => {
-  var _this = this;
-  var elementFinder = helperElement.getElementFinder(container, key);
+  const elementFinder = element.getElementFinder(container, key);
 
-  elementFinder.getLocation().then(function locate(elementLocation) {
-    browser.executeScript('window.scrollTo(0, 0);');
-    browser.executeScript('window.scrollTo(' + elementLocation.x + ',' + elementLocation.y + ');');
-    _this.delayCallback(callback);
+  elementFinder.getLocation().then((elementLocation) => {
+    driver.executeScript('window.scrollTo(0, 0);');
+    driver.executeScript(`window.scrollTo(${elementLocation.x},${elementLocation.y}`);
   });
 });
 
@@ -59,25 +55,22 @@ When(/^user scrolls to '(.+)-(.+)'$/, (container, key, callback) => {
 * scrolls to direction x times
 */
 When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times, callback) => {
-  var _this = this;
-
-  for (var i = 0; i < times; i++) {
+  for (let i = 0; i < times; i++) {
     switch (direction) {
       case 'up':
-        browser.executeScript("window.scrollBy(0, -50);");
+        driver.executeScript("window.scrollBy(0, -50);");
         break;
       case 'down':
-        browser.executeScript("window.scrollBy(0, 50);");
+        driver.executeScript("window.scrollBy(0, 50);");
         break;
       case 'left':
-        browser.executeScript("window.scrollBy(-100, 0);");
+        driver.executeScript("window.scrollBy(-100, 0);");
         break;
       case 'right':
-        browser.executeScript("window.scrollBy(100, 0);");
+        driver.executeScript("window.scrollBy(100, 0);");
         break;
       default:
         break;
     }
   }
-  _this.delayCallback(callback);
 });

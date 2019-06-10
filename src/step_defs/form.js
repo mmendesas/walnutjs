@@ -26,7 +26,7 @@ When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, 
 Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, text) => {
   text = common.getTreatedValue(text);
   const elementFinder = element.getElementFinder(container, key);
-  page.executeScriptArgs('arguments[0].value=arguments[1]', elementFinder, text);
+  return driver.executeScript(`arguments[0].value=${text}`, elementFinder);
 });
 
 /**
@@ -48,7 +48,7 @@ When(/^user clicks by JS on '(.+)-(.+)'$/, (container, key) => {
 /**
  * Selects a option in the combo-box element in page
  */
-When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (container, key, value) {
+When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, (container, key, value) => {
   value = common.getTreatedValue(value);
   const elementFinder = element.getElementFinder(container, key);
 
@@ -76,7 +76,7 @@ When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, function (containe
 /**
  * Check or Uncheck element in page
  */
-When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, container, key) {
+When(/^user (checks|unchecks) the '(.+)-(.+)'$/, (checkOrUncheck, container, key) => {
   const elementFinder = element.getElementFinder(container, key);
   const checkOrNot = (checkOrUncheck === 'checks');
 
@@ -94,7 +94,7 @@ When(/^user (checks|unchecks) the '(.+)-(.+)'$/, function (checkOrUncheck, conta
 /**
  * Accept or dismiss popup
  */
-When(/^user (accept|dismiss) the popup$/, function (action) {
+When(/^user (accept|dismiss) the popup$/, (action) => {
   // thread sleep before switch
   setTimeout(() => {
     if (action !== 'accept' && action !== 'dismiss') {
@@ -107,8 +107,5 @@ When(/^user (accept|dismiss) the popup$/, function (action) {
     if (action === 'dismiss') {
       driver.switchTo().alert().dismiss();
     }
-    // _this.delayCallback(callback);
   }, 200);
-
-  // _this.handleError(errorMessage, callback);
 });
