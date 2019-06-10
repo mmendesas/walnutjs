@@ -106,8 +106,8 @@ const cucumberCli = new Cucumber.Cli(cucumberInfo);
 
 cucumberCli.run()
   .then((succeeded) => {
-    var code = succeeded ? 0 : 1;
-    function exitNow() {
+    const code = succeeded.success ? 0 : 1;
+    exitNow = () => {
       process.exit(code);
     }
 

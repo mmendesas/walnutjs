@@ -8,7 +8,7 @@ const { common, page } = helpers;
  */
 Given(/^user navigates to '(.*)'$/, (url) => {
   const gotourl = common.getTreatedValue(url);
-  return helpers.page.loadPage(gotourl)
+  return page.loadPage(gotourl)
 });
 
 /**

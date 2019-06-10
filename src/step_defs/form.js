@@ -10,8 +10,6 @@ When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
   return elementFinder.sendKeys(text);
 });
 
-
-
 /**
  * Fills the element in page by replacing the existing text in that element
  */

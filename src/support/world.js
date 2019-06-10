@@ -55,7 +55,7 @@ function closeBrowser() {
 }
 
 function tearDownBrowser() {
-  switch (config.selenium.tearDownStrategy) {
+  switch (config.selenium.browserTeardownStrategy) {
     case 'none':
       return Promise.resolve();
     case 'clear':
@@ -118,7 +118,7 @@ AfterAll((done) => {
 // execute after each scenario
 After((scenario) => {
 
-  if (scenario.isFailed() && !config.noScreenshot) {
+  if (scenario.result.status !== 'passed' && !config.noScreenshot) {
 
     return driver.takeScreenshot((screenShot) => {
 
