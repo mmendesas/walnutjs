@@ -74,3 +74,24 @@ When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times, 
     }
   }
 });
+
+/**
+ * Clears the current cookies
+ */
+When(/^user clears the cookies$/, () => {
+  return page.clearCookies();
+});
+
+/**
+ * Add a specific cookie to current session
+ */
+When(/^user add a cookie '(.*)' with value '(.*)'$/, (name, value) => {
+  return page.addCookie(name, value)
+});
+
+/**
+ * Executes a simple JS script
+ */
+Given(/^user executes the JS '(.*)'$/, (code, callback) => {
+  return page.executeScript(code);
+});

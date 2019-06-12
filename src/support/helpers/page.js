@@ -22,6 +22,10 @@ module.exports = {
     return driver.navigate().refresh();
   },
 
+  addCookie: (name, value) => {
+    return driver.manage().addCookie({ name, value });
+  },
+
   clearCookies: () => {
     return driver.manage().deleteAllCookies();
   },
@@ -35,6 +39,10 @@ module.exports = {
   },
 
   executeScriptArgs: (script, ...args) => {
-    driver.executeScript(script, ...args);
+    return driver.executeScript(script, ...args);
+  },
+
+  executeScript: (script) => {
+    return driver.executeScript(script)
   }
 };

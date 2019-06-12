@@ -8,5 +8,14 @@ Feature: Cucumber test
     When user fills 'Grosa-teste2' with 'led zeppelin wikipedia'
     # When user fills 'GoogleHome-SearchInput' by JS with 'jsonla'
     When user fills 'Grosa-teste2' by replacing text with '2231'
+    # And user waits for 5 seconds
+    And user stores the value 'asdf' in variable 'mteste'
+    And user stores the following list of variables:
+      | grosa | marcio |
+      | name  | mendes |
+
+    Given user stores the TEXT from element 'Grosa-combo' in variable 'grosa3'
+    Then user prints all variables to console
+    Then user prints the message 'gros' to console
 
 # Then user clicks on 'Grosa-teste'

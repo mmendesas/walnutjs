@@ -1,142 +1,106 @@
 var helperVars = require('../support/helpers/variables');
 var helperInfo = require('../support/helpers/info');
 var helperElement = require('../support/helpers/element');
-var helperCommon = require('../support/helpers/common');
 var helperString = require('../support/helpers/string');
 var _ = require('lodash');
 
-var CommonSteps = function () {
-    /**
-     * Sleeps the execution for a specific time in seconds
-     */
-  this.Then(/^user waits for ([0-9]+) seconds$/, function (time, callback) {
-    browser.sleep(time * 1000).then(callback);
+const { Given, When, Then } = require('cucumber');
+const { common, string, element, vars } = helpers;
+
+/**
+ * Sleeps the execution for a specific time in seconds
+ */
+Then(/^user waits for ([0-9]+) seconds$/, (time) => {
+  return driver.sleep(time * 1000);
+});
+
+/**
+ * Stores a value in a variable to use between scenarios
+ */
+Given(/^user stores the value '(.*)' in variable '(.*)'$/, (value, name) => {
+  const varName = common.getTreatedValue(name);
+  const varvalue = common.getTreatedValue(value);
+  vars.addVariable(varName, varvalue);
+});
+
+/**
+ * Stores a list of variables
+ */
+Given(/^user stores the following list of variables:$/, (data) => {
+  data.raw().forEach((item) => {
+    const varName = common.getTreatedValue(item[0]);
+    const varvalue = common.getTreatedValue(item[1]);
+    vars.addVariable(varName, varvalue);
   });
+});
 
-    /**
-     * Stores a value in a variable to use between scenarios
-     */
-  this.Given(/^user stores the value '(.*)' in variable '(.*)'$/, function (value, name) {
-    var varName = helperCommon.getTreatedValue(name);
-    var varvalue = helperCommon.getTreatedValue(value);
+/**
+ * Prints a message to console, with or without walnut vars/expressions
+ */
+Given(/^user prints the message '(.*)' to console$/, (text) => {
+  text = common.getTreatedValue(text);
+  helperInfo.logInfo(text);
+});
 
-    helperVars.addVariable(varName, varvalue);
-  });
+/**
+ * Prints all variables stored at to console
+ */
+Given(/^user prints all variables to console$/, () => {
+  helperInfo.logInfo('-------------------------------------------');
+  console.log(JSON.stringify(helperVars.getAllVariables(), null, 2));
+  helperInfo.logInfo('-------------------------------------------');
+});
 
-    /**
-     * Stores a list of variables
-     */
-  this.Given(/^user stores the following list of variables:$/, function (data) {
-    _.forEach(data.raw(), function (item) {
-      var varName = helperCommon.getTreatedValue(item[0]);
-      var varvalue = helperCommon.getTreatedValue(item[1]);
+/**
+ * Stores the value from element inside a variable
+ */
+Given(/^user stores the (TEXT|VALUE) from element '(.+)-(.+)' in variable '(.*)'$/, async (type, container, key, varName) => {
+  const elementFinder = element.getElementFinder(container, key);
+  let text = '';
+  if (type.toLowerCase() === 'text') {
+    text = await elementFinder.getText();
+  } else {
+    text = await elementFinder.getAttribute('value');
+  }
+  vars.addVariable(varName, text);
+});
 
-      helperVars.addVariable(varName, varvalue);
-    });
-  });
+/**
+ * Stores the elements count in variable
+ */
+Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, (container, key, varName) => {
+  var deferred = protractor.promise.defer();
 
-    /**
-     * Prints a message to console, with or without walnut vars/expressions
-     */
-  this.Given(/^user prints the message '(.*)' to console$/, function (text) {
-    text = helperCommon.getTreatedValue(text);
-    helperInfo.logInfo(text);
-  });
-
-    /**
-     * Prints all variables stored at to console
-     */
-  this.Given(/^user prints all variables to console$/, function () {
-    helperInfo.logInfo('-------------------------------------------');
-    console.log(helperVars.getAllVariables());
-    helperInfo.logInfo('-------------------------------------------');
-  });
-
-    /**
-     * Stores the value from element inside a variable
-     */
-  this.Given(/^user stores the (TEXT|VALUE) from element '(.+)-(.+)' in variable '(.*)'$/, function (type, container, key, varName) {
-    var deferred = protractor.promise.defer();
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    if (type.toLowerCase() === 'text') {
-      elementFinder.getText().then(function getTextSuccess (text) {
-        helperVars.addVariable(varName, text);
-        deferred.fulfill();
-      });
-    } else {
-      elementFinder.getAttribute('text').then(function getValueSuccess (value) {
-        helperVars.addVariable(varName, value);
-        deferred.fulfill();
-      });
-    }
-
-    return deferred.promise;
-  });
-
-    /**
-     * Stores the elements count in variable
-     */
-  this.Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, function (container, key, varName) {
-    var deferred = protractor.promise.defer();
-
-    helperElement.getElementFinderAll(container, key).count().then(function (count) {
+  helperElement.getElementFinderAll(container, key).count()
+    .then((count) => {
       helperVars.addVariable(varName, count);
       deferred.fulfill();
     });
 
-    return deferred.promise;
-  });
+  return deferred.promise;
+});
 
-    /**
-     * Stores a screenshot in the path, using pattern 'path|imageName'
-     */
-  this.Then(/^user saves a screenshot '(.*)'$/, function (path_list) {
-    path_list = helperCommon.getTreatedValue(path_list);
+/**
+ * Stores a screenshot in the path, using pattern 'path|imageName'
+ */
+Then(/^user saves a screenshot '(.*)'$/, (path_list) => {
+  path_list = common.getTreatedValue(path_list);
 
-    if (path_list.includes('|')) {
-      var split = path_list.split('|');
-      var name = split[split.length - 1];
+  if (path_list.includes('|')) {
+    const split = path_list.split('|');
+    const name = split[split.length - 1];
 
-      split.pop();
+    split.pop();
 
-      var img_num = parseInt(helperVars.getVariable('img_num'));
+    const img_num = parseInt(helperVars.getVariable('img_num'));
 
-            // add format to 3 digits
-      var valWithDig = helperString.formatWitDigits(img_num, 3);
+    // add format to 3 digits
+    const valWithDig = string.formatWitDigits(img_num, 3);
 
-      name = helperString.formatString('{0}_{1}', [valWithDig, name]);
+    name = string.formatString('{0}_{1}', [valWithDig, name]);
 
-      this.saveScreenshot(split, name);
+    this.saveScreenshot(split, name);
 
-      helperVars.addVariable('img_num', ++img_num);
-    }
-  });
-
-    /**
-     * Clears the current cookies
-     */
-  this.When(/^user clears the cookies$/, function () {
-    browser.manage().deleteAllCookies();
-  });
-
-    /**
-     * Add a specific cookie to current session
-     */
-  this.When(/^user add a cookie '(.*)' with value '(.*)'$/, function (cname, cvalue) {
-    browser.manage().addCookie({ name: cname, value: cvalue });
-  });
-
-    /**
-     * Executes a simple JS script
-     */
-  this.Given(/^user executes the JS '(.*)'$/, function (code, callback) {
-    var _this = this;
-
-    browser.executeScript(code).then(function () {
-      _this.delayCallback(callback);
-    });
-  });
-};
-
-module.exports = CommonSteps;
+    vars.addVariable('img_num', ++img_num);
+  }
+});

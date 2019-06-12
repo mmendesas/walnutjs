@@ -9,7 +9,8 @@ const { version, description } = require('../package.json');
 const config = {
   walnut: {
     parametersPath: '',
-    locatorsPath: '/Users/mmendesas/Documents/mdocs/walnutjs/example/locators'
+    locatorsPath: '/Users/mmendesas/Documents/mdocs/walnutjs/example/locators',
+    enableDebug: false
   },
   cucumber: {
     steps: './steps',
