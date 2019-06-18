@@ -4,6 +4,7 @@ const element = require('./element');
 const string = require('./string');
 const vars = require('./variables');
 const params = require('./params');
+const logger = require('./logger');
 
 module.exports = {
   page,
@@ -11,5 +12,6 @@ module.exports = {
   element,
   string,
   vars,
-  params
+  params,
+  logger
 }

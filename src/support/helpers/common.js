@@ -3,6 +3,9 @@ const string = require('./string');
 const vars = require('./variables');
 const params = require('./params');
 
+const fs = require('fs-plus')
+const path = require('path');
+
 module.exports = {
   /**
    * Process expressions and vars in a text with walnut marks '${text}'
@@ -83,6 +86,14 @@ module.exports = {
     if (comparisson.result) { comparisson.msg = '' }
 
     return comparisson;
+  },
+
+  saveScreenshot: (folder_path, name) => {
+    driver.takeScreenshot().then((screenshot, err) => {
+      fs.writeFile(path.join(folder_path, `${name}.png`), screenshot, 'base64', (err) => {
+        console.log(err)
+      })
+    });
   }
 
 };

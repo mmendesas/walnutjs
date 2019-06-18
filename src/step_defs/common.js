@@ -1,11 +1,5 @@
-var helperVars = require('../support/helpers/variables');
-var helperInfo = require('../support/helpers/info');
-var helperElement = require('../support/helpers/element');
-var helperString = require('../support/helpers/string');
-var _ = require('lodash');
-
-const { Given, When, Then } = require('cucumber');
-const { common, string, element, vars } = helpers;
+const { Given, Then } = require('cucumber');
+const { common, string, element, vars, logger } = helpers;
 
 /**
  * Sleeps the execution for a specific time in seconds
@@ -39,16 +33,14 @@ Given(/^user stores the following list of variables:$/, (data) => {
  */
 Given(/^user prints the message '(.*)' to console$/, (text) => {
   text = common.getTreatedValue(text);
-  helperInfo.logInfo(text);
+  logger.info(text);
 });
 
 /**
  * Prints all variables stored at to console
  */
 Given(/^user prints all variables to console$/, () => {
-  helperInfo.logInfo('-------------------------------------------');
-  console.log(JSON.stringify(helperVars.getAllVariables(), null, 2));
-  helperInfo.logInfo('-------------------------------------------');
+  logger.info(`all variables: ${JSON.stringify(vars.getAllVariables(), null, 2)}`);
 });
 
 /**
@@ -69,15 +61,11 @@ Given(/^user stores the (TEXT|VALUE) from element '(.+)-(.+)' in variable '(.*)'
  * Stores the elements count in variable
  */
 Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, (container, key, varName) => {
-  var deferred = protractor.promise.defer();
-
-  helperElement.getElementFinderAll(container, key).count()
+  return element.getElementFinderAll(container, key)
+    .count()
     .then((count) => {
-      helperVars.addVariable(varName, count);
-      deferred.fulfill();
+      vars.addVariable(varName, count);
     });
-
-  return deferred.promise;
 });
 
 /**
@@ -91,16 +79,13 @@ Then(/^user saves a screenshot '(.*)'$/, (path_list) => {
     const name = split[split.length - 1];
 
     split.pop();
-
-    const img_num = parseInt(helperVars.getVariable('img_num'));
+    const img_num = parseInt(vars.getVariable('img_num'));
 
     // add format to 3 digits
     const valWithDig = string.formatWitDigits(img_num, 3);
+    name = `${valWithDig}_${name}`
 
-    name = string.formatString('{0}_{1}', [valWithDig, name]);
-
-    this.saveScreenshot(split, name);
-
+    common.saveScreenshot(split, name)
     vars.addVariable('img_num', ++img_num);
   }
 });

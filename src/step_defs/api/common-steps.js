@@ -1,16 +1,14 @@
-var helperInfo = require('../../support/helpers/info');
 var trest = require('../../support/api/client');
+
+const { logger } = helpers;
 
 var commonapi = function () {
   /**
    * User prints the current body content (Req|Res)
    */
   this.Given(/^\(api\) user prints the current (REQUEST|RESPONSE) body content$/, function (type, callback) {
-    var _this = this;
-    var content = type === 'REQUEST' ? trest.requestContent : trest.response.raw_body;
-
-    helperInfo.logInfoFormat('[{0}] content:\n{1}\n', [type, content]);
-    _this.delayCallback(callback);
+    const content = type === 'REQUEST' ? trest.requestContent : trest.response.raw_body;
+    logger.info(`[${type}] content:\n${content}\n`);
   });
 
   /**

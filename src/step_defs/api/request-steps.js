@@ -1,104 +1,83 @@
-var helperCommon = require('../../support/helpers/common');
-var helperFile = require('../../support/helpers/file');
-var helperInfo = require('../../support/helpers/info');
-var helperString = require('../../support/helpers/string');
-var trest = require('../../support/api/client');
-var jsonparser = require('../../support/parser/jsonparser');
-var _ = require('lodash');
+const helperFile = require('../../support/helpers/file');
+const trest = require('../../support/api/client');
+const jsonparser = require('../../support/parser/jsonparser');
+const { common, logger } = helpers;
 
 var reqSteps = function () {
   /**
    * Set the default baseURI
    */
-  this.Given(/^\(api\) user set the baseURI with '(.*)'$/, function (baseURI, callback) {
-    var _this = this;
-
-    baseURI = helperCommon.getTreatedValue(baseURI);
+  Given(/^\(api\) user set the baseURI with '(.*)'$/, (baseURI) => {
+    baseURI = common.getTreatedValue(baseURI);
     trest.setBaseURL(baseURI);
-    _this.delayCallback(callback);
   });
 
   /**
    * Create the request for a specific path
    */
-  this.Given(/^\(api\) user creates a (POST|GET|PUT|PATCH|DELETE|HEAD) request to '(.*)'$/, function (method, path, callback) {
-    var _this = this;
-
+  Given(/^\(api\) user creates a (POST|GET|PUT|PATCH|DELETE|HEAD) request to '(.*)'$/, (method, path) => {
     trest.createRequest(method, path);
-    _this.delayCallback(callback);
   });
 
   /**
    * Executes the request
    */
-  this.When(/^\(api\) user sends the request$/, function (callback) {
-    var _this = this;
-
-    trest.sendRequest()
-      .then(() => _this.delayCallback(callback));
+  When(/^\(api\) user sends the request$/, () => {
+    return trest.sendRequest()
   });
 
   /**
    * Change request headers
    */
-  this.When(/^\(api\) user sets the following headers to request:$/, function (data, callback) {
-    _.forEach(data.raw(), function (item) {
-      var name = helperCommon.getTreatedValue(item[0]);
-      var value = helperCommon.getTreatedValue(item[1]);
-
+  When(/^\(api\) user sets the following headers to request:$/, (data) => {
+    data.raw().forEach((item) => {
+      const name = common.getTreatedValue(item[0]);
+      const value = common.getTreatedValue(item[1]);
       trest.addHeader(name, value);
     });
-    this.delayCallback(callback);
   });
 
   /**
    * Add parameters to request
    */
-  this.When(/^\(api\) user add the following parameters to request:$/, function (data, callback) {
-    var _this = this;
-
-    _.forEach(data.raw(), function (item) {
+  When(/^\(api\) user add the following parameters to request:$/, (data) => {
+    data.raw().forEach((item) => {
       trest.addParam(item[0], item[1]);
     });
-    _this.delayCallback(callback);
   });
 
   /**
    * Add body content from resource
    */
-  this.When(/^\(api\) user add the request BODY from the resource '(.*)'$/, function (filepath, callback) {
-    filepath = helperCommon.getTreatedValue(filepath);
+  When(/^\(api\) user add the request BODY from the resource '(.*)'$/, (filepath) => {
+    filepath = common.getTreatedValue(filepath);
     filepath = helperFile.getTreatedPath(filepath);
 
     trest.requestContent = '';
     if (filepath === '') {
-      helperInfo.logError('File [' + filepath + '] not found. Please set the complete path of the file.');
+      logger.error(`File [${filepath}] not found. Please set the complete path of the file.`);
     } else {
       trest.requestContent = helperFile.readContentFromFile(filepath);
     }
-
-    helperInfo.logDebugFormat('Content Pattern used as body:\n{0}\n', [trest.requestContent]);
-    this.delayCallback(callback);
+    logger.info(`Content Pattern used as body:\n${trest.requestContent}\n`);
   });
 
 
   /**
    * Add body as string in current request
    */
-  this.When(/^\(api\) user add the following value to BODY request:$/, function (fileContent, callback) {
-    fileContent = helperCommon.getTreatedValue(fileContent);
-
+  When(/^\(api\) user add the following value to BODY request:$/, (fileContent) => {
+    fileContent = common.getTreatedValue(fileContent);
     trest.requestContent = fileContent;
-    helperInfo.logDebugFormat('Content Pattern used as body:\n{0}\n', [trest.requestContent]);
-    this.delayCallback(callback);
+    logger.info(`Content Pattern used as body:\n${trest.requestContent}\n`);
   });
 
   /**
    * User update current json body in request
    */
-  this.Then(/^\(api\) user fills '(.*)' with '(.*)'$/, function (keyPath, newValue, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    var value = helperCommon.getTreatedValue(newValue);
+  Then(/^\(api\) user fills '(.*)' with '(.*)'$/, (keyPath, newValue) => {
+    keyPath = common.getTreatedValue(keyPath);
+    var value = common.getTreatedValue(newValue);
 
     // change field value in json
     jsonparser.init(JSON.parse(trest.requestContent));
@@ -106,16 +85,14 @@ var reqSteps = function () {
 
     // update the value in request content file
     trest.requestContent = JSON.stringify(jsonparser.jsonObj);
-
-    this.delayCallback(callback);
   });
 
   /**
    * User update current json body in request
    */
-  this.Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type$/, function (keyPath, newValue, type, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    var value = helperCommon.getTreatedValue(newValue);
+  Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type$/, (keyPath, newValue, type) => {
+    keyPath = common.getTreatedValue(keyPath);
+    var value = common.getTreatedValue(newValue);
     var newValue;
 
     switch (type) {
@@ -139,15 +116,13 @@ var reqSteps = function () {
 
     // update the value in request content file
     trest.requestContent = JSON.stringify(jsonparser.jsonObj);
-
-    this.delayCallback(callback);
   });
 
   /**
    * User update current json body in request with null type
    */
-  this.Then(/^\(api\) user fills '(.*)' using NULL type$/, function (keyPath, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
+  Then(/^\(api\) user fills '(.*)' using NULL type$/, (keyPath) => {
+    keyPath = common.getTreatedValue(keyPath);
     var newValue = null;
 
     // change field value in json
@@ -156,16 +131,14 @@ var reqSteps = function () {
 
     // update the value in request content file
     trest.requestContent = JSON.stringify(jsonparser.jsonObj);
-
-    this.delayCallback(callback);
   });
 
   /**
    * User update string with comma to array current json body in request
    */
-  this.Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, function (keyPath, newValue, type, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    var value = helperCommon.getTreatedValue(newValue);
+  Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, (keyPath, newValue, type) => {
+    keyPath = common.getTreatedValue(keyPath);
+    var value = common.getTreatedValue(newValue);
     var newValue;
 
     switch (type) {
@@ -173,7 +146,7 @@ var reqSteps = function () {
         newValue = value.split(',').map(Number);
         break;
       case 'DOUBLE':
-        newValue = value.split(',').map(function (value) { return parseFloat(value) });
+        newValue = value.split(',').map((value) => { return parseFloat(value) });
         break;
       default:
         newValue = value.split(',');
@@ -187,17 +160,16 @@ var reqSteps = function () {
     // update the value in request content file
     trest.requestContent = JSON.stringify(jsonparser.jsonObj);
 
-    this.delayCallback(callback);
   });
 
 
   /**
    * User update current json body in request with multiple fields
    */
-  this.When(/^\(api\) user fills the request body with the following fields:$/, function (data, callback) {
-    _.forEach(data.raw(), function (item) {
-      var keyPath = helperCommon.getTreatedValue(item[0]);
-      var value = helperCommon.getTreatedValue(item[1]);
+  When(/^\(api\) user fills the request body with the following fields:$/, (data) => {
+    data.raw().forEach((item) => {
+      const keyPath = common.getTreatedValue(item[0]);
+      const value = common.getTreatedValue(item[1]);
 
       // change field value in json
       jsonparser.init(JSON.parse(trest.requestContent));
@@ -206,14 +178,13 @@ var reqSteps = function () {
       // update the value in request content file
       trest.requestContent = JSON.stringify(jsonparser.jsonObj);
     });
-    this.delayCallback(callback);
   });
 
   /**
   * User delete key from the current json body in request
   */
-  this.Then(/^\(api\) user deletes key '(.*)'$/, function (keyPath, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
+  Then(/^\(api\) user deletes key '(.*)'$/, (keyPath) => {
+    keyPath = common.getTreatedValue(keyPath);
 
     // delete the key in json
     jsonparser.init(JSON.parse(trest.requestContent));
@@ -221,8 +192,6 @@ var reqSteps = function () {
 
     // update the value in request content file
     trest.requestContent = JSON.stringify(jsonparser.jsonObj);
-
-    this.delayCallback(callback);
   });
 };
 
