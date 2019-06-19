@@ -43,49 +43,38 @@ module.exports = {
   },
 
   compare: (current, type, received) => {
-    var comparisson = { result: null, msg: null };
-
     type = type.trim().toLowerCase().replace(/\s/gi, '');
-
     current = current.toString();
     received = received.toString();
 
     switch (type) {
       case 'whichcontains':
-        comparisson.result = current.includes(received);
-        comparisson.msg = `Current value [$${current}] not contains [${received}]`;
+        assert(current.includes(received), `Current value [$${current}] not contains [${received}]`);
         break;
 
       case 'whichnotcontains':
-        comparisson.result = !current.includes(received);
-        comparisson.msg = `Current value [${current}] contains [${received}]`;
+        assert(!current.includes(received), `Current value [${current}] contains [${received}]`);
         break;
 
       case 'equalsto':
-        comparisson.result = current === received;
-        comparisson.msg = `Current value [${current}] not equals to [${received}]`;
+        assert.equal(current, received, `Current value [${current}] not equals to [${received}]`);
         break;
 
       case 'notequalsto':
-        comparisson.result = current !== received;
-        comparisson.msg = `Current value [${current}] is equals to [${received}]`;
+        assert.notEqual(current, received, `Current value [${current}] is equals to [${received}]`);
         break;
+
       case 'whichstartswith':
-        comparisson.result = current.startsWith(received);
-        comparisson.msg = `Current value [${current}] does not start with [${received}]`;
+        assert(current.startsWith(received), `Current value [${current}] does not start with [${received}]`);
         break;
+
       case 'whichendswith':
-        comparisson.result = current.endsWith(received);
-        comparisson.msg = `Current value [${current}] does not end with [${received}]`;
+        assert(current.endsWith(received), `Current value [${current}] does not end with [${received}]`);
         break;
 
       default:
         break;
     }
-
-    if (comparisson.result) { comparisson.msg = '' }
-
-    return comparisson;
   },
 
   saveScreenshot: (folder_path, name) => {
