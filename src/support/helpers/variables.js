@@ -30,11 +30,11 @@ module.exports = {
    */
   nutParseVars: (text) => {
     if (text.includes('vars.')) {
-      var list = text.match(/(vars.[\w]*)/g);
+      const list = text.match(/(vars.[\w]*)/g);
 
-      list.forEach(function (item) {
-        var varName = item.split('.')[1];
-        var varValue = Variables.getVariable(varName);
+      list.forEach((item) => {
+        const varName = item.split('.')[1];
+        const varValue = getVariable(varName);
 
         text = text.replace(item, varValue);
       });

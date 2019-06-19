@@ -1,9 +1,7 @@
-'use strict';
-
-var xpath = require('xpath');
-var DOMParser = require('xmldom').DOMParser;
-var XMLSerializer = require('xmldom').XMLSerializer;
-var serializer = new XMLSerializer();
+const xpath = require('xpath');
+const DOMParser = require('xmldom').DOMParser;
+const XMLSerializer = require('xmldom').XMLSerializer;
+const serializer = new XMLSerializer();
 
 var xmlparser = {
 
@@ -13,18 +11,16 @@ var xmlparser = {
   /**
    * Set the current xmlContent
    */
-  init: function (xmlContent) {
+  init: (xmlContent) => {
     this.xmlContent = xmlContent;
   },
 
   /**
    * Returns the value from a Tag (find by xpath)
    */
-  getTagValue: function (xpath_expression) {
-    var doc = new DOMParser().parseFromString(this.xmlContent);
-    var node = xpath.select(xpath_expression, doc);
-
-
+  getTagValue: (xpath_expression) => {
+    const doc = new DOMParser().parseFromString(this.xmlContent);
+    const node = xpath.select(xpath_expression, doc);
     return node[0].textContent;
   },
 
@@ -32,8 +28,8 @@ var xmlparser = {
    * Set the value for a Tag (find by xpath)
    */
   setTagValue: function (path, value) {
-    var mdoc = new DOMParser().parseFromString(this.xmlContent, 'text/xml');
-    var mnode = xpath.select(path, mdoc);
+    const mdoc = new DOMParser().parseFromString(this.xmlContent, 'text/xml');
+    const mnode = xpath.select(path, mdoc);
 
     mnode[0].textContent = value;
     this.xmlContentEdited = serializer.serializeToString(mdoc);
