@@ -1,5 +1,6 @@
 const api = require('../../support/api/client');
 const { logger } = helpers;
+const { Given, When, Then } = require('cucumber');
 
 /**
  * User prints the current body content (Req|Res)

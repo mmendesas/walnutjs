@@ -1,11 +1,11 @@
-var path = require('path');
-var config = require('../config');
-var fs = require('fs');
+const path = require('path');
+const config = require('../config');
+const fs = require('fs-plus');
 
-var file = {
+module.exports = {
 
   getTreatedFilename: function (folder_path, name) {
-    var filename = path.join(this.getTreatedPath(config.evidencesPath), folder_path.join('/'), name);
+    const filename = path.join(this.getTreatedPath(config.evidencesPath), folder_path.join('/'), name);
 
     this.ensureDirectoryExistence(filename);
 
@@ -13,7 +13,7 @@ var file = {
   },
 
   ensureDirectoryExistence: function (filePath) {
-    var dirname = path.dirname(filePath);
+    const dirname = path.dirname(filePath);
 
     if (fs.existsSync(dirname)) {
       return true;
@@ -34,8 +34,7 @@ var file = {
   },
 
   writePNGToFile: function (data, filename) {
-    var pngStream = fs.createWriteStream(filename + '.png');
-
+    const pngStream = fs.createWriteStream(filename + '.png');
     pngStream.write(new Buffer(data, 'base64'));
     pngStream.end();
   },
@@ -47,6 +46,4 @@ var file = {
   writeContentToFile: function (data, filename) {
     fs.writeFileSync(filename, data, 'utf8');
   }
-};
-
-module.exports = file;
+}

@@ -5,6 +5,7 @@ const string = require('./string');
 const vars = require('./variables');
 const params = require('./params');
 const logger = require('./logger');
+const file = require('./file')
 
 module.exports = {
   page,
@@ -13,5 +14,6 @@ module.exports = {
   string,
   vars,
   params,
-  logger
+  logger,
+  file
 }
