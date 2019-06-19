@@ -70,7 +70,7 @@ function tearDownBrowser() {
  */
 function loadUIMap() {
   let uimap = { containers: [] }
-  const folder = config.walnut.locatorsPath;
+  const folder = config.walnut.path.locators;
 
   try {
     fs.readdirSync(folder)
