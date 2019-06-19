@@ -54,7 +54,7 @@ When(/^user scrolls to '(.+)-(.+)'$/, (container, key, callback) => {
 /**
 * scrolls to direction x times
 */
-When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times, callback) => {
+When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times) => {
   for (let i = 0; i < times; i++) {
     switch (direction) {
       case 'up':
@@ -92,6 +92,6 @@ When(/^user add a cookie '(.*)' with value '(.*)'$/, (name, value) => {
 /**
  * Executes a simple JS script
  */
-Given(/^user executes the JS '(.*)'$/, (code, callback) => {
+Given(/^user executes the JS '(.*)'$/, (code) => {
   return page.executeScript(code);
 });

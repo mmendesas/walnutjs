@@ -61,7 +61,7 @@ Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which no
 /**
  * Validate value in element
  */
-Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, text, callback) => {
+Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, text) => {
   const elementFinder = element.getElementFinder(container, key);
   text = common.getTreatedValue(text);
 
