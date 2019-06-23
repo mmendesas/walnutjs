@@ -6,7 +6,7 @@ module.exports = {
    * Replace parameters marks with correspondent value from file
   */
   nutParseParams(text) {
-    if (config.walnut.parametersPath !== '') {
+    if (text.includes('params.') && config.walnut.parametersPath !== '') {
       while (text.includes('params.')) {
         // var list = text.match(/(params.[^,{}]+)/g);
         var list = text.match(/params.\[(.*?)\]/g);

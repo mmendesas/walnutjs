@@ -12,30 +12,30 @@ module.exports = {
   /**
    * Check if text has Quotation Mark
    */
-  hasQuotationMark: (text) => {
+  hasQuotationMark: function (text) {
     return text.startsWith('\"') && text.endsWith('\"');
   },
 
   /**
    * Remove Quotation Mark
    */
-  removeQuotationMark: (text) => {
-    if (helpers.string.hasQuotationMark(text)) { text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"')) }
+  removeQuotationMark: function (text) {
+    if (this.hasQuotationMark(text)) { text = text.substring(text.indexOf('"') + 1, text.lastIndexOf('"')) }
     return text;
   },
 
   /**
    * Check if text has Brackets Mark
    */
-  hasBracketsMark: (text) => {
+  hasBracketsMark: function (text) {
     return text.startsWith('${') && text.endsWith('}');
   },
 
   /**
    * Remove Brackets Mark
    */
-  removeBracketsMark: (text) => {
-    if (helpers.string.hasBracketsMark(text)) { text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}')) }
+  removeBracketsMark: function (text) {
+    if (this.hasBracketsMark(text)) { text = text.substring(text.indexOf('{') + 1, text.lastIndexOf('}')) }
 
     return text;
   },
@@ -43,7 +43,7 @@ module.exports = {
   /**
    * Format string with parameters replacement
    */
-  formatString: (text, args) => {
+  formatString: function (text, args) {
     var mgroup = text.match((/{(\d+)}/g));
 
     if (mgroup) {
