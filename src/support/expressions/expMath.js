@@ -1,8 +1,8 @@
 var expMath = {
 
-    /**
-     * Used to make simple math operations
-     */
+  /**
+   * Used to make simple math operations
+   */
   parseExpression: function (expression) {
     var sb = [];
 
@@ -27,75 +27,75 @@ var expMath = {
 
     try {
       switch (type.toLowerCase().trim()) {
-      case 'i':
-        result = this.getIntegerProcessedValue(num01, oper, num02);
+        case 'i':
+          result = this.getIntegerProcessedValue(num01, oper, num02);
 
-        return result;
-      case 'd':
-        result = this.getFloatProcessedValue(num01, oper, num02);
+          return result;
+        case 'd':
+          result = this.getFloatProcessedValue(num01, oper, num02);
 
-        return result;
-      default:
-        break;
+          return result;
+        default:
+          break;
       }
     } catch (err) {
       throw sb.join('\n');
     }
   },
 
-    /**
-     * Return the result of operation as Integer
-     */
+  /**
+   * Return the result of operation as Integer
+   */
   getIntegerProcessedValue: function (num01, oper, num02) {
     var iRetValue = 0;
     var inum01 = parseInt(num01);
     var inum02 = parseInt(num02);
 
     switch (oper.trim().toLowerCase()) {
-    case 'add':
-      iRetValue = inum01 + inum02;
-      break;
-    case 'sub':
-      iRetValue = inum01 - inum02;
-      break;
-    case 'mul':
-      iRetValue = inum01 * inum02;
-      break;
-    case 'div':
-      iRetValue = inum01 / inum02;
-      break;
+      case 'add':
+        iRetValue = inum01 + inum02;
+        break;
+      case 'sub':
+        iRetValue = inum01 - inum02;
+        break;
+      case 'mul':
+        iRetValue = inum01 * inum02;
+        break;
+      case 'div':
+        iRetValue = inum01 / inum02;
+        break;
 
-    default:
-      throw 'Illegal argument';
+      default:
+        throw 'Illegal argument';
     }
 
     return iRetValue.toString();
   },
 
-    /**
-     * Return the result of operation as Float
-     */
+  /**
+   * Return the result of operation as Float
+   */
   getFloatProcessedValue: function (num01, oper, num02) {
     var dRetValue = 0;
     var dnum01 = parseFloat(num01);
     var dnum02 = parseFloat(num02);
 
     switch (oper.trim().toLowerCase()) {
-    case 'add':
-      dRetValue = dnum01 + dnum02;
-      break;
-    case 'sub':
-      dRetValue = dnum01 - dnum02;
-      break;
-    case 'mul':
-      dRetValue = dnum01 * dnum02;
-      break;
-    case 'div':
-      dRetValue = dnum01 / dnum02;
-      break;
+      case 'add':
+        dRetValue = dnum01 + dnum02;
+        break;
+      case 'sub':
+        dRetValue = dnum01 - dnum02;
+        break;
+      case 'mul':
+        dRetValue = dnum01 * dnum02;
+        break;
+      case 'div':
+        dRetValue = dnum01 / dnum02;
+        break;
 
-    default:
-      throw 'Illegal argument';
+      default:
+        throw 'Illegal argument';
     }
 
     return parseFloat(dRetValue).toString();
