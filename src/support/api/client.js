@@ -1,5 +1,5 @@
-var helperCommon = require('../helpers/common');
-var helperInfo = require('../helpers/info');
+const common = require('../helpers/common');
+const logger = require('../helpers/logger');
 const axios = require('axios')
 
 class ApiClient {
@@ -18,7 +18,7 @@ class ApiClient {
   }
 
   createRequest(method, path) {
-    path = helperCommon.getTreatedValue(path);
+    path = common.getTreatedValue(path);
 
     this.options = {
       ...this.options,
@@ -26,7 +26,7 @@ class ApiClient {
       url: path
     }
 
-    helperInfo.logDebug(`User creates the [${method}] request to [${path}]`);
+    logger.debug(`User creates the [${method}] request to [${path}]`);
   }
 
   sendRequest() {
@@ -41,19 +41,19 @@ class ApiClient {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+          logger.error(error.response.data);
+          logger.error(error.response.status);
+          logger.error(error.response.headers);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          console.log(error.request);
+          logger.error(error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
+          logger.error('Error', error.message);
         }
-        console.log(error.config);
+        logger.error(error.config);
       });
   }
 
