@@ -1,10 +1,10 @@
-var helperString = require('../helpers/string');
+const string = require('../helpers/string');
 
-var expCPF = {
+const expCPF = {
 
-    /**
-     * Used to generate a valid CPF with or without format
-     */
+  /**
+   * Used to generate a valid CPF with or without format
+   */
   parseExpression: function (expression) {
     if (expression != '' && expression != 'f') {
       var sb = [];
@@ -19,12 +19,12 @@ var expCPF = {
 
     if (expression === '') { return cpfResult }
 
-    if (expression === 'f') { return helperString.formatString('{0}{1}{2}.{3}{4}{5}.{6}{7}{8}-{9}{10}', cpfResult) }
+    if (expression === 'f') { return string.formatString('{0}{1}{2}.{3}{4}{5}.{6}{7}{8}-{9}{10}', cpfResult) }
   },
 
-    /**
-     * Generate the valid CPF
-     */
+  /**
+   * Generate the valid CPF
+   */
   generateCPF: function () {
     var ini = '';
     var num = 0;
@@ -37,9 +37,9 @@ var expCPF = {
     return ini + this.calculateLastNums(ini);
   },
 
-    /**
-     * Calculate the last two characteres
-     */
+  /**
+   * Calculate the last two characteres
+   */
   calculateLastNums: function (num) {
     var num01 = 0, num02 = 0;
     var sum = 0, weight = 10;
