@@ -1,29 +1,25 @@
-'use strict';
-
-var _ = require('lodash');
-var context = require('../context');
-var helperString = require('./string');
-var helperInfo = require('./info');
+const string = require('./string');
+const logger = require('./logger');
 var lastStyleValue = '';
 
-function isEmptyObject(o) {
-  return Object.keys(o).every(function (x) {
+const isEmptyObject = (o) => {
+  return Object.keys(o).every((x) => {
     return o[x] === '' || o[x] === null;
   });
 }
 
-function applyFilterInList(list, option) {
+const applyFilterInList = (list, option) => {
   switch (option.toLowerCase()) {
     case 'first':
       return list.first();
     case 'last':
       return list.last();
     case 'enabled':
-      return list.filter(function (elem) {
+      return list.filter((elem) => {
         return elem.isEnabled();
       });
     case 'displayed':
-      return list.filter(function (elem) {
+      return list.filter((elem) => {
         return elem.isDisplayed();
       });
     default:
@@ -62,26 +58,6 @@ const Element = {
 
     // wait element displayed
     return helpers.page.waitUntilElementIsPresent(elementBy)
-
-    // return the element based on type/value
-    // return this.getElements(locator.type, locator.value);
-
-    // return myList
-
-    // // apply filter options if included
-    // if (locator.options) {
-    //   var options = locator.options.split('|');
-
-    //   _.forEach(options, function (option) {
-    //     myList = applyFilterInList(myList, option);
-    //   });
-
-    //   // return filtered list
-    //   return myList;
-    // }
-
-    // // default: return first element of list
-    // return myList[0];
   },
 
   /**
@@ -172,7 +148,7 @@ const Element = {
             const { type, value, options } = locators[j];
 
             if (type.toLowerCase().startsWith('p:')) {
-              value = helperString.formatString(value, params);
+              value = string.formatString(value, params);
               type = type.substring(type.indexOf(':') + 1);
             }
 
@@ -180,8 +156,7 @@ const Element = {
             result = {
               key, type, value, options
             }
-
-            helperInfo.logDebug(helperString.formatString('Current Locator --> using [{0}] value [{1}] options[{2}]', [result.type, result.value, result.options]));
+            logger.debug(`Current Locator --> using [${type}] value [${value}] options[${options}]`);
 
             break;
           }
