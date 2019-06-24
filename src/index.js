@@ -12,7 +12,7 @@ const config = {
     paths: {
       locators: './example/locators',
       evidences: './example/photos',
-      parameters: './example/params'
+      parameters: './example/params/my-params.jsons'
     }
   },
   cucumber: {

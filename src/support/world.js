@@ -5,11 +5,13 @@ const {
   setDefaultTimeout,
   BeforeAll,
   AfterAll,
-  After
+  After,
+  Before
 } = require('cucumber');
 
 const expect = require('chai').expect;
 const assert = require('chai').assert;
+const { vars, logger, string, common, params } = require('../support/helpers');
 
 /**
  * Expose a list of vars globally to be used in each step definition
@@ -70,7 +72,7 @@ function tearDownBrowser() {
  */
 function loadUIMap() {
   let uimap = { containers: [] }
-  const folder = config.walnut.path.locators;
+  const folder = config.walnut.paths.locators;
 
   try {
     fs.readdirSync(folder)
@@ -79,16 +81,32 @@ function loadUIMap() {
           const content = fs.readFileSync(`${folder}/${file}`);
           uimap.containers = uimap.containers.concat(JSON.parse(content).containers);
         } catch (err) {
-          console.error(`Error: Locators - ${folder}/${file}. You need to inform correct structure of locator file.`)
+          logger.error(`Error: Locators - ${folder}/${file}. You need to inform correct structure of locator file.`)
         }
       });
   } catch (err) {
-    console.error('Error: Locators - You need to inform a valid locators folder path')
+    logger.error('Error: Locators - You need to inform a valid locators folder path')
     throw err
   }
 
-  global['locators'] = uimap
+  global['locators'] = uimap;
+}
 
+const loadParameters = () => {
+  let parameters = {};
+  const file = config.walnut.paths.parameters;
+  try {
+    const content = fs.readFileSync(file);
+    parameters = JSON.parse(content);
+  } catch (err) {
+    logger.error(`Inform a valid parameters path. ${err.message}`)
+    throw err
+  }
+  // set parameters to vars
+  params.setAsVariables(parameters);
+
+  // load parameters globally
+  global['parameters'] = parameters;
 }
 
 // create the driver and applitools eyes before scenario if it's not instantiated
@@ -97,8 +115,9 @@ BeforeAll((done) => {
   logging.installConsoleHandler();
   logging.getLogger('webdriver.http').setLevel(logging.Level.INFO);
 
-  // load UIMap
+  // load UIMap and parameters
   loadUIMap();
+  loadParameters();
 
   if (!global.driver) {
     global.driver = getDriverInstance();
@@ -113,6 +132,14 @@ AfterAll((done) => {
   else {
     new Promise((resolve) => resolve(done()));
   }
+})
+
+Before((scenario) => {
+  vars.addVariable("scenario_name", string.slugify(scenario.pickle.name));
+  vars.addVariable("img_num", "1");
+
+  var folder_default = common.getTreatedValue("${vars.project_name}|${vars.feature_name}|${vars.scenario_name}");
+  vars.addVariable('folder_default', folder_default);
 })
 
 // execute after each scenario

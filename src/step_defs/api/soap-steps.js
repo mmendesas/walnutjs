@@ -65,7 +65,7 @@ Then(/^\(soap\) the JSON \(jsonpath\) key '(.*)' has value (equals to|not equals
 /**
 * Stores the value from Request/Response
 */
-Then(/^\(soap\) user stores the value '(.*)' from (REQUEST|RESPONSE) in variable '(.*)'$/, (keyPath, type, varName) => {
+Then(/^\(soap\) user stores the value '(.*)' from (REQUEST|RESPONSE) in variable '(.*)'$/, (keyPath, type, name) => {
   const varName = common.getTreatedValue(name);
   keyPath = common.getTreatedValue(keyPath);
   const jsonObj = type === 'REQUEST' ? soapclient.jsonToSend : soapclient.jsonResponse;

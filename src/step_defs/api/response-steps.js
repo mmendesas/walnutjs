@@ -2,7 +2,7 @@ const api = require('../../support/api/client');
 const jsonparser = require('../../support/parser/jsonparser');
 const xmlparser = require('../../support/parser/xmlparser');
 const { vars, common, logger } = helpers;
-
+const { Then } = require('cucumber');
 /**
  *  Validates the response status code
  */

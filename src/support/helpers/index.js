@@ -6,6 +6,7 @@ const vars = require('./variables');
 const params = require('./params');
 const logger = require('./logger');
 const file = require('./file')
+const flatten = require('./flattenObject');
 
 module.exports = {
   page,
@@ -15,5 +16,6 @@ module.exports = {
   vars,
   params,
   logger,
-  file
+  file,
+  flatten
 }

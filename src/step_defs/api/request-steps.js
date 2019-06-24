@@ -92,7 +92,6 @@ Then(/^\(api\) user fills '(.*)' with '(.*)'$/, (keyPath, newValue) => {
 Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type$/, (keyPath, newValue, type) => {
   keyPath = common.getTreatedValue(keyPath);
   const value = common.getTreatedValue(newValue);
-  const newValue;
 
   switch (type) {
     case 'INT':
@@ -138,7 +137,6 @@ Then(/^\(api\) user fills '(.*)' using NULL type$/, (keyPath) => {
 Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, (keyPath, newValue, type) => {
   keyPath = common.getTreatedValue(keyPath);
   const value = common.getTreatedValue(newValue);
-  const newValue;
 
   switch (type) {
     case 'INT':

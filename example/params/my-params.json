@@ -1,0 +1,6 @@
+{
+  "name": "walnutjs-test",
+  "default": {
+    "base_url": "https://httpbin.org/get"
+  }
+}
