@@ -8,8 +8,8 @@ const parseExpression = (expression) => {
 
   if (parts.length < 2) {
     let sb = [];
-    sb.push('[1] - concatenate(arg1|arg2)      - concatenate(teste|451)      - teste451');
-    sb.push('[2] - concatenate(arg1|arg2|argN) - concatenate(teste|451|_abc) - teste451_abc');
+    sb.push('\t[1] - concatenate(arg1|arg2)      - concatenate(teste|451)      - teste451');
+    sb.push('\t[2] - concatenate(arg1|arg2|argN) - concatenate(teste|451|_abc) - teste451_abc');
 
     throw new Error(sb.join('\n'));
   }

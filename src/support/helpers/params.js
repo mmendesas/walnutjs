@@ -6,10 +6,10 @@ module.exports = {
    * Replace parameters marks with correspondent value from file
   */
   nutParseParams(text) {
-    if (text.includes('params.') && config.walnut.parametersPath !== '') {
+    if (global.parameters) {
       while (text.includes('params.')) {
         // var list = text.match(/(params.[^,{}]+)/g);
-        var list = text.match(/params.\[(.*?)\]/g);
+        const list = text.match(/params.\[(.*?)\]/g);
 
         list.forEach((item) => {
           const keypath = item.substring(item.indexOf('[') + 1, item.length - 1);

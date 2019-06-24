@@ -1,8 +1,6 @@
 const common = require('../../../src/support/helpers/common');
 const vars = require('../../../src/support/helpers/variables');
-
-const assert = require('chai').assert;
-global['assert'] = assert;
+global['assert'] = require('chai').assert;
 
 describe('Common Helper Tests', () => {
 

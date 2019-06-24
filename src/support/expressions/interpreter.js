@@ -42,8 +42,8 @@ class Interpreter {
         this.parseExpressionChain(chainExpression);
         chainExpression = this.resolveExpressionChain(chainExpression);
       } catch (err) {
-        let msg = `Error in Expression: ${expAux}. You need to inform correct arguments, try this: \n ${err.message}`;
-        logger.error(err.message);
+        let msg = `\n\nProblem found in Expression >> ${expAux}.\n\n You need to inform correct arguments, try this: \n ${err.message}`;
+        logger.error(msg);
       }
       break;
     }
