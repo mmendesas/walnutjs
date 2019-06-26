@@ -1,29 +1,29 @@
-const helperString = require('../../../src/support/helpers/string');
+const string = require('../../../src/support/helpers/string');
 const interpreter = require('../../../src/support/expressions/interpreter');
 
 describe('NOW Tests', () => {
-    it('should be validate the expression NOW', () => {
-        var date = new Date();
-        var hour = helperString.addZero(date.getHours());
-        var min = helperString.addZero(date.getMinutes());
-        var sec = helperString.addZero(date.getSeconds());
+  it('should be validate the expression NOW', () => {
+    const date = new Date();
+    const hour = string.addZero(date.getHours());
+    const min = string.addZero(date.getMinutes());
+    const sec = string.addZero(date.getSeconds());
 
-        var expected = helperString.formatString('{0}:{1}:{2}', [hour, min, sec]);
-        var received = interpreter.resolveExpression('now(HH:mm:ss)');
+    const expected = string.formatString('{0}:{1}:{2}', [hour, min, sec]);
+    const received = interpreter.resolveExpression('now(HH:mm:ss)');
 
-        expect(expected).toEqual(received);
-    });
+    expect(expected).toEqual(received);
+  });
 
-    it('should be validate the expression NOW with operators', () => {
-        var date = new Date();
-        var hour = helperString.addZero(date.getHours() + 2);
-        var min = helperString.addZero(date.getMinutes());
-        var sec = helperString.addZero(date.getSeconds());
+  it('should be validate the expression NOW with operators', () => {
+    const date = new Date();
+    date.setHours(date.getHours() + 2)
+    const hour = string.addZero(date.getHours());
+    const min = string.addZero(date.getMinutes());
+    const sec = string.addZero(date.getSeconds());
 
-        var expected = helperString.formatString('{0}:{1}:{2}', [hour, min, sec]);
-        var received = interpreter.resolveExpression('now(HH:mm:ss|+2h)');
-
-        expect(expected).toEqual(received);
-    });
+    const expected = string.formatString('{0}:{1}:{2}', [hour, min, sec]);
+    const received = interpreter.resolveExpression('now(HH:mm:ss|+2h)');
+    expect(expected).toEqual(received);
+  });
 
 });
