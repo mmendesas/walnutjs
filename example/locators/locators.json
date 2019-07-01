@@ -16,42 +16,42 @@
       ]
     },
     {
-      "name": "Grosa",
+      "name": "msite",
       "locators": [
         {
-          "key": "teste",
+          "key": "name",
           "type": "xpath",
-          "value": "//*[@id='forms']/article[1]/form/input[3]"
+          "value": "//input[@name='name']"
         },
         {
-          "key": "teste2",
+          "key": "job",
           "type": "id",
-          "value": "name"
+          "value": "job"
         },
         {
-          "key": "email",
+          "key": "age",
+          "type": "name",
+          "value": "age"
+        },
+        {
+          "key": "genderMale",
+          "type": "name",
+          "value": "male"
+        },
+        {
+          "key": "genderFemale",
+          "type": "name",
+          "value": "female"
+        },
+        {
+          "key": "color",
           "type": "id",
-          "value": "email"
+          "value": "color"
         },
         {
-          "key": "combo",
+          "key": "ageTotal",
           "type": "id",
-          "value": "choose"
-        },
-        {
-          "key": "checkbox",
-          "type": "xpath",
-          "value": "//input[@type='checkbox']"
-        }
-      ]
-    },
-    {
-      "name": "GoogleResult",
-      "locators": [
-        {
-          "key": "SiteLink",
-          "type": "xpath",
-          "value": "(//div[@class='rc']//h3)[1]"
+          "value": "total"
         }
       ]
     }

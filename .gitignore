@@ -17,3 +17,5 @@ reports
 # logs
 yarn-error.log
 walnutjs.log
+
+example/photos/*

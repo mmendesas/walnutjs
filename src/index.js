@@ -20,7 +20,7 @@ const config = {
   cucumber: {
     steps: './steps',
     timeout: 15000,
-    features: '/Users/mmendesas/Documents/mdocs/walnutjs/example/features/sample.feature',
+    features: './example/features/sample.feature',
   },
   selenium: {
     browser: 'chrome',

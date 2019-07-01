@@ -78,7 +78,7 @@ module.exports = {
   },
 
   saveScreenshot: (folder_path, name) => {
-    driver.takeScreenshot().then((screenshot, err) => {
+    return driver.takeScreenshot().then((screenshot, err) => {
       fs.writeFile(path.join(folder_path, `${name}.png`), screenshot, 'base64', (err) => {
         console.log(err)
       })

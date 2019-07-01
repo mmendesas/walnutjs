@@ -1,5 +1,6 @@
 const { Given, Then } = require('cucumber');
 const { common, string, element, vars, logger } = helpers;
+const path = require('path');
 
 /**
  * Sleeps the execution for a specific time in seconds
@@ -75,17 +76,19 @@ Then(/^user saves a screenshot '(.*)'$/, (path_list) => {
   path_list = common.getTreatedValue(path_list);
 
   if (path_list.includes('|')) {
-    const split = path_list.split('|');
-    const name = split[split.length - 1];
+    const folder_path = path_list.split('|');
+    let name = folder_path[folder_path.length - 1];
 
-    split.pop();
-    const img_num = parseInt(vars.getVariable('img_num'));
+    folder_path.pop();
+    let img_num = parseInt(vars.getVariable('img_num'));
 
     // add format to 3 digits
     const valWithDig = string.formatWitDigits(img_num, 3);
-    name = `${valWithDig}_${name}`
+    name = `${valWithDig}_${name}`;
 
-    common.saveScreenshot(split, name)
+    folder_path.unshift(config.walnut.paths.evidences);
+    const folder = path.join(...folder_path)
+    common.saveScreenshot(folder, name)
     vars.addVariable('img_num', ++img_num);
   }
 });
