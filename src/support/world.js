@@ -109,7 +109,7 @@ const loadParameters = () => {
   global['parameters'] = parameters;
 }
 
-// create the driver and applitools eyes before scenario if it's not instantiated
+// load resources and create driver
 BeforeAll((done) => {
   // set loging level
   logging.installConsoleHandler();
@@ -126,6 +126,7 @@ BeforeAll((done) => {
 });
 
 AfterAll((done) => {
+  tearDownBrowser();
   if (browserTeardownStrategy !== 'always') {
     closeBrowser().then(() => done());
   }
@@ -155,7 +156,8 @@ After((scenario) => {
     })
   }
 
-  return tearDownBrowser();
+  // teardown after each scenario
+  // return tearDownBrowser();
 })
 
 module.exports = function () {

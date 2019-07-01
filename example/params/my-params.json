@@ -1,6 +1,6 @@
 {
   "name": "walnutjs-test",
   "default": {
-    "base_url": "https://httpbin.org/get"
+    "base_url": "https://mmendesas.github.io/react-tutorial/"
   }
 }

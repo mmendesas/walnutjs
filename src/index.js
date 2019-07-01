@@ -36,11 +36,17 @@ const config = {
   },
 };
 
+const collectPaths = (value, paths) => {
+  paths.push(value);
+  return paths;
+}
+
 // start the CLI options
 program
   .version(version)
   .description(description)
   .option('-c, --config <path>', 'path to JSON config file')
+  .option('-t, --tags <tagName>', 'name of tag to run', collectPaths, [])
   .parse(process.argv);
 
 // read config from file
@@ -93,6 +99,14 @@ process.argv.push(path.resolve(config.cucumber.steps));
 // process.argv.push(path.resolve(__dirname, '../example/features/**/*.feature'));
 // add path to import custom features
 process.argv.push(config.cucumber.features)
+
+// add tag
+if (program.tags) {
+  program.tags.forEach((tag) => {
+    process.argv.push('-t');
+    process.argv.push(tag);
+  });
+}
 
 // console.log('my-args: ', process.argv)
 
