@@ -9,10 +9,12 @@ const { version, description } = require('../package.json');
 const config = {
   walnut: {
     enableDebug: false,
+    reports: './reports',
+    noScreenshot: false,
     paths: {
       locators: './example/locators',
       evidences: './example/photos',
-      parameters: './example/params/my-params.jsons'
+      parameters: './example/params/my-params.json'
     }
   },
   cucumber: {
@@ -32,9 +34,6 @@ const config = {
       },
     }
   },
-  reports: './reports',
-  noScreenshot: false,
-
 };
 
 // start the CLI options
@@ -45,7 +44,7 @@ program
   .parse(process.argv);
 
 // read config from file
-const configFileName = path.resolve(process.cwd(), 'walnutjs.json');
+const configFileName = path.resolve(process.cwd(), 'walnut-config.json');
 const configPath = program.config || configFileName
 
 if (fs.isFileSync(configPath)) {
@@ -60,9 +59,9 @@ global.browser = config.selenium.browser;
 global.browserTeardownStrategy = config.selenium.browserTeardownStrategy;
 
 // used within world.js to output reports
-global.reportsPath = path.resolve(config.reports);
-if (!fs.existsSync(config.reports)) {
-  fs.makeTreeSync(config.reports);
+global.reportsPath = path.resolve(config.walnut.reports);
+if (!fs.existsSync(config.walnut.reports)) {
+  fs.makeTreeSync(config.walnut.reports);
 }
 
 // set the default timeout
@@ -124,5 +123,5 @@ cucumberCli.run()
     }
   })
   .catch((error) => {
-    console.error(`\n[ walnutjs ] -> ${error.stack}`)
+    console.error(`\n[ walnut ] -> ${error.stack}`)
   })

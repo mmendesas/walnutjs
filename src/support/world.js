@@ -145,7 +145,7 @@ Before((scenario) => {
 // execute after each scenario
 After((scenario) => {
 
-  if (scenario.result.status !== 'passed' && !config.noScreenshot) {
+  if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
 
     return driver.takeScreenshot((screenShot) => {
 

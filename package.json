@@ -3,6 +3,9 @@
   "version": "1.1.0",
   "description": "Walnut Framework - BDD Automated Tests for ES6 based applications",
   "main": "index.js",
+  "bin": {
+    "walnut": "bin/walnut"
+  },
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage"
@@ -12,17 +15,11 @@
     "url": "https://github.com/mmendesas/walnutjs.git"
   },
   "keywords": [
-    "protractor",
-    "cucumber",
-    "angular",
-    "angularjs",
-    "reactjs",
-    "vuejs",
     "walnut",
-    "walnutjs",
-    "behaviour driven development",
+    "testing",
+    "tests",
+    "cucumber",
     "bdd",
-    "webdriverJS",
     "gherkin",
     "automation testing"
   ],
