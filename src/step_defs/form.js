@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { Given, When } = require('cucumber');
 
 const { common, element, page } = helpers;
@@ -5,8 +6,8 @@ const { common, element, page } = helpers;
 /**
  * Fills the element in page
  */
-When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
-  text = common.getTreatedValue(text);
+When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, value) => {
+  const text = common.getTreatedValue(value);
   const elementFinder = element.getElementFinder(container, key);
   return elementFinder.sendKeys(text);
 });
@@ -14,8 +15,8 @@ When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, text) => {
 /**
  * Fills the element in page by replacing the existing text in that element
  */
-When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, text) => {
-  text = common.getTreatedValue(text);
+When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, value) => {
+  const text = common.getTreatedValue(value);
   const elementFinder = element.getElementFinder(container, key);
   elementFinder.clear();
   return elementFinder.sendKeys(text);
@@ -24,8 +25,8 @@ When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, 
 /**
 * Fills the element in page by javascript value
 */
-Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, text) => {
-  text = common.getTreatedValue(text);
+Given(/^user fills '(.*)-(.*)' by JS with '(.*)'$/, (container, key, value) => {
+  const text = common.getTreatedValue(value);
   const elementFinder = element.getElementFinder(container, key);
   return driver.executeScript(`arguments[0].value=${text}`, elementFinder);
 });
@@ -49,8 +50,8 @@ When(/^user clicks by JS on '(.+)-(.+)'$/, (container, key) => {
 /**
  * Selects a option in the combo-box element in page
  */
-When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, (container, key, value) => {
-  value = common.getTreatedValue(value);
+When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, (container, key, optionChoosed) => {
+  const value = common.getTreatedValue(optionChoosed);
   const elementFinder = element.getElementFinder(container, key);
 
   // click on element to open the box

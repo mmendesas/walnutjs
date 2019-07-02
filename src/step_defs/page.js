@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { Given, When } = require('cucumber');
 
 const { common, element, page } = helpers;
@@ -15,8 +16,8 @@ Given(/^user navigates to '(.*)'$/, (url) => {
  */
 Given(/^user open url '(.*)' with user '(.*)' and pass '(.*)'$/, (url, user, pass) => {
   const gotourl = common.getTreatedValue(url);
-  const myuser = common.getTreatedValue(myuser);
-  const mypass = common.getTreatedValue(mypass);
+  const myuser = common.getTreatedValue(user);
+  const mypass = common.getTreatedValue(pass);
 
   // http://username:password@server
   const server = gotourl.substring(gotourl.indexOf('//') + 2);
@@ -33,7 +34,7 @@ Given(/^user refreshes the page$/, () => page.refresh());
 /**
  * Highlight element on the screen
  */
-When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key, callback) => {
+When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key) => {
   const elementFinder = element.getElementFinder(container, key);
   return element.nutHighlightElement(elementFinder);
 });
@@ -41,7 +42,7 @@ When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key, callbac
 /**
 * scroll to element
 */
-When(/^user scrolls to '(.+)-(.+)'$/, (container, key, callback) => {
+When(/^user scrolls to '(.+)-(.+)'$/, (container, key) => {
   const elementFinder = element.getElementFinder(container, key);
 
   elementFinder.getLocation().then((elementLocation) => {
@@ -54,7 +55,7 @@ When(/^user scrolls to '(.+)-(.+)'$/, (container, key, callback) => {
 * scrolls to direction x times
 */
 When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times) => {
-  for (let i = 0; i < times; i++) {
+  for (let i = 0; i < times; i += 1) {
     switch (direction) {
       case 'up':
         driver.executeScript('window.scrollBy(0, -50);');

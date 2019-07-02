@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { Then } = require('cucumber');
 
 const { common, element } = helpers;
@@ -22,17 +23,18 @@ Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, (container, key, isOrNot)
  * Validate if the element is not present or displayed on the screen
  */
 Then(/^user does not sees the '(.+)-(.+)' on the screen$/, (container, key) => {
-  element.getElementFinder(container, key).catch((err) => {
-    throw new Error('Element found on the current screen');
-  });
+  element.getElementFinder(container, key)
+    .catch(() => {
+      throw new Error('Element found on the current screen');
+    });
 });
 
 /**
 * Validate text in element
 */
-Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, text) => {
+Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, value) => {
   const elementFinder = element.getElementFinder(container, key);
-  text = common.getTreatedValue(text);
+  const text = common.getTreatedValue(value);
 
   elementFinder.getText().then((elementText) => {
     switch (comparison) {
@@ -61,9 +63,9 @@ Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which no
 /**
  * Validate value in element
  */
-Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, text) => {
+Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, value) => {
   const elementFinder = element.getElementFinder(container, key);
-  text = common.getTreatedValue(text);
+  const text = common.getTreatedValue(value);
 
   elementFinder.getAttribute('value').then((elementText) => {
     switch (comparison) {
@@ -170,10 +172,9 @@ Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|gr
 /**
  * Validate attribute in element
  */
-Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, attributeName, comparison, text) => {
+Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, attributeName, comparison, value) => {
   const elementFinder = element.getElementFinder(container, key);
-
-  text = common.getTreatedValue(text);
+  const text = common.getTreatedValue(value);
 
   elementFinder.getAttribute(attributeName).then((elementText) => {
     switch (comparison) {
@@ -202,9 +203,9 @@ Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which conta
 /**
 * Compare two string values, can be used with expressions ${x}
 */
-Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (text1, comparison, text2) => {
-  text1 = common.getTreatedValue(text1);
-  text2 = common.getTreatedValue(text2);
+Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (value1, comparison, value2) => {
+  const text1 = common.getTreatedValue(value1);
+  const text2 = common.getTreatedValue(value2);
 
   switch (comparison) {
     case 'which contains':

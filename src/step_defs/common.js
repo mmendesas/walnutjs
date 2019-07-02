@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const { Given, Then } = require('cucumber');
 
 const {
@@ -33,10 +34,7 @@ Given(/^user stores the following list of variables:$/, (data) => {
 /**
  * Prints a message to console, with or without walnut vars/expressions
  */
-Given(/^user prints the message '(.*)' to console$/, (text) => {
-  text = common.getTreatedValue(text);
-  logger.info(text);
-});
+Given(/^user prints the message '(.*)' to console$/, msg => logger.info(common.getTreatedValue(msg)));
 
 /**
  * Prints all variables stored at to console
@@ -71,23 +69,23 @@ Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, (c
 /**
  * Stores a screenshot in the path, using pattern 'path|imageName'
  */
-Then(/^user saves a screenshot '(.*)'$/, (path_list) => {
-  path_list = common.getTreatedValue(path_list);
+Then(/^user saves a screenshot '(.*)'$/, (screenshotPath) => {
+  const listOfPaths = common.getTreatedValue(screenshotPath);
 
-  if (path_list.includes('|')) {
-    const folder_path = path_list.split('|');
-    let name = folder_path[folder_path.length - 1];
+  if (listOfPaths.includes('|')) {
+    const folderPath = listOfPaths.split('|');
+    let name = folderPath[folderPath.length - 1];
 
-    folder_path.pop();
-    let img_num = parseInt(vars.getVariable('img_num'));
+    folderPath.pop();
+    let imgNum = parseInt(vars.getVariable('img_num'), 10);
 
     // add format to 3 digits
-    const valWithDig = string.formatWitDigits(img_num, 3);
+    const valWithDig = string.formatWitDigits(imgNum, 3);
     name = `${valWithDig}_${name}`;
 
-    folder_path.unshift(config.walnut.paths.evidences);
-    const folder = path.join(...folder_path);
+    folderPath.unshift(config.walnut.paths.evidences);
+    const folder = path.join(...folderPath);
     common.saveScreenshot(folder, name);
-    vars.addVariable('img_num', ++img_num);
+    vars.addVariable('img_num', imgNum += 1);
   }
 });
