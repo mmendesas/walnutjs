@@ -1,4 +1,5 @@
-const { Given, When } = require("cucumber");
+const { Given, When } = require('cucumber');
+
 const { common, element, page } = helpers;
 
 /**
@@ -55,21 +56,21 @@ When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, (container, key, v
   // click on element to open the box
   elementFinder.click();
 
-  driver.findElements(by.css('option')).then(options => {
-    let num = options.length;
+  driver.findElements(by.css('option')).then((options) => {
+    const num = options.length;
     let clickOk = false;
 
     options.forEach((option, index) => {
-      option.getText().then(text => {
+      option.getText().then((text) => {
         if (text === value) {
-          clickOk = true
+          clickOk = true;
           option.click();
         }
         if (num === index + 1 && !clickOk) {
-          throw new Error(`Option ${text} not found in select!`)
+          throw new Error(`Option ${text} not found in select!`);
         }
       });
-    })
+    });
   });
 });
 
@@ -80,7 +81,7 @@ When(/^user (checks|unchecks) the '(.+)-(.+)'$/, (checkOrUncheck, container, key
   const elementFinder = element.getElementFinder(container, key);
   const checkOrNot = (checkOrUncheck === 'checks');
 
-  elementFinder.isSelected().then(isSelected => {
+  elementFinder.isSelected().then((isSelected) => {
     if (checkOrNot) {
       if (!isSelected) {
         elementFinder.click();

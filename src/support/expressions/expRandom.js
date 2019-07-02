@@ -30,7 +30,7 @@ const getRandomAlfaNumeric = (option, num) => {
   }
 
   return ret;
-}
+};
 
 /**
  * Used to return a random value
@@ -58,14 +58,13 @@ const parseExpression = (expression) => {
     result = randomNum.tovar();
 
     return result;
-  } else if (parts.length == 1) {
+  } if (parts.length == 1) {
     try {
       const num = parseInt(expression);
       result = Math.floor((Math.random() * num - 1) + 1);
       return result;
-    }
-    catch (err) {
-      let sb = [];
+    } catch (err) {
+      const sb = [];
       sb.push('[1] - random(num|num) - random(3|7) - 6');
       sb.push('[2] - random(n|num)   - random(n|5) - 65871');
       sb.push('[3] - random(l|num)   - random(l|5) - 6aS7x');
@@ -74,9 +73,9 @@ const parseExpression = (expression) => {
       throw sb.join('\n');
     }
   }
-}
+};
 
 
 module.exports = {
-  parseExpression
+  parseExpression,
 };

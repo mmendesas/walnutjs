@@ -1,9 +1,10 @@
 const xpath = require('xpath');
-const DOMParser = require('xmldom').DOMParser;
-const XMLSerializer = require('xmldom').XMLSerializer;
+const { DOMParser } = require('xmldom');
+const { XMLSerializer } = require('xmldom');
+
 const serializer = new XMLSerializer();
 
-var xmlparser = {
+const xmlparser = {
 
   xmlContent: null,
   xmlContentEdited: '',
@@ -27,13 +28,13 @@ var xmlparser = {
   /**
    * Set the value for a Tag (find by xpath)
    */
-  setTagValue: function (path, value) {
+  setTagValue(path, value) {
     const mdoc = new DOMParser().parseFromString(this.xmlContent, 'text/xml');
     const mnode = xpath.select(path, mdoc);
 
     mnode[0].textContent = value;
     this.xmlContentEdited = serializer.serializeToString(mdoc);
-  }
+  },
 };
 
 module.exports = xmlparser;

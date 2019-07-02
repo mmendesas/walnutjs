@@ -1,14 +1,17 @@
+const { Given, When, Then } = require('cucumber');
+
+// eslint-disable-next-line no-undef
+const { common, logger, file } = helpers;
 const api = require('../../support/api/client');
 const jsonparser = require('../../support/parser/jsonparser');
-const { common, logger, file } = helpers;
-const { Given, When, Then } = require('cucumber');
+
 
 /**
  * Set the default baseURI
  */
 Given(/^\(api\) user set the baseURI with '(.*)'$/, (baseURI) => {
-  baseURI = common.getTreatedValue(baseURI);
-  api.setBaseURL(baseURI);
+  const myBaseURI = common.getTreatedValue(baseURI);
+  api.setBaseURL(myBaseURI);
 });
 
 /**
@@ -21,9 +24,7 @@ Given(/^\(api\) user creates a (POST|GET|PUT|PATCH|DELETE|HEAD) request to '(.*)
 /**
  * Executes the request
  */
-When(/^\(api\) user sends the request$/, () => {
-  return api.sendRequest()
-});
+When(/^\(api\) user sends the request$/, () => api.sendRequest());
 
 /**
  * Change request headers
@@ -49,14 +50,14 @@ When(/^\(api\) user add the following parameters to request:$/, (data) => {
  * Add body content from resource
  */
 When(/^\(api\) user add the request BODY from the resource '(.*)'$/, (filepath) => {
-  filepath = common.getTreatedValue(filepath);
-  filepath = file.getTreatedPath(filepath);
+  let resourcePath = common.getTreatedValue(filepath);
+  resourcePath = file.getTreatedPath(resourcePath);
 
   api.requestContent = '';
   if (filepath === '') {
-    logger.error(`File [${filepath}] not found. Please set the complete path of the file.`);
+    logger.error(`File [${resourcePath}] not found. Please set the complete path of the file.`);
   } else {
-    api.requestContent = file.readContentFromFile(filepath);
+    api.requestContent = file.readContentFromFile(resourcePath);
   }
   logger.info(`Content Pattern used as body:\n${api.requestContent}\n`);
 });
@@ -66,8 +67,8 @@ When(/^\(api\) user add the request BODY from the resource '(.*)'$/, (filepath) 
  * Add body as string in current request
  */
 When(/^\(api\) user add the following value to BODY request:$/, (fileContent) => {
-  fileContent = common.getTreatedValue(fileContent);
-  api.requestContent = fileContent;
+  const content = common.getTreatedValue(fileContent);
+  api.requestContent = content;
   logger.info(`Content Pattern used as body:\n${api.requestContent}\n`);
 });
 
@@ -75,12 +76,12 @@ When(/^\(api\) user add the following value to BODY request:$/, (fileContent) =>
  * User update current json body in request
  */
 Then(/^\(api\) user fills '(.*)' with '(.*)'$/, (keyPath, newValue) => {
-  keyPath = common.getTreatedValue(keyPath);
+  const key = common.getTreatedValue(keyPath);
   const value = common.getTreatedValue(newValue);
 
   // change field value in json
   jsonparser.init(JSON.parse(api.requestContent));
-  jsonparser.setValue(keyPath, value);
+  jsonparser.setValue(key, value);
 
   // update the value in request content file
   api.requestContent = JSON.stringify(jsonparser.jsonObj);
@@ -90,27 +91,27 @@ Then(/^\(api\) user fills '(.*)' with '(.*)'$/, (keyPath, newValue) => {
  * User update current json body in request
  */
 Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type$/, (keyPath, newValue, type) => {
-  keyPath = common.getTreatedValue(keyPath);
-  const value = common.getTreatedValue(newValue);
+  const key = common.getTreatedValue(keyPath);
+  let value = common.getTreatedValue(newValue);
 
   switch (type) {
     case 'INT':
-      newValue = parseInt(value);
+      value = parseInt(value, 10);
       break;
     case 'DOUBLE':
-      newValue = parseFloat(value);
+      value = parseFloat(value);
       break;
     case 'BOOL':
-      newValue = (value.toLowerCase() == 'true');
+      value = (value.toLowerCase() === 'true');
       break;
     default:
-      newValue = value;
+      value = common.getTreatedValue(value);
       break;
   }
 
   // change field value in json
   jsonparser.init(JSON.parse(api.requestContent));
-  jsonparser.setValue(keyPath, newValue);
+  jsonparser.setValue(key, value);
 
   // update the value in request content file
   api.requestContent = JSON.stringify(jsonparser.jsonObj);
@@ -120,12 +121,10 @@ Then(/^\(api\) user fills '(.*)' with '(.*)' using (STRING|INT|DOUBLE|BOOL) type
  * User update current json body in request with null type
  */
 Then(/^\(api\) user fills '(.*)' using NULL type$/, (keyPath) => {
-  keyPath = common.getTreatedValue(keyPath);
-  const newValue = null;
-
+  const key = common.getTreatedValue(keyPath);
   // change field value in json
   jsonparser.init(JSON.parse(api.requestContent));
-  jsonparser.setValue(keyPath, newValue);
+  jsonparser.setValue(key, null);
 
   // update the value in request content file
   api.requestContent = JSON.stringify(jsonparser.jsonObj);
@@ -135,28 +134,27 @@ Then(/^\(api\) user fills '(.*)' using NULL type$/, (keyPath) => {
  * User update string with comma to array current json body in request
  */
 Then(/^\(api\) user fills '(.*)' with '(.*)' using an ARRAY of (STRING|INT|DOUBLE) type$/, (keyPath, newValue, type) => {
-  keyPath = common.getTreatedValue(keyPath);
-  const value = common.getTreatedValue(newValue);
+  const key = common.getTreatedValue(keyPath);
+  let value = common.getTreatedValue(newValue);
 
   switch (type) {
     case 'INT':
-      newValue = value.split(',').map(Number);
+      value = value.split(',').map(Number);
       break;
     case 'DOUBLE':
-      newValue = value.split(',').map((value) => { return parseFloat(value) });
+      value = value.split(',').map(item => parseFloat(item));
       break;
     default:
-      newValue = value.split(',');
+      value = value.split(',');
       break;
   }
 
   // change field value in json
   jsonparser.init(JSON.parse(api.requestContent));
-  jsonparser.setValue(keyPath, newValue);
+  jsonparser.setValue(key, value);
 
   // update the value in request content file
   api.requestContent = JSON.stringify(jsonparser.jsonObj);
-
 });
 
 
@@ -181,13 +179,12 @@ When(/^\(api\) user fills the request body with the following fields:$/, (data) 
 * User delete key from the current json body in request
 */
 Then(/^\(api\) user deletes key '(.*)'$/, (keyPath) => {
-  keyPath = common.getTreatedValue(keyPath);
+  const key = common.getTreatedValue(keyPath);
 
   // delete the key in json
   jsonparser.init(JSON.parse(api.requestContent));
-  jsonparser.deleteKey(keyPath);
+  jsonparser.deleteKey(key);
 
   // update the value in request content file
   api.requestContent = JSON.stringify(jsonparser.jsonObj);
 });
-

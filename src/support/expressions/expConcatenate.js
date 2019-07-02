@@ -7,7 +7,7 @@ const parseExpression = (expression) => {
   const parts = expression.split('|');
 
   if (parts.length < 2) {
-    let sb = [];
+    const sb = [];
     sb.push('\t[1] - concatenate(arg1|arg2)      - concatenate(teste|451)      - teste451');
     sb.push('\t[2] - concatenate(arg1|arg2|argN) - concatenate(teste|451|_abc) - teste451_abc');
 
@@ -19,8 +19,8 @@ const parseExpression = (expression) => {
   }
 
   return ret;
-}
+};
 
 module.exports = {
-  parseExpression
+  parseExpression,
 };

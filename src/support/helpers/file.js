@@ -31,16 +31,14 @@ module.exports = {
   },
 
   writePNGToFile: (data, filename) => {
-    const pngStream = fs.createWriteStream(filename + '.png');
+    const pngStream = fs.createWriteStream(`${filename}.png`);
     pngStream.write(new Buffer(data, 'base64'));
     pngStream.end();
   },
 
-  readContentFromFile: (filename) => {
-    return fs.readFileSync(filename, 'utf8');
-  },
+  readContentFromFile: filename => fs.readFileSync(filename, 'utf8'),
 
   writeContentToFile: (data, filename) => {
     fs.writeFileSync(filename, data, 'utf8');
-  }
-}
+  },
+};

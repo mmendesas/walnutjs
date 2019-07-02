@@ -1,6 +1,7 @@
-const api = require('../../support/api/client');
+// eslint-disable-next-line no-undef
 const { logger } = helpers;
-const { Given, When, Then } = require('cucumber');
+const { Given } = require('cucumber');
+const api = require('../../support/api/client');
 
 /**
  * User prints the current body content (Req|Res)
@@ -14,8 +15,8 @@ Given(/^\(api\) user prints the current (REQUEST|RESPONSE) body content$/, (type
  * Define a value for request headers [Accept, Content-Type]
  */
 Given(/^\(api\) user will send and accept (XML|JSON|HTML)$/, (type) => {
-  const accept = 'application/json';
-  const contentType = 'application/json';
+  let accept = 'application/json';
+  let contentType = 'application/json';
 
   switch (type) {
     case 'XML':
@@ -34,4 +35,3 @@ Given(/^\(api\) user will send and accept (XML|JSON|HTML)$/, (type) => {
   api.addHeader('Accept', accept);
   api.addHeader('Content-Type', contentType);
 });
-

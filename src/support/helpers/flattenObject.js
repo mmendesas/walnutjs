@@ -1,17 +1,17 @@
 
 const flattenObject = (ob) => {
-  let toReturn = {};
+  const toReturn = {};
 
-  for (let i in ob) {
-    if (!ob.hasOwnProperty(i)) { continue }
+  for (const i in ob) {
+    if (!ob.hasOwnProperty(i)) { continue; }
 
     if ((typeof ob[i]) === 'object') {
-      let flatObject = flattenObject(ob[i]);
+      const flatObject = flattenObject(ob[i]);
 
-      for (let x in flatObject) {
-        if (!flatObject.hasOwnProperty(x)) { continue }
+      for (const x in flatObject) {
+        if (!flatObject.hasOwnProperty(x)) { continue; }
 
-        toReturn[i + '.' + x] = flatObject[x];
+        toReturn[`${i}.${x}`] = flatObject[x];
       }
     } else {
       toReturn[i] = ob[i];
@@ -19,8 +19,8 @@ const flattenObject = (ob) => {
   }
 
   return toReturn;
-}
+};
 
 module.exports = {
-  flattenObject
-}
+  flattenObject,
+};

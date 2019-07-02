@@ -1,13 +1,14 @@
 const { Given, Then } = require('cucumber');
-const { common, string, element, vars, logger } = helpers;
+
+const {
+  common, string, element, vars, logger,
+} = helpers;
 const path = require('path');
 
 /**
  * Sleeps the execution for a specific time in seconds
  */
-Then(/^user waits for ([0-9]+) seconds$/, (time) => {
-  return driver.sleep(time * 1000);
-});
+Then(/^user waits for ([0-9]+) seconds$/, time => driver.sleep(time * 1000));
 
 /**
  * Stores a value in a variable to use between scenarios
@@ -61,13 +62,11 @@ Given(/^user stores the (TEXT|VALUE) from element '(.+)-(.+)' in variable '(.*)'
 /**
  * Stores the elements count in variable
  */
-Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, (container, key, varName) => {
-  return element.getElementFinderAll(container, key)
-    .count()
-    .then((count) => {
-      vars.addVariable(varName, count);
-    });
-});
+Given(/^user stores the elements count from '(.+)-(.+)' in variable '(.+)'$/, (container, key, varName) => element.getElementFinderAll(container, key)
+  .count()
+  .then((count) => {
+    vars.addVariable(varName, count);
+  }));
 
 /**
  * Stores a screenshot in the path, using pattern 'path|imageName'
@@ -87,8 +86,8 @@ Then(/^user saves a screenshot '(.*)'$/, (path_list) => {
     name = `${valWithDig}_${name}`;
 
     folder_path.unshift(config.walnut.paths.evidences);
-    const folder = path.join(...folder_path)
-    common.saveScreenshot(folder, name)
+    const folder = path.join(...folder_path);
+    common.saveScreenshot(folder, name);
     vars.addVariable('img_num', ++img_num);
   }
 });

@@ -1,9 +1,9 @@
 const soap = require('soap');
 const jsonparser = require('../parser/jsonparser');
+
 const { logger } = helpers;
 
 class SoapClient {
-
   constructor() {
     this.wsdlPath = null;
     this.jsonToSend = null;
@@ -20,15 +20,13 @@ class SoapClient {
 
   getAllMethods() {
     const methods = Reflect.ownKeys(this.client)
-      .filter((p) => {
-        return typeof this.client[p] === 'function';
-      });
+      .filter(p => typeof this.client[p] === 'function');
 
     return methods;
   }
 
   getMethodByName(object, method) {
-    for (let item in object) {
+    for (const item in object) {
       if (typeof object[item] === 'function') {
         if (item === method) {
           return object[item];
@@ -55,4 +53,4 @@ class SoapClient {
   }
 }
 
-module.exports = new SoapClient;
+module.exports = new SoapClient();

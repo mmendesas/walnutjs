@@ -1,12 +1,9 @@
 const string = require('./string');
 const logger = require('./logger');
-var lastStyleValue = '';
 
-const isEmptyObject = (o) => {
-  return Object.keys(o).every((x) => {
-    return o[x] === '' || o[x] === null;
-  });
-}
+let lastStyleValue = '';
+
+const isEmptyObject = o => Object.keys(o).every(x => o[x] === '' || o[x] === null);
 
 const applyFilterInList = (list, option) => {
   switch (option.toLowerCase()) {
@@ -15,17 +12,13 @@ const applyFilterInList = (list, option) => {
     case 'last':
       return list.last();
     case 'enabled':
-      return list.filter((elem) => {
-        return elem.isEnabled();
-      });
+      return list.filter(elem => elem.isEnabled());
     case 'displayed':
-      return list.filter((elem) => {
-        return elem.isDisplayed();
-      });
+      return list.filter(elem => elem.isDisplayed());
     default:
       return list;
   }
-}
+};
 
 const Element = {
 
@@ -42,7 +35,7 @@ const Element = {
   /**
    * Returns the elementFinder object to interact with in protractor
   */
-  getElementFinder: function (container, name) {
+  getElementFinder(container, name) {
     // save current used container/name
     this.lastUsedLocator = [container, name];
 
@@ -53,34 +46,34 @@ const Element = {
     }
 
     // get Element By
-    const { type, value } = locator
-    const elementBy = this.getElementBy(type, value)
+    const { type, value } = locator;
+    const elementBy = this.getElementBy(type, value);
 
     // wait element displayed
-    return helpers.page.waitUntilElementIsPresent(elementBy)
+    return helpers.page.waitUntilElementIsPresent(elementBy);
   },
 
   /**
    * Returns a list of elementFinders based in current findOptions
    */
-  getElementFinderAll: function (container, name) {
+  getElementFinderAll(container, name) {
     // save current used container/name
     this.lastUsedLocator = [container, name];
 
-    var locator = this.getLocator(container, name);
+    const locator = this.getLocator(container, name);
 
     if (isEmptyObject(locator)) {
       throw 'Locator element incorrect, please use {key, type, value}';
     }
 
     // get list of elements based on type/value
-    var myList = this.getElements(locator.type, locator.value);
+    let myList = this.getElements(locator.type, locator.value);
 
     // apply filter options if included
     if (locator.options) {
-      var options = locator.options.split('|');
+      const options = locator.options.split('|');
 
-      _.forEach(options, function (option) {
+      _.forEach(options, (option) => {
         myList = applyFilterInList(myList, option);
       });
 
@@ -96,7 +89,7 @@ const Element = {
   /**
    * Return the element By based on locator
    */
-  getElementBy: function (type, content) {
+  getElementBy(type, content) {
     switch (type.toLowerCase()) {
       case 'classname':
         return by.className(content);
@@ -125,10 +118,10 @@ const Element = {
   /**
    * Find the locator in json by container name and locator key
    */
-  getLocator: function (container, name) {
-    var container_list = locators.containers;
-    var result = {};
-    var params;
+  getLocator(container, name) {
+    const container_list = locators.containers;
+    let result = {};
+    let params;
 
     if (name.includes(':')) {
       params = this.getParams(name);
@@ -136,12 +129,12 @@ const Element = {
     }
 
     // search a specific locator inside containers list
-    for (var i = 0; i < container_list.length; i++) {
+    for (let i = 0; i < container_list.length; i++) {
       const { name: cname, locators } = container_list[i];
 
       if (cname == container) {
-        for (var j = 0; j < locators.length; j++) {
-          const { key } = locators[j]
+        for (let j = 0; j < locators.length; j++) {
+          const { key } = locators[j];
 
           // return locator info if exists
           if (key === name) {
@@ -154,8 +147,8 @@ const Element = {
 
             // mount founded locator
             result = {
-              key, type, value, options
-            }
+              key, type, value, options,
+            };
             logger.debug(`Current Locator --> using [${type}] value [${value}] options[${options}]`);
 
             break;
@@ -171,8 +164,8 @@ const Element = {
   /**
    * Mount the paramenters list from simple text
    */
-  getParams: function (text) {
-    var params;
+  getParams(text) {
+    let params;
 
     if (text.includes(':')) {
       params = text.substring(text.indexOf(':') + 1);
@@ -192,7 +185,7 @@ const Element = {
     elementFinder.getAttribute('style').then((attribute) => {
       const newStyle = attribute + pattern;
 
-      if (global['lastStyleElement']) {
+      if (global.lastStyleElement) {
         lastStyleElement.getAttribute('style').then((oldStyle) => {
           oldStyle = oldStyle.replace(pattern, '');
           if (lastStyleValue === '') {
@@ -203,10 +196,10 @@ const Element = {
         });
       }
       lastStyleValue = attribute;
-      global['lastStyleElement'] = elementFinder;
+      global.lastStyleElement = elementFinder;
       driver.executeScript(`arguments[0].setAttribute("style", "${newStyle}");`, elementFinder);
     });
-  }
+  },
 };
 
 module.exports = Element;

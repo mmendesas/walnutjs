@@ -1,20 +1,19 @@
+const axios = require('axios');
 const common = require('../helpers/common');
 const logger = require('../helpers/logger');
-const axios = require('axios')
 
 class ApiClient {
-
   constructor() {
-    this.options = {}
-    this.requestContent = {}
-    this.client = axios.create()
+    this.options = {};
+    this.requestContent = {};
+    this.client = axios.create();
   }
 
   setBaseURL(baseURL) {
     this.options = {
       ...this.options,
-      baseURL: baseURL
-    }
+      baseURL,
+    };
   }
 
   createRequest(method, path) {
@@ -22,20 +21,20 @@ class ApiClient {
 
     this.options = {
       ...this.options,
-      method: method,
-      url: path
-    }
+      method,
+      url: path,
+    };
 
     logger.debug(`User creates the [${method}] request to [${path}]`);
   }
 
   sendRequest() {
-    this.addBody(this.requestContent)
+    this.addBody(this.requestContent);
 
     return this.client.request(this.options)
-      .then(response => {
-        this.response = response
-        return Promise.resolve(response)
+      .then((response) => {
+        this.response = response;
+        return Promise.resolve(response);
       })
       .catch((error) => {
         if (error.response) {
@@ -62,9 +61,9 @@ class ApiClient {
       ...this.options,
       headers: {
         ...this.options.headers,
-        [name]: value
-      }
-    }
+        [name]: value,
+      },
+    };
   }
 
   addParam(name, value) {
@@ -72,18 +71,17 @@ class ApiClient {
       ...this.options,
       params: {
         ...this.options.params,
-        [name]: value
-      }
-    }
+        [name]: value,
+      },
+    };
   }
 
   addBody(body) {
     this.options = {
       ...this.options,
-      data: body
-    }
+      data: body,
+    };
   }
-
 }
 
-module.exports = new ApiClient;
+module.exports = new ApiClient();

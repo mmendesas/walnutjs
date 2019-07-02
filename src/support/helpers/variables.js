@@ -1,6 +1,6 @@
-'use strict';
 
-var varMap = {};
+
+const varMap = {};
 
 
 /**
@@ -13,16 +13,12 @@ const addVariable = (key, value) => {
 /**
  * Get simple variable by name
  */
-const getVariable = (key) => {
-  return varMap[key] || 'unknown-var';
-};
+const getVariable = key => varMap[key] || 'unknown-var';
 
 /**
  * Return a list of variables
  */
-const getAllVariables = () => {
-  return varMap;
-};
+const getAllVariables = () => varMap;
 
 /**
  * Replace variables marks with correspondent value
@@ -46,5 +42,5 @@ module.exports = {
   addVariable,
   getVariable,
   getAllVariables,
-  nutParseVars
-}
+  nutParseVars,
+};

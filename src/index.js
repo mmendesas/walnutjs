@@ -16,14 +16,14 @@ const config = {
     paths: {
       locators: './example/locators',
       evidences: './example/photos',
-      parameters: './example/params/my-params.json'
-    }
+      parameters: './example/params/my-params.json',
+    },
   },
   cucumber: {
     steps: './steps',
     timeout: 15000,
     features: './example/features/sample.feature',
-    outputFormat: 'summary'
+    outputFormat: 'summary',
   },
   selenium: {
     browser: 'chrome',
@@ -33,16 +33,16 @@ const config = {
       browserName: 'chrome',
       chromeOptions: {
         // args: ['--headless', '--disable-gpu'] //headless
-        args: ['start-maximized', 'disable-extensions']
+        args: ['start-maximized', 'disable-extensions'],
       },
-    }
+    },
   },
 };
 
 const collectPaths = (value, paths) => {
   paths.push(value);
   return paths;
-}
+};
 
 // start the CLI options
 program
@@ -54,14 +54,14 @@ program
 
 // read config from file
 const configFileName = path.resolve(process.cwd(), 'walnut-config.json');
-const configPath = program.config || configFileName
+const configPath = program.config || configFileName;
 
 if (fs.isFileSync(configPath)) {
   config = Object.assign(config, require(configPath));
 }
 
 // set config globally
-global['config'] = config;
+global.config = config;
 
 // browser name globally
 global.browser = config.selenium.browser;
@@ -84,7 +84,7 @@ process.argv.splice(2, 100);
 process.argv.push('-f');
 process.argv.push(config.cucumber.outputFormat || 'summary');
 process.argv.push('-f');
-process.argv.push('json:' + path.resolve(__dirname, global.reportsPath, 'cucumber-report.json'));
+process.argv.push(`json:${path.resolve(__dirname, global.reportsPath, 'cucumber-report.json')}`);
 
 // 2 define the required scripts
 // add cucumber world as first required script (this sets up the globals)
@@ -101,7 +101,7 @@ process.argv.push(path.resolve(config.cucumber.steps));
 
 // process.argv.push(path.resolve(__dirname, '../example/features/**/*.feature'));
 // add path to import custom features
-process.argv.push(config.cucumber.features)
+process.argv.push(config.cucumber.features);
 
 // add tag
 if (program.tags) {
@@ -119,8 +119,8 @@ if (program.tags) {
 const cucumberInfo = {
   argv: process.argv,
   cwd: process.cwd(),
-  stdout: process.stdout
-}
+  stdout: process.stdout,
+};
 
 const cucumberCli = new Cucumber.Cli(cucumberInfo);
 
@@ -129,16 +129,15 @@ cucumberCli.run()
     const code = succeeded.success ? 0 : 1;
     exitNow = () => {
       process.exit(code);
-    }
+    };
 
     if (process.stdout.write('')) {
       exitNow();
-    }
-    else {
+    } else {
       // write() returned false, kernel buffer is not empty yet...
       process.stdout.on('drain', exitNow);
     }
   })
   .catch((error) => {
-    logger.error(`\n${error.stack}`)
-  })
+    logger.error(`\n${error.stack}`);
+  });

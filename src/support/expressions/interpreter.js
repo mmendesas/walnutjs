@@ -5,12 +5,12 @@ const expCNPJ = require('./expCNPJ');
 const expMath = require('./expMath');
 const expToNumber = require('./expToNumber');
 const expRandom = require('./expRandom');
+
 const dev = process.env.NODE_ENV !== 'production';
 const string = require('../helpers/string');
 const logger = require('../helpers/logger');
 
 class Interpreter {
-
   constructor() {
     this.expressionList = ['now', 'cpf', 'cnpj', 'concatenate', 'tonumber', 'math', 'random'];
     this.melist = null;
@@ -22,7 +22,7 @@ class Interpreter {
   */
   isSyntaxCorrect(chainExpression) {
     return string.countLetters(chainExpression, '(') === string.countLetters(chainExpression, ')');
-  };
+  }
 
   /**
    * Solve a simple or chained expression in a string
@@ -32,7 +32,7 @@ class Interpreter {
     this.count = 0;
 
     if (!this.isSyntaxCorrect(chainExpression)) {
-      throw 'Syntax error, check the ( and ) characters to complete expression'
+      throw 'Syntax error, check the ( and ) characters to complete expression';
     }
 
     const expAux = chainExpression;
@@ -42,14 +42,14 @@ class Interpreter {
         this.parseExpressionChain(chainExpression);
         chainExpression = this.resolveExpressionChain(chainExpression);
       } catch (err) {
-        let msg = `\n\nProblem found in Expression >> ${expAux}.\n\n You need to inform correct arguments, try this: \n ${err.message}`;
+        const msg = `\n\nProblem found in Expression >> ${expAux}.\n\n You need to inform correct arguments, try this: \n ${err.message}`;
         logger.error(msg);
       }
       break;
     }
 
     return chainExpression;
-  };
+  }
 
   /**
    * Return a expression by name
@@ -71,7 +71,7 @@ class Interpreter {
       case 'random':
         return expRandom;
     }
-  };
+  }
 
 
   /**
@@ -79,12 +79,12 @@ class Interpreter {
    */
   expressionNeedToBeCracked(text) {
     for (let i = 0; i < this.expressionList.length; i++) {
-      if (text.includes(this.expressionList[i] + '(')) {
-        return true
+      if (text.includes(`${this.expressionList[i]}(`)) {
+        return true;
       }
     }
     return false;
-  };
+  }
 
   /**
    * Parse the chain of expression
@@ -100,14 +100,15 @@ class Interpreter {
         this.parseExpressionChain(expCracked[1]);
       }
     }
-  };
+  }
 
   /**
    * Crack a specific expression
    */
   crackExpression(expName, text) {
-    let aExp = {};
-    let sliceStart = 0, sliceEnd = 0, startPar = 0, endPar = 0;
+    const aExp = {};
+    let sliceStart = 0; let sliceEnd = 0; let startPar = 0; let
+      endPar = 0;
 
     const expNameStart = text.indexOf(expName);
 
@@ -140,7 +141,7 @@ class Interpreter {
     aExp[2] = `${expName}(${content})`;
 
     return aExp;
-  };
+  }
 
   /**
    * Solve a chain of expressions
@@ -149,7 +150,7 @@ class Interpreter {
     let result = '';
 
     if (!chainExpression.includes('(')) {
-      return chainExpression
+      return chainExpression;
     }
 
     for (let i = Object.keys(this.meList).length - 1; i >= 0; i--) {
@@ -176,7 +177,7 @@ class Interpreter {
     }
 
     return chainExpression;
-  };
+  }
 
   /**
    * Update a cached list of expressions (for chain expressions)
@@ -192,8 +193,7 @@ class Interpreter {
         this.meList[i][2] = fullContent;
       }
     }
-  };
-
-};
+  }
+}
 
 module.exports = new Interpreter();

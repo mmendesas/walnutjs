@@ -1,10 +1,10 @@
+const fs = require('fs-plus');
+const path = require('path');
 const interpreter = require('../expressions/interpreter');
 const string = require('./string');
 const vars = require('./variables');
 const params = require('./params');
 
-const fs = require('fs-plus')
-const path = require('path');
 
 module.exports = {
   /**
@@ -77,12 +77,10 @@ module.exports = {
     }
   },
 
-  saveScreenshot: (folder_path, name) => {
-    return driver.takeScreenshot().then((screenshot, err) => {
-      fs.writeFile(path.join(folder_path, `${name}.png`), screenshot, 'base64', (err) => {
-        console.log(err)
-      })
+  saveScreenshot: (folder_path, name) => driver.takeScreenshot().then((screenshot, err) => {
+    fs.writeFile(path.join(folder_path, `${name}.png`), screenshot, 'base64', (err) => {
+      console.log(err);
     });
-  }
+  }),
 
 };

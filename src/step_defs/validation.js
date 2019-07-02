@@ -1,4 +1,5 @@
-const { Then } = require('cucumber')
+const { Then } = require('cucumber');
+
 const { common, element } = helpers;
 
 /**
@@ -12,9 +13,8 @@ Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, (container, key, isOrNot)
     const res = (isOrNot === 'enabled') ? 'DISABLED' : 'ENABLED';
 
     if (isEnabled !== compare) {
-      throw new Error(`Element present but ${res}`)
+      throw new Error(`Element present but ${res}`);
     }
-    return
   });
 });
 
@@ -22,9 +22,9 @@ Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, (container, key, isOrNot)
  * Validate if the element is not present or displayed on the screen
  */
 Then(/^user does not sees the '(.+)-(.+)' on the screen$/, (container, key) => {
-  element.getElementFinder(container, key).catch(err => {
-    throw new Error(`Element found on the current screen`);
-  })
+  element.getElementFinder(container, key).catch((err) => {
+    throw new Error('Element found on the current screen');
+  });
 });
 
 /**
@@ -80,7 +80,7 @@ Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which n
         break;
 
       case 'not equals to':
-        assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`)
+        assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
         break;
 
       default:
@@ -98,7 +98,7 @@ Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|gre
   elementFinder.getText().then((elementText) => {
     switch (comparison) {
       case 'equals to':
-        assert.equal(elementText.length, count, `Text length [${elementText}] is not equals to [${count}]`)
+        assert.equal(elementText.length, count, `Text length [${elementText}] is not equals to [${count}]`);
         break;
 
       case 'not equals to':
@@ -106,19 +106,19 @@ Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|gre
         break;
 
       case 'greater than':
-        assert(elementText.length > count, `Text length [${elementText}] is not greater than [${count}]`)
+        assert(elementText.length > count, `Text length [${elementText}] is not greater than [${count}]`);
         break;
 
       case 'greater than or equal to':
-        assert(elementText.length >= count, `Text length[${elementText}] is not greater than or equal to[${count}]`)
+        assert(elementText.length >= count, `Text length[${elementText}] is not greater than or equal to[${count}]`);
         break;
 
       case 'less than':
-        assert(elementText.length < count, `Text length [${elementText}] is not less than [${count}]`)
+        assert(elementText.length < count, `Text length [${elementText}] is not less than [${count}]`);
         break;
 
       case 'less than or equal to':
-        assert(elementText.length <= count, `Text length[${elementText}] is not less than or equal to[${count}]`)
+        assert(elementText.length <= count, `Text length[${elementText}] is not less than or equal to[${count}]`);
         break;
 
       default:
@@ -131,12 +131,10 @@ Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|gre
  * Validate value length in element
 */
 Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, (container, key, comparison, count) => {
-
   const elementFinder = element.getElementFinder(container, key);
 
   elementFinder.getAttribute('value').then((elementText) => {
-
-    const length = elementText.length;
+    const { length } = elementText;
 
     switch (comparison) {
       case 'equals to':
@@ -152,15 +150,15 @@ Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|gr
         break;
 
       case 'greater than or equals to':
-        assert(length >= count, `Value length[${length}] is not greater than or equal to[${count}]`)
+        assert(length >= count, `Value length[${length}] is not greater than or equal to[${count}]`);
         break;
 
       case 'less than':
-        asserrt(length < count, `Value length [${length}] is not less than [${count}]`)
+        asserrt(length < count, `Value length [${length}] is not less than [${count}]`);
         break;
 
       case 'less than or equals to':
-        asserrt(length <= count, `Value length[${length}] is not less than or equal to[${count}]`)
+        asserrt(length <= count, `Value length[${length}] is not less than or equal to[${count}]`);
         break;
 
       default:
@@ -180,11 +178,11 @@ Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which conta
   elementFinder.getAttribute(attributeName).then((elementText) => {
     switch (comparison) {
       case 'which contains':
-        assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`)
+        assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
         break;
 
       case 'which not contains':
-        assert(!elementText.includes(text), `Expected[${elementText}] contains[${text}]`)
+        assert(!elementText.includes(text), `Expected[${elementText}] contains[${text}]`);
         break;
 
       case 'equals to':
@@ -210,19 +208,19 @@ Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not
 
   switch (comparison) {
     case 'which contains':
-      assert(text1.includes(text2), `Expected[${text1}] not contains[${text2}]`)
+      assert(text1.includes(text2), `Expected[${text1}] not contains[${text2}]`);
       break;
 
     case 'which not contains':
-      assert(!text1.includes(text2), `Expected[${text1}] contains[${text2}]`)
+      assert(!text1.includes(text2), `Expected[${text1}] contains[${text2}]`);
       break;
 
     case 'equals to':
-      assert.equal(text1, text2, `Expected[${text1}] not equals to[${text2}]`)
+      assert.equal(text1, text2, `Expected[${text1}] not equals to[${text2}]`);
       break;
 
     case 'not equals to':
-      assert.notEqual(text1, text2, `Expected[${text1}] is equals to[${text2}]`)
+      assert.notEqual(text1, text2, `Expected[${text1}] is equals to[${text2}]`);
       break;
 
     default:

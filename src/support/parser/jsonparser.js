@@ -1,8 +1,8 @@
-'use strict';
 
-var jp = require('jsonpath');
 
-var jsonparser = {
+const jp = require('jsonpath');
+
+const jsonparser = {
 
   jsonObj: null,
 
@@ -16,9 +16,7 @@ var jsonparser = {
   /**
   * Returns the value from a Key (find by jsonpath)
   */
-  getValue: (path) => {
-    return jp.query(this.jsonObj, path);
-  },
+  getValue: path => jp.query(this.jsonObj, path),
 
   /**
   * Set the value for a Key (find by jsonpath)
@@ -40,7 +38,7 @@ var jsonparser = {
     } else {
       delete parent[item];
     }
-  }
-}
+  },
+};
 
 module.exports = jsonparser;
