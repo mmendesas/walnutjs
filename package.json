@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "preversion": "changelog"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "xpath": "0.0.24"
   },
   "devDependencies": {
+    "generate-changelog": "^1.8.0",
     "jest": "^24.8.0"
   },
   "jest": {
