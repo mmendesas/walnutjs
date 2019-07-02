@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Walnutjs",
+      "name": "walnut-debug",
       "program": "${workspaceFolder}/src/index.js",
       "args": [
         "--tags",

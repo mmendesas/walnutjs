@@ -4,10 +4,12 @@ const path = require('path');
 const Cucumber = require('cucumber');
 const program = require('commander');
 const { version, description } = require('../package.json');
+const logger = require('../src/support/helpers/logger');
 
 // set default configuration
 const config = {
   walnut: {
+    name: 'walnut sample automation',
     enableDebug: false,
     reports: './reports',
     noScreenshot: false,
@@ -21,6 +23,7 @@ const config = {
     steps: './steps',
     timeout: 15000,
     features: './example/features/sample.feature',
+    outputFormat: 'summary'
   },
   selenium: {
     browser: 'chrome',
@@ -79,7 +82,7 @@ process.argv.splice(2, 100);
 // 1 define cucumber output format
 // add switch to tell cucumber to produce json report files
 process.argv.push('-f');
-process.argv.push('progress');
+process.argv.push(config.cucumber.outputFormat || 'summary');
 process.argv.push('-f');
 process.argv.push('json:' + path.resolve(__dirname, global.reportsPath, 'cucumber-report.json'));
 
@@ -137,5 +140,5 @@ cucumberCli.run()
     }
   })
   .catch((error) => {
-    console.error(`\n[ walnut ] -> ${error.stack}`)
+    logger.error(`\n${error.stack}`)
   })

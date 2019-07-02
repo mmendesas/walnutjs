@@ -48,6 +48,9 @@ function getDriverInstance() {
   return driver;
 }
 
+/**
+ * Close the current instance of browser
+ */
 function closeBrowser() {
   return driver.close().then(() => {
     if (config.selenium.browser !== 'firefox') {
@@ -56,6 +59,9 @@ function closeBrowser() {
   })
 }
 
+/**
+ * Teardown browser based on property browserTeardownStrategy
+ */
 function tearDownBrowser() {
   switch (config.selenium.browserTeardownStrategy) {
     case 'none':
@@ -81,17 +87,20 @@ function loadUIMap() {
           const content = fs.readFileSync(`${folder}/${file}`);
           uimap.containers = uimap.containers.concat(JSON.parse(content).containers);
         } catch (err) {
-          logger.error(`Error: Locators - ${folder}/${file}. You need to inform correct structure of locator file.`)
+          logger.error(`Locators - Invalid JSON structure of the locator file -> [ ${folder}/${file} ]`)
         }
       });
   } catch (err) {
-    logger.error('Error: Locators - You need to inform a valid locators folder path')
+    logger.error(`Locators - Invalid locators folder path -> [ ${folder} ]`)
     throw err
   }
 
   global['locators'] = uimap;
 }
 
+/**
+ * Load parameters file
+ */
 const loadParameters = () => {
   let parameters = {};
   const file = config.walnut.paths.parameters;
@@ -111,6 +120,7 @@ const loadParameters = () => {
 
 // load resources and create driver
 BeforeAll((done) => {
+  logger.info('Execution started...');
   // set loging level
   logging.installConsoleHandler();
   logging.getLogger('webdriver.http').setLevel(logging.Level.INFO);
@@ -133,13 +143,18 @@ AfterAll((done) => {
   else {
     new Promise((resolve) => resolve(done()));
   }
+  logger.info('Execution finished!\n')
 })
 
+/**
+ * Make some action before each scenario
+ */
 Before((scenario) => {
+  vars.addVariable("project_name", string.slugify(config.walnut.name))
   vars.addVariable("scenario_name", string.slugify(scenario.pickle.name));
   vars.addVariable("img_num", "1");
 
-  var folder_default = common.getTreatedValue("${vars.project_name}|${vars.feature_name}|${vars.scenario_name}");
+  const folder_default = common.getTreatedValue("${vars.project_name}|${vars.scenario_name}");
   vars.addVariable('folder_default', folder_default);
 })
 
@@ -147,11 +162,8 @@ Before((scenario) => {
 After((scenario) => {
 
   if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
-
     return driver.takeScreenshot((screenShot) => {
-
       scenario.attach(new Buffer(screenShot, 'base64'), 'image/png');
-
       return tearDownBrowser();
     })
   }
