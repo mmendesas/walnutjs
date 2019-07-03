@@ -6,33 +6,53 @@ const expMath = require('./expMath');
 const expToNumber = require('./expToNumber');
 const expRandom = require('./expRandom');
 
-const dev = process.env.NODE_ENV !== 'production';
 const string = require('../helpers/string');
 const logger = require('../helpers/logger');
+
+/**
+  * Validate the expression syntax
+  */
+const isSyntaxCorrect = chainExpression => string.countLetters(chainExpression, '(') === string.countLetters(chainExpression, ')');
+
+/**
+ * Return a expression by name
+ */
+const findExpression = (name) => {
+  switch (name.toLowerCase()) {
+    case 'now':
+      return expNow;
+    case 'concatenate':
+      return expConcatenate;
+    case 'cpf':
+      return expCPF;
+    case 'cnpj':
+      return expCNPJ;
+    case 'math':
+      return expMath;
+    case 'tonumber':
+      return expToNumber;
+    case 'random':
+      return expRandom;
+    default:
+      return 'no-expression-selected';
+  }
+};
 
 class Interpreter {
   constructor() {
     this.expressionList = ['now', 'cpf', 'cnpj', 'concatenate', 'tonumber', 'math', 'random'];
-    this.melist = null;
-    this.count = null;
-  }
-
-  /**
-  * Validate the expression syntax
-  */
-  isSyntaxCorrect(chainExpression) {
-    return string.countLetters(chainExpression, '(') === string.countLetters(chainExpression, ')');
   }
 
   /**
    * Solve a simple or chained expression in a string
    */
-  resolveExpression(chainExpression) {
+  resolveExpression(expression) {
+    let chainExpression = expression;
     this.meList = {};
     this.count = 0;
 
-    if (!this.isSyntaxCorrect(chainExpression)) {
-      throw 'Syntax error, check the ( and ) characters to complete expression';
+    if (!isSyntaxCorrect(chainExpression)) {
+      throw new Error('Syntax error, check the ( and ) characters to complete expression');
     }
 
     const expAux = chainExpression;
@@ -42,7 +62,7 @@ class Interpreter {
         this.parseExpressionChain(chainExpression);
         chainExpression = this.resolveExpressionChain(chainExpression);
       } catch (err) {
-        const msg = `\n\nProblem found in Expression >> ${expAux}.\n\n You need to inform correct arguments, try this: \n ${err.message}`;
+        const msg = `\n\nInvalid use of expression >> ${expAux}.\n\n You need to inform correct arguments, try this: \n ${err.message}`;
         logger.error(msg);
       }
       break;
@@ -52,33 +72,10 @@ class Interpreter {
   }
 
   /**
-   * Return a expression by name
-   */
-  findExpression(name) {
-    switch (name.toLowerCase()) {
-      case 'now':
-        return expNow;
-      case 'concatenate':
-        return expConcatenate;
-      case 'cpf':
-        return expCPF;
-      case 'cnpj':
-        return expCNPJ;
-      case 'math':
-        return expMath;
-      case 'tonumber':
-        return expToNumber;
-      case 'random':
-        return expRandom;
-    }
-  }
-
-
-  /**
    * Check if current has expression to be cracked
    */
   expressionNeedToBeCracked(text) {
-    for (let i = 0; i < this.expressionList.length; i++) {
+    for (let i = 0; i < this.expressionList.length; i += 1) {
       if (text.includes(`${this.expressionList[i]}(`)) {
         return true;
       }
@@ -90,13 +87,13 @@ class Interpreter {
    * Parse the chain of expression
    */
   parseExpressionChain(text) {
-    for (let i = 0; i < this.expressionList.length; i++) {
+    for (let i = 0; i < this.expressionList.length; i += 1) {
       const expName = this.expressionList[i];
 
       if (text.includes(expName)) {
         const expCracked = this.crackExpression(expName, text);
 
-        this.meList[this.count++] = expCracked;
+        this.meList[this.count += 1] = expCracked;
         this.parseExpressionChain(expCracked[1]);
       }
     }
@@ -105,6 +102,7 @@ class Interpreter {
   /**
    * Crack a specific expression
    */
+  // eslint-disable-next-line class-methods-use-this
   crackExpression(expName, text) {
     const aExp = {};
     let sliceStart = 0; let sliceEnd = 0; let startPar = 0; let
@@ -112,18 +110,18 @@ class Interpreter {
 
     const expNameStart = text.indexOf(expName);
 
-    for (let i = expNameStart; i < text.length; i++) {
+    for (let i = expNameStart; i < text.length; i += 1) {
       const letter = text[i];
 
       if (letter === '(') {
-        startPar++;
+        startPar += 1;
         if (startPar === 1) {
           sliceStart = i;
         }
       }
 
       if (letter === ')') {
-        endPar++;
+        endPar += 1;
       }
 
       if (startPar > 0) {
@@ -146,19 +144,20 @@ class Interpreter {
   /**
    * Solve a chain of expressions
    */
-  resolveExpressionChain(chainExpression) {
+  resolveExpressionChain(chain) {
+    let chainExpression = chain;
     let result = '';
 
     if (!chainExpression.includes('(')) {
       return chainExpression;
     }
 
-    for (let i = Object.keys(this.meList).length - 1; i >= 0; i--) {
+    for (let i = Object.keys(this.meList).length; i > 0; i -= 1) {
       const key = this.meList[i][0];
       const content = this.meList[i][1];
       const fullContent = this.meList[i][2];
 
-      const expression = this.findExpression(key);
+      const expression = findExpression(key);
 
       // solve expressions
       if (!this.expressionNeedToBeCracked(content)) {
@@ -183,8 +182,7 @@ class Interpreter {
    * Update a cached list of expressions (for chain expressions)
    */
   updateExpressionList(content, replacement) {
-    for (let i = 0; i < Object.keys(this.meList).length; i++) {
-      // console.log('mteste ', i, this.list[1][1]);
+    for (let i = 1; i <= Object.keys(this.meList).length; i += 1) {
       if (this.meList[i][1].includes(content)) {
         const textContent = this.meList[i][1].replace(content, replacement);
         this.meList[i][1] = textContent;

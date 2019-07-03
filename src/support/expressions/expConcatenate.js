@@ -14,7 +14,7 @@ const parseExpression = (expression) => {
     throw new Error(sb.join('\n'));
   }
 
-  for (let i = 0; i < parts.length; i++) {
+  for (let i = 0; i < parts.length; i += 1) {
     ret += parts[i];
   }
 

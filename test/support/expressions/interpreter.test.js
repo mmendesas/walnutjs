@@ -1,23 +1,22 @@
+/* eslint-disable no-undef */
 const interpreter = require('../../../src/support/expressions/interpreter');
 const string = require('../../../src/support/helpers/string');
 
 describe('Interpreter Tests', () => {
-
   it('should be count letters correctly', () => {
-    const text = string.countLetters("Smoke on the (sdf) (778)", '(');
+    const text = string.countLetters('Smoke on the (sdf) (778)', '(');
     expect(text).toEqual(2);
   });
 
   it('should be validate if a string has expressions', () => {
-    let hasExpression = interpreter.expressionNeedToBeCracked("now");
+    let hasExpression = interpreter.expressionNeedToBeCracked('now');
     expect(hasExpression).toEqual(false);
-    hasExpression = interpreter.expressionNeedToBeCracked("now()");
+    hasExpression = interpreter.expressionNeedToBeCracked('now()');
     expect(hasExpression).toEqual(true);
   });
 
   it('should be validate if the expression cracked correctly', () => {
     const list = interpreter.crackExpression('now', 'now(HHmmss|+2h)');
-
     expect(list[0]).toEqual('now');
     expect(list[1]).toEqual('HHmmss|+2h');
     expect(list[2]).toEqual('now(HHmmss|+2h)');
@@ -34,5 +33,4 @@ describe('Interpreter Tests', () => {
 
     expect(expected).toEqual(received);
   });
-
 });

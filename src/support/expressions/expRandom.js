@@ -24,7 +24,7 @@ const getRandomAlfaNumeric = (option, num) => {
       break;
   }
 
-  for (let i = 0; i < num; i++) {
+  for (let i = 0; i < num; i += 1) {
     const idx = Math.floor((Math.random() * text.length - 1) + 1);
     ret += text[idx];
   }
@@ -39,12 +39,12 @@ const parseExpression = (expression) => {
   const parts = expression.split('|');
   let result = '';
 
-  if (parts.length == 2) {
+  if (parts.length === 2) {
     const part01 = parts[0].trim().toLowerCase();
 
     // random(n|8);
     if (string.isLetter(part01[0])) {
-      result = getRandomAlfaNumeric(part01, parseInt(parts[1]));
+      result = getRandomAlfaNumeric(part01, parseInt(parts[1], 10));
       return result;
     }
     // random(15.78|55.98);
@@ -58,9 +58,10 @@ const parseExpression = (expression) => {
     result = randomNum.tovar();
 
     return result;
-  } if (parts.length == 1) {
+  }
+  if (parts.length === 1) {
     try {
-      const num = parseInt(expression);
+      const num = parseInt(expression, 10);
       result = Math.floor((Math.random() * num - 1) + 1);
       return result;
     } catch (err) {
@@ -73,8 +74,9 @@ const parseExpression = (expression) => {
       throw sb.join('\n');
     }
   }
-};
 
+  return 0;
+};
 
 module.exports = {
   parseExpression,

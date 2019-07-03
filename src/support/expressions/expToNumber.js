@@ -9,8 +9,8 @@ const sanitizeMap = {
 const expToNumber = {
 
   /**
-     * Used to return only number of string value
-     */
+   * Used to return only number of string value
+   */
   parseExpression(expression) {
     const [number, typeDefinition = ':', format] = expression.split('|');
     const [type, precision] = typeDefinition.split(':');
@@ -26,11 +26,11 @@ const expToNumber = {
 
     switch (type) {
       case 'i':
-        return parseInt(numberSanitize).toString();
+        return parseInt(numberSanitize, 10).toString();
       case 'd':
         return parseFloat(numberSanitize).toFixed(precision);
       default:
-        break;
+        return 0;
     }
   },
 };

@@ -13,7 +13,7 @@ const expMath = {
 
     const parts = expression.split('|');
 
-    if (parts.length != 3 || !expression.includes(':')) {
+    if (parts.length !== 3 || !expression.includes(':')) {
       throw sb.join('\n');
     }
 
@@ -29,14 +29,13 @@ const expMath = {
       switch (type.toLowerCase().trim()) {
         case 'i':
           result = this.getIntegerProcessedValue(num01, oper, num02);
-
           return result;
         case 'd':
           result = this.getFloatProcessedValue(num01, oper, num02);
-
           return result;
+
         default:
-          break;
+          return '';
       }
     } catch (err) {
       throw sb.join('\n');
@@ -48,8 +47,8 @@ const expMath = {
    */
   getIntegerProcessedValue(num01, oper, num02) {
     let iRetValue = 0;
-    const inum01 = parseInt(num01);
-    const inum02 = parseInt(num02);
+    const inum01 = parseInt(num01, 10);
+    const inum02 = parseInt(num02, 10);
 
     switch (oper.trim().toLowerCase()) {
       case 'add':
@@ -66,7 +65,7 @@ const expMath = {
         break;
 
       default:
-        throw 'Illegal argument';
+        throw new Error(`Illegal argument in Math Expression -> ${oper.trim()}`);
     }
 
     return iRetValue.toString();
@@ -95,7 +94,7 @@ const expMath = {
         break;
 
       default:
-        throw 'Illegal argument';
+        throw new Error(`Illegal argument in Math Expression -> ${oper.trim()}`);
     }
 
     return parseFloat(dRetValue).toString();

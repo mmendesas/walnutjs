@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const soap = require('soap');
 const jsonparser = require('../parser/jsonparser');
 
@@ -25,7 +26,8 @@ class SoapClient {
     return methods;
   }
 
-  getMethodByName(object, method) {
+  static getMethodByName(object, method) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const item in object) {
       if (typeof object[item] === 'function') {
         if (item === method) {
@@ -33,6 +35,7 @@ class SoapClient {
         }
       }
     }
+    return '';
   }
 
   executeMethod(methodName) {

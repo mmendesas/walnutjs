@@ -17,12 +17,12 @@ class ApiClient {
   }
 
   createRequest(method, path) {
-    path = common.getTreatedValue(path);
+    const urlPath = common.getTreatedValue(path);
 
     this.options = {
       ...this.options,
       method,
-      url: path,
+      url: urlPath,
     };
 
     logger.debug(`User creates the [${method}] request to [${path}]`);
