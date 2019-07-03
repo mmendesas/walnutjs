@@ -1,3 +1,5 @@
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable global-require */
 
 const fs = require('fs-plus');
 const path = require('path');
@@ -7,7 +9,7 @@ const { version, description } = require('../package.json');
 const logger = require('../src/support/helpers/logger');
 
 // set default configuration
-const config = {
+let config = {
   walnut: {
     name: 'walnut sample automation',
     enableDebug: false,
@@ -127,7 +129,7 @@ const cucumberCli = new Cucumber.Cli(cucumberInfo);
 cucumberCli.run()
   .then((succeeded) => {
     const code = succeeded.success ? 0 : 1;
-    exitNow = () => {
+    const exitNow = () => {
       process.exit(code);
     };
 

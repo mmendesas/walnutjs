@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable no-undef */
 const webdriver = require('selenium-webdriver');
 const { logging } = require('selenium-webdriver');
 const fs = require('fs-plus');
@@ -141,6 +143,7 @@ AfterAll((done) => {
   if (browserTeardownStrategy !== 'always') {
     closeBrowser().then(() => done());
   } else {
+    // eslint-disable-next-line no-new
     new Promise(resolve => resolve(done()));
   }
   logger.info('Execution finished!\n');
@@ -154,23 +157,25 @@ Before((scenario) => {
   vars.addVariable('scenario_name', string.slugify(scenario.pickle.name));
   vars.addVariable('img_num', '1');
 
-  const folder_default = common.getTreatedValue('${vars.project_name}|${vars.scenario_name}');
-  vars.addVariable('folder_default', folder_default);
+  // eslint-disable-next-line no-template-curly-in-string
+  const folderDefault = common.getTreatedValue('${vars.project_name}|${vars.scenario_name}');
+  vars.addVariable('folder_default', folderDefault);
 });
 
 // execute after each scenario
 After((scenario) => {
   if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
     return driver.takeScreenshot((screenShot) => {
-      scenario.attach(new Buffer(screenShot, 'base64'), 'image/png');
+      scenario.attach(Buffer.from(screenShot, 'base64'), 'image/png');
       return tearDownBrowser();
     });
   }
-
+  return 0;
   // teardown after each scenario
   // return tearDownBrowser();
 });
 
+// eslint-disable-next-line func-names
 module.exports = (function () {
   // set a default world
   createWorld();

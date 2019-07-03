@@ -19,9 +19,9 @@ const xmlparser = {
   /**
    * Returns the value from a Tag (find by xpath)
    */
-  getTagValue: (xpath_expression) => {
+  getTagValue: (xpathExpression) => {
     const doc = new DOMParser().parseFromString(this.xmlContent);
-    const node = xpath.select(xpath_expression, doc);
+    const node = xpath.select(xpathExpression, doc);
     return node[0].textContent;
   },
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const winston = require('winston');
 
 const {
@@ -5,8 +6,8 @@ const {
 } = winston.format;
 
 const myFormat = printf(({
-  level, message, flabel, ftimestamp,
-}) => `${ftimestamp} [ ${flabel} ] ${level}: ${message}`);
+  level, message, label, timestamp,
+}) => `${timestamp} [ ${label} ] ${level}: ${message}`);
 
 module.exports = winston.createLogger({
   format: combine(
