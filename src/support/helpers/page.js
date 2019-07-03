@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Page Helpers
 
 module.exports = {
@@ -7,9 +8,9 @@ module.exports = {
     const timeout = (waitInSeconds) ? (waitInSeconds * 1000) : DEFAULT_TIMEOUT;
 
     // load the url and wait for it to complete
-    return driver.get(url).then(() =>
-      // now wait for the body element to be present
-      driver.wait(until.elementLocated(by.css('body')), timeout));
+    // and wait for the body element to be present
+    return driver.get(url)
+      .then(() => driver.wait(until.elementLocated(by.css('body')), timeout));
   },
 
   waitUntilElementIsPresent: (elementBy, timeout = DEFAULT_TIMEOUT) => {

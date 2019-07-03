@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 const fs = require('fs-plus');
 const path = require('path');
 const interpreter = require('../expressions/interpreter');
 const string = require('./string');
 const vars = require('./variables');
 const params = require('./params');
-
+const logger = require('./logger');
 
 module.exports = {
   /**
@@ -18,7 +19,7 @@ module.exports = {
       return content;
     }
 
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i += 1) {
       const word = list[i];
       let newWord = word;
 
@@ -42,10 +43,10 @@ module.exports = {
     return content;
   },
 
-  compare: (current, type, received) => {
-    type = type.trim().toLowerCase().replace(/\s/gi, '');
-    current = current.toString();
-    received = received.toString();
+  compare: (mcurrent, mtype, mreceived) => {
+    const type = mtype.trim().toLowerCase().replace(/\s/gi, '');
+    const current = mcurrent.toString();
+    const received = mreceived.toString();
 
     switch (type) {
       case 'whichcontains':
@@ -77,9 +78,12 @@ module.exports = {
     }
   },
 
-  saveScreenshot: (folder_path, name) => driver.takeScreenshot().then((screenshot, err) => {
-    fs.writeFile(path.join(folder_path, `${name}.png`), screenshot, 'base64', (err) => {
-      console.log(err);
+  saveScreenshot: (folderPath, name) => driver.takeScreenshot().then((screenshot, err) => {
+    if (err) {
+      throw new Error(err.stack);
+    }
+    fs.writeFile(path.join(folderPath, `${name}.png`), screenshot, 'base64', (writeErr) => {
+      logger.info(writeErr);
     });
   }),
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-undef */
 const string = require('./string');
 const logger = require('./logger');
 
@@ -38,11 +40,10 @@ const Element = {
   getElementFinder(container, name) {
     // save current used container/name
     this.lastUsedLocator = [container, name];
-
     const locator = this.getLocator(container, name);
 
     if (isEmptyObject(locator)) {
-      throw 'Locator element incorrect, please use {key, type, value}';
+      throw new Error('Invalid locator element, please use { key, type, value }');
     }
 
     // get Element By
@@ -59,11 +60,10 @@ const Element = {
   getElementFinderAll(container, name) {
     // save current used container/name
     this.lastUsedLocator = [container, name];
-
     const locator = this.getLocator(container, name);
 
     if (isEmptyObject(locator)) {
-      throw 'Locator element incorrect, please use {key, type, value}';
+      throw new Error('Invalid locator element, please use { key, type, value }');
     }
 
     // get list of elements based on type/value
@@ -118,8 +118,9 @@ const Element = {
   /**
    * Find the locator in json by container name and locator key
    */
-  getLocator(container, name) {
-    const container_list = locators.containers;
+  getLocator(container, keyName) {
+    let name = keyName;
+    const containerList = locators.containers;
     let result = {};
     let params;
 
@@ -129,16 +130,17 @@ const Element = {
     }
 
     // search a specific locator inside containers list
-    for (let i = 0; i < container_list.length; i++) {
-      const { name: cname, locators } = container_list[i];
+    for (let i = 0; i < containerList.length; i += 1) {
+      const { name: cname, locators } = containerList[i];
 
-      if (cname == container) {
-        for (let j = 0; j < locators.length; j++) {
+      if (cname === container) {
+        for (let j = 0; j < locators.length; j += 1) {
           const { key } = locators[j];
 
           // return locator info if exists
           if (key === name) {
-            const { type, value, options } = locators[j];
+            // eslint-disable-next-line prefer-const
+            let { type, value, options } = locators[j];
 
             if (type.toLowerCase().startsWith('p:')) {
               value = string.formatString(value, params);
@@ -187,11 +189,11 @@ const Element = {
 
       if (global.lastStyleElement) {
         lastStyleElement.getAttribute('style').then((oldStyle) => {
-          oldStyle = oldStyle.replace(pattern, '');
+          const usedStyle = oldStyle.replace(pattern, '');
           if (lastStyleValue === '') {
             driver.executeScript('arguments[0].removeAttribute("style");', lastStyleElement);
           } else {
-            driver.executeScript(`arguments[0].setAttribute("style", "${oldStyle}");`, lastStyleElement);
+            driver.executeScript(`arguments[0].setAttribute("style", "${usedStyle}");`, lastStyleElement);
           }
         });
       }

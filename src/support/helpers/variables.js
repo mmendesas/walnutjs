@@ -2,7 +2,6 @@
 
 const varMap = {};
 
-
 /**
  * Add variable to list
  */
@@ -31,6 +30,7 @@ const nutParseVars = (text) => {
       const varName = item.split('.')[1];
       const varValue = getVariable(varName);
 
+      // eslint-disable-next-line no-param-reassign
       text = text.replace(item, varValue);
     });
   }

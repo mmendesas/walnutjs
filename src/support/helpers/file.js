@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 const path = require('path');
 const fs = require('fs-plus');
 
 module.exports = {
 
-  getTreatedFilename: (folder_path, name) => {
-    const filename = path.join(this.getTreatedPath(config.evidencesPath), folder_path.join('/'), name);
+  getTreatedFilename: (folderPath, name) => {
+    const filename = path.join(this.getTreatedPath(config.evidencesPath), folderPath.join('/'), name);
     this.ensureDirectoryExistence(filename);
     return filename;
   },
@@ -17,10 +18,12 @@ module.exports = {
     }
     this.ensureDirectoryExistence(dirname);
     fs.mkdirSync(dirname);
+    return true;
   },
 
-  getTreatedPath: (filepath) => {
-    if (filepath.startsWith('{default}') || filepath == '') {
+  getTreatedPath: (mypath) => {
+    let filepath = mypath;
+    if (filepath.startsWith('{default}') || filepath === '') {
       filepath = filepath.replace('{default}', '');
       filepath = path.join(process.cwd(), 'test', filepath);
     } else {
@@ -32,7 +35,7 @@ module.exports = {
 
   writePNGToFile: (data, filename) => {
     const pngStream = fs.createWriteStream(`${filename}.png`);
-    pngStream.write(new Buffer(data, 'base64'));
+    pngStream.write(Buffer.from(data, 'base64'));
     pngStream.end();
   },
 

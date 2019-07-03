@@ -5,8 +5,8 @@ const {
 } = winston.format;
 
 const myFormat = printf(({
-  level, message, label, timestamp,
-}) => `${timestamp} [ ${label} ] ${level}: ${message}`);
+  level, message, flabel, ftimestamp,
+}) => `${ftimestamp} [ ${flabel} ] ${level}: ${message}`);
 
 module.exports = winston.createLogger({
   format: combine(

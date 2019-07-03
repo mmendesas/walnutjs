@@ -1,3 +1,6 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-restricted-syntax */
 
 const flattenObject = (ob) => {
   const toReturn = {};
