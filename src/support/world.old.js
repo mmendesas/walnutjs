@@ -1,3 +1,4 @@
+/* eslint-disable */
 const $q = require('q');
 const context = require('./context');
 const config = require('./config');
@@ -111,9 +112,9 @@ module.exports = function () {
     this._isPresentAndDisplayed = function (elementFinder) {
       const _this = this;
       const deferred = $q.defer();
+      elementFinder.isPresent().then((isPresent) => {
 
-      _this.waitForElementToBePresent(elementFinder).then(() => {
-        elementFinder.isPresent().then((isPresent) => {
+        _this.waitForElementToBePresent(elementFinder).then(() => {
           if (isPresent === true) {
             elementFinder.isDisplayed().then((isVisible) => {
               if (isVisible === true) {

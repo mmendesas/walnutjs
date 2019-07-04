@@ -1,8 +1,7 @@
+/* eslint-disable */
 const webdriver = require('selenium-webdriver');
-
-const test = ('selenium-webdriver/testing');
 const {
-  Builder, By, Key, logging, until,
+  Builder, By, Key, until,
 } = require('selenium-webdriver');
 
 const chromeCapabilities = webdriver.Capabilities.chrome();

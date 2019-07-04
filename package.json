@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "preversion": "changelog"
+    "preversion": "changelog",
+    "pretest": "eslint src"
   },
   "repository": {
     "type": "git",
