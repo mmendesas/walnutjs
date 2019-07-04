@@ -45,6 +45,12 @@
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "MyTest",
+      "program": "${workspaceFolder}/src/mtest.js"
     }
   ]
 }

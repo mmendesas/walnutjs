@@ -5,6 +5,7 @@ const fs = require('fs-plus');
 const path = require('path');
 const Cucumber = require('cucumber');
 const program = require('commander');
+const reporter = require('cucumber-html-reporter');
 const { version, description } = require('../package.json');
 const logger = require('../src/support/helpers/logger');
 
@@ -15,6 +16,7 @@ let config = {
     enableDebug: false,
     reports: './reports',
     noScreenshot: false,
+    launchReport: true,
     paths: {
       locators: './example/locators',
       evidences: './example/photos',
@@ -44,6 +46,24 @@ let config = {
 const collectPaths = (value, paths) => {
   paths.push(value);
   return paths;
+};
+
+// generate html report
+const generateReport = () => {
+  const cucumberJson = path.resolve(config.walnut.reports, 'cucumber-report.json');
+  const cucumberHTML = path.resolve(config.walnut.reports, 'cucumber-report.html');
+
+  // generate the HTML report
+  const options = {
+    theme: 'bootstrap',
+    jsonFile: cucumberJson,
+    output: cucumberHTML,
+    reportSuiteAsScenarios: true,
+    launchReport: config.walnut.launchReport,
+    ignoreBadJsonFile: true,
+  };
+
+  reporter.generate(options);
 };
 
 // start the CLI options
@@ -128,6 +148,9 @@ const cucumberCli = new Cucumber.Cli(cucumberInfo);
 
 cucumberCli.run()
   .then((succeeded) => {
+    // generate html report
+    generateReport();
+
     const code = succeeded.success ? 0 : 1;
     const exitNow = () => {
       process.exit(code);

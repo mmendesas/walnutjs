@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable global-require */
 /* eslint-disable no-undef */
 const webdriver = require('selenium-webdriver');
@@ -152,7 +153,8 @@ AfterAll((done) => {
 /**
  * Make some action before each scenario
  */
-Before((scenario) => {
+Before(function (scenario) {
+  global.world = this;
   vars.addVariable('project_name', string.slugify(config.walnut.name));
   vars.addVariable('scenario_name', string.slugify(scenario.pickle.name));
   vars.addVariable('img_num', '1');
@@ -165,8 +167,8 @@ Before((scenario) => {
 // execute after each scenario
 After((scenario) => {
   if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
-    return driver.takeScreenshot((screenShot) => {
-      scenario.attach(Buffer.from(screenShot, 'base64'), 'image/png');
+    return driver.takeScreenshot().then((screenShot) => {
+      world.attach(Buffer.from(screenShot, 'base64'), 'image/png');
       return tearDownBrowser();
     });
   }
@@ -179,7 +181,6 @@ After((scenario) => {
 module.exports = (function () {
   // set a default world
   createWorld();
-  this.World = createWorld;
 
   // global helpers
   global.helpers = require('../support/helpers');

@@ -32,63 +32,63 @@ Then(/^user does not sees the '(.+)-(.+)' on the screen$/, (container, key) => {
 /**
 * Validate text in element
 */
-Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, value) => {
+Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, async (container, key, comparison, value) => {
   const elementFinder = element.getElementFinder(container, key);
   const text = common.getTreatedValue(value);
 
-  elementFinder.getText().then((elementText) => {
-    switch (comparison) {
-      case 'which contains':
-        assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
-        break;
+  const elementText = await elementFinder.getText();
 
-      case 'which not contains':
-        assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
-        break;
+  switch (comparison) {
+    case 'which contains':
+      assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
+      break;
 
-      case 'equals to':
-        assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
-        break;
+    case 'which not contains':
+      assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
+      break;
 
-      case 'not equals to':
-        assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
-        break;
+    case 'equals to':
+      assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
+      break;
 
-      default:
-        break;
-    }
-  });
+    case 'not equals to':
+      assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
+      break;
+
+    default:
+      break;
+  }
 });
 
 /**
  * Validate value in element
  */
-Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, comparison, value) => {
+Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, async (container, key, comparison, value) => {
   const elementFinder = element.getElementFinder(container, key);
   const text = common.getTreatedValue(value);
 
-  elementFinder.getAttribute('value').then((elementText) => {
-    switch (comparison) {
-      case 'which contains':
-        assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
-        break;
+  const elementText = await elementFinder.getAttribute('value');
 
-      case 'which not contains':
-        assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
-        break;
+  switch (comparison) {
+    case 'which contains':
+      assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
+      break;
 
-      case 'equals to':
-        assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
-        break;
+    case 'which not contains':
+      assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
+      break;
 
-      case 'not equals to':
-        assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
-        break;
+    case 'equals to':
+      assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
+      break;
 
-      default:
-        break;
-    }
-  });
+    case 'not equals to':
+      assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
+      break;
+
+    default:
+      break;
+  }
 });
 
 /**

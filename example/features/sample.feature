@@ -24,6 +24,8 @@ Feature: Cucumber test
 
     Then user prints all variables to console
     Then user prints the message 'gros' to console
+    Then the 'msite-ageTotal' has text equals to '36'
+    Then the 'msite-job' has value equals to 'Developer'
     Then user saves a screenshot 'interact|my-screen'
 
   @full_test
