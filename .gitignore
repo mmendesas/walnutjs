@@ -1,6 +1,3 @@
-### VSCODE ##
-.vscode
-
 ### Node ###
 npm-debug.log*
 
@@ -12,3 +9,14 @@ node_modules/
 
 # package.json Lock file
 package-lock.json
+
+# ignore reports
+reports
+
+
+# logs
+yarn-error.log
+walnutjs.log
+walnut.log
+
+example/photos/*

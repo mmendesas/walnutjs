@@ -1,6 +1,6 @@
 # walnutjs
 
-**walnutjs** is a simple collection of generic steps for interact with web elements in _**es6**_ sites.
+**walnutjs** is a collection of generic steps for interact with web elements in _**es6**_ sites.
 You only need to write some feature files using the **Gherkin** syntax and plan your tests with **BDD (Behavior Driven Development)** pattern.
 
 Please see our wiki **[DOC](https://github.com/sednemm/walnutjs/wiki)** for more details.
@@ -41,7 +41,7 @@ Before continue, check that you have completed the following requirements:
             > locators
                 locators.json
     ```
-4. Add the foloowing content to `locators.json` file: 
+4. Add the foloowing content to `locators.json` file:
     ```json
     {
         "containers":[
@@ -50,7 +50,7 @@ Before continue, check that you have completed the following requirements:
                 "locators":[
                     { "key": "SearchInput", "type": "name", "value": "q" },
                     { "key": "SearchButton", "type": "p:xpath", "value": "//input[@value='{0}']" }
-                ]            
+                ]
             }
         ]
     }
@@ -63,7 +63,7 @@ Before continue, check that you have completed the following requirements:
         Scenario: I want see the Google Page
             Given user navigates to 'http://www.google.com'
             When user fills 'GoogleHome-SearchInput' by replacing text with 'led zeppelin wikipedia'
-            And user clicks on 'GoogleResult-SearchButton'        
+            And user clicks on 'GoogleResult-SearchButton'
     ```
 
 6. Before execution check that `webdriver-manager` was started correctly

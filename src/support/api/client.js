@@ -1,59 +1,58 @@
-var helperCommon = require('../helper/common');
-var helperInfo = require('../helper/info');
-const axios = require('axios')
+const axios = require('axios');
+const common = require('../helpers/common');
+const logger = require('../helpers/logger');
 
 class ApiClient {
-
   constructor() {
-    this.options = {}
-    this.requestContent = {}
-    this.client = axios.create()
+    this.options = {};
+    this.requestContent = {};
+    this.client = axios.create();
   }
 
   setBaseURL(baseURL) {
     this.options = {
       ...this.options,
-      baseURL: baseURL
-    }
+      baseURL,
+    };
   }
 
   createRequest(method, path) {
-    path = helperCommon.getTreatedValue(path);
+    const urlPath = common.getTreatedValue(path);
 
     this.options = {
       ...this.options,
-      method: method,
-      url: path
-    }
+      method,
+      url: urlPath,
+    };
 
-    helperInfo.logDebug(`User creates the [${method}] request to [${path}]`);
+    logger.debug(`User creates the [${method}] request to [${path}]`);
   }
 
   sendRequest() {
-    this.addBody(this.requestContent)
+    this.addBody(this.requestContent);
 
     return this.client.request(this.options)
-      .then(response => {
-        this.response = response
-        return Promise.resolve(response)
+      .then((response) => {
+        this.response = response;
+        return Promise.resolve(response);
       })
       .catch((error) => {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+          logger.error(error.response.data);
+          logger.error(error.response.status);
+          logger.error(error.response.headers);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
           // http.ClientRequest in node.js
-          console.log(error.request);
+          logger.error(error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
+          logger.error('Error', error.message);
         }
-        console.log(error.config);
+        logger.error(error.config);
       });
   }
 
@@ -62,9 +61,9 @@ class ApiClient {
       ...this.options,
       headers: {
         ...this.options.headers,
-        [name]: value
-      }
-    }
+        [name]: value,
+      },
+    };
   }
 
   addParam(name, value) {
@@ -72,19 +71,17 @@ class ApiClient {
       ...this.options,
       params: {
         ...this.options.params,
-        [name]: value
-      }
-    }
+        [name]: value,
+      },
+    };
   }
 
   addBody(body) {
     this.options = {
       ...this.options,
-      data: body
-    }
+      data: body,
+    };
   }
-
 }
 
-
-module.exports = new ApiClient;
+module.exports = new ApiClient();

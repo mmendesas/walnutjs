@@ -1,150 +1,190 @@
-var $q = require('q');
-var context = require('./context');
-var config = require('./config');
-var helperString = require('./helper/string');
-var helperCommon = require('./helper/common');
-var helperFile = require('./helper/file');
-var helperElement = require('./helper/element');
-var EC = protractor.ExpectedConditions;
+/* eslint-disable func-names */
+/* eslint-disable global-require */
+/* eslint-disable no-undef */
+const webdriver = require('selenium-webdriver');
+const { logging } = require('selenium-webdriver');
+const fs = require('fs-plus');
+const {
+  setDefaultTimeout,
+  BeforeAll,
+  AfterAll,
+  After,
+  Before,
+} = require('cucumber');
 
-module.exports = function () {
+const { expect } = require('chai');
+const { assert } = require('chai');
+const {
+  vars, logger, string, common, params,
+} = require('../support/helpers');
 
-    this.World = function World() {
+/**
+ * Expose a list of vars globally to be used in each step definition
+ * @returns {void}
+ */
+function createWorld() {
+  const props = {
+    driver: null,
+    selenium: webdriver,
+    until: webdriver.until,
+    By: webdriver.By,
+    by: webdriver.By,
+    expect,
+    assert,
+  };
 
-        /**
-       * Refresh the current url
-       * @returns {null}
-       */
-        this.refresh = function () {
-            return browser.driver.navigate().refresh();
-        };
+  // expose to step definitions methods
+  Object.keys(props).forEach((key) => {
+    global[key] = props[key];
+  });
+}
 
-        /**
-        * Runs callback with a delay
-        * @param callback
-        * @returns {exports}
-        */
-        this.delayCallback = function (callback) {
-            var _this = this;
-            setTimeout(callback, 100);
-            return _this;
-        };
+/**
+ * Creates a webdriver instance based on config (remote connection)
+ * @returns {webdriver} selenium webdriver
+ */
+function getDriverInstance() {
+  const driver = new webdriver.Builder()
+    .usingServer(config.selenium.remoteURL)
+    .withCapabilities(config.selenium.caps)
+    .build();
 
-        /**
-         * Error handler (take screenshot and call callback.fail())
-         * @param error
-         * @param callback
-         * @returns {exports}
-         */
-        this.handleError = function (error, callback) {
-            var _this = this;
-            var evidencesPath = config.evidencesPath;
+  return driver;
+}
 
-            //console.error('\n' + err.name + ': ' + err.message + '\n');
+/**
+ * Close the current instance of browser
+ */
+function closeBrowser() {
+  return driver.close().then(() => {
+    if (config.selenium.browser !== 'firefox') {
+      driver.quit();
+    }
+  });
+}
 
-            browser.takeScreenshot().then(function (imageData) {
-                var formatFeature = helperString.slugify(context.getCurrentFeature().getName());
-                var formatScenario = helperString.slugify(context.getCurrentScenario().getName());
-                var formatStep = helperString.slugify(context.getCurrentStep().getName());
+/**
+ * Teardown browser based on property browserTeardownStrategy
+ */
+function tearDownBrowser() {
+  switch (config.selenium.browserTeardownStrategy) {
+    case 'none':
+      return Promise.resolve();
+    case 'clear':
+      return helpers.page.clearCookiesAndStorages();
+    default:
+      return closeBrowser(driver);
+  }
+}
 
-                var folder_path = [];
-                folder_path.push(config.projectName);
-                folder_path.push(formatFeature);
-                folder_path.push(formatScenario);
-                folder_path.push('errors');
+/**
+ * Load locators with all User Interface Map
+ */
+function loadUIMap() {
+  const uimap = { containers: [] };
+  const folder = config.walnut.paths.locators;
 
-                var filename = helperFile.getTreatedFilename(folder_path, formatStep + '_error');
-
-                helperFile.writePNGToFile(imageData, filename);
-
-                _this.delayCallback(function handleErrorCallback() {
-                    callback(new Error(error));
-                });
-            });
-
-            return _this;
-        };
-
-        /**
-       * Wait for element appears in page
-       * @param {object} elementFinder
-       * @returns {Promise}
-       */
-        this.waitForElementToBePresent = function (elementFinder) {
-            var _this = this;
-            var deferred = $q.defer();
-            var waitElementTimeout = config.waitElementTimeout;
-
-            //wait for presence of element before interact with him until timeout(10 sec)
-            browser
-                .driver.wait(EC.presenceOf(elementFinder), waitElementTimeout)
-                .catch(function (err) {
-                    _this.handleError(err, function () { });
-                });
-            deferred.resolve();
-            return deferred.promise;
+  try {
+    fs.readdirSync(folder)
+      .forEach((file) => {
+        try {
+          const content = fs.readFileSync(`${folder}/${file}`);
+          uimap.containers = uimap.containers.concat(JSON.parse(content).containers);
+        } catch (err) {
+          logger.error(`Locators - Invalid JSON structure of the locator file -> [ ${folder}/${file} ]`);
         }
+      });
+  } catch (err) {
+    logger.error(`Locators - Invalid locators folder path -> [ ${folder} ]`);
+    throw err;
+  }
 
-        /**
-      * Check if an element or list of element is present and visible
-      * @param {object} elementFinder
-      * @returns {Promise}
-      */
-        this.isPresentAndDisplayed = function (elementFinder) {
-            const isPresents = [];
-            const isSingleElement = !elementFinder.count;
+  global.locators = uimap;
+}
 
-            if (isSingleElement) {
-                return this._isPresentAndDisplayed(elementFinder);
-            }
+/**
+ * Load parameters file
+ */
+const loadParameters = () => {
+  let parameters = {};
+  const file = config.walnut.paths.parameters;
+  try {
+    const content = fs.readFileSync(file);
+    parameters = JSON.parse(content);
+  } catch (err) {
+    logger.error(`Inform a valid parameters path. ${err.message}`);
+    throw err;
+  }
+  // set parameters to vars
+  params.setAsVariables(parameters);
 
-            elementFinder.each(el => {
-                isPresents.push(this._isPresentAndDisplayed(el))
-            });
-
-            return $q.all(isPresents);
-        };
-
-        /**
-       * Check if an element is present and visible
-       * @param {object} elementFinder
-       * @returns {Promise}
-       */
-        this._isPresentAndDisplayed = function (elementFinder) {
-            var _this = this;
-            var deferred = $q.defer();
-
-            _this.waitForElementToBePresent(elementFinder).then(function elementPresent() {
-                elementFinder.isPresent().then(function isPresentSuccess(isPresent) {
-                    if (isPresent === true) {
-                        elementFinder.isDisplayed().then(function isDisplayedSuccess(isVisible) {
-                            if (isVisible === true) {
-                                deferred.resolve();
-                            } else {
-                                deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                            }
-                        }, function isDisplayedFailure() {
-                            deferred.reject("Element is present but not visible. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                        });
-                    } else {
-                        deferred.reject("Unable to find element in page. Binding [container, key] : " + JSON.stringify(helperElement.lastUsedLocator));
-                    }
-                });
-            });
-
-            return deferred.promise;
-        };
-
-        this.saveScreenshot = function (folder_path, name) {
-            var _this = this;
-            var filename = helperFile.getTreatedFilename(folder_path, name);
-
-            browser.takeScreenshot().then(function (imageData) {
-                helperFile.writePNGToFile(imageData, filename + '.png');
-            });
-
-            return _this;
-        };
-
-    };
+  // load parameters globally
+  global.parameters = parameters;
 };
+
+// load resources and create driver
+BeforeAll((done) => {
+  logger.info('Execution started...');
+  // set loging level
+  logging.installConsoleHandler();
+  logging.getLogger('webdriver.http').setLevel(logging.Level.INFO);
+
+  // load UIMap and parameters
+  loadUIMap();
+  loadParameters();
+
+  if (!global.driver) {
+    global.driver = getDriverInstance();
+    done();
+  }
+});
+
+AfterAll((done) => {
+  tearDownBrowser();
+  if (browserTeardownStrategy !== 'always') {
+    closeBrowser().then(() => done());
+  } else {
+    // eslint-disable-next-line no-new
+    new Promise(resolve => resolve(done()));
+  }
+  logger.info('Execution finished!\n');
+});
+
+/**
+ * Make some action before each scenario
+ */
+Before(function (scenario) {
+  global.world = this;
+  vars.addVariable('project_name', string.slugify(config.walnut.name));
+  vars.addVariable('scenario_name', string.slugify(scenario.pickle.name));
+  vars.addVariable('img_num', '1');
+
+  // eslint-disable-next-line no-template-curly-in-string
+  const folderDefault = common.getTreatedValue('${vars.project_name}|${vars.scenario_name}');
+  vars.addVariable('folder_default', folderDefault);
+});
+
+// execute after each scenario
+After((scenario) => {
+  if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
+    return driver.takeScreenshot().then((screenShot) => {
+      world.attach(Buffer.from(screenShot, 'base64'), 'image/png');
+      return tearDownBrowser();
+    });
+  }
+  return 0;
+  // teardown after each scenario
+  // return tearDownBrowser();
+});
+
+// eslint-disable-next-line func-names
+module.exports = (function () {
+  // set a default world
+  createWorld();
+
+  // global helpers
+  global.helpers = require('../support/helpers');
+
+  // // set the default timeout for all tests
+  setDefaultTimeout(global.DEFAULT_TIMEOUT);
+}());

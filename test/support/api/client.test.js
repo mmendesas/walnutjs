@@ -1,6 +1,6 @@
 
 const api = require('../../../src/support/api/client')
-const helperVars = require('../../../src/support/helper/variables')
+const vars = require('../../../src/support/helpers/variables')
 
 describe('API Tests', () => {
   const baseURL = "https://httpbin.org/get"
@@ -21,7 +21,7 @@ describe('API Tests', () => {
   })
 
   it('should be able to create a simple request with treated value', () => {
-    helperVars.addVariable('my_url', baseURL);
+    vars.addVariable('my_url', baseURL);
     api.createRequest('get', "${vars.my_url}")
     expect(api.options).toEqual({ method: 'get', url: baseURL })
   })

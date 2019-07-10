@@ -1,347 +1,230 @@
-var helperElement = require('../support/helper/element');
-var helperString = require('../support/helper/string');
-var helperCommon = require('../support/helper/common');
+/* eslint-disable no-undef */
+const { Then } = require('cucumber');
 
-var Validation = function () {
-    /**
-      * Validate if the element is enabled or disabled
-      */
-  this.Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, function (container, key, isOrNot, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
+const { common, element } = helpers;
 
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.isEnabled().then(function isDisplayedSuccess (isEnabled) {
-        var compare = (isOrNot === 'enabled');
-        var res = (isOrNot === 'enabled') ? 'DISABLED' : 'ENABLED';
+/**
+  * Validate if the element is enabled or disabled
+  */
+Then(/^user sees the '(.+)-(.+)' (enabled|disabled)$/, (container, key, isOrNot) => {
+  const elementFinder = element.getElementFinder(container, key);
 
-        if (isEnabled === compare) {
-          _this.delayCallback(callback);
-        }
-        _this.handleError(helperString.formatString('Element present but {0}', [res]), callback);
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
+  return elementFinder.isEnabled().then((isEnabled) => {
+    const compare = (isOrNot === 'enabled');
+    const res = (isOrNot === 'enabled') ? 'DISABLED' : 'ENABLED';
+
+    if (isEnabled !== compare) {
+      throw new Error(`Element present but ${res}`);
+    }
   });
+});
 
-    /**
-     * Validate if the element is not present or displayed on the screen
-     */
-  this.Then(/^user does not sees the '(.+)-(.+)' on the screen$/, function (container, key, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      _this.handleError('Element found on the current screen', callback);
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.delayCallback(callback);
+/**
+ * Validate if the element is not present or displayed on the screen
+ */
+Then(/^user does not sees the '(.+)-(.+)' on the screen$/, (container, key) => {
+  element.getElementFinder(container, key)
+    .catch(() => {
+      throw new Error('Element found on the current screen');
     });
-  });
+});
 
-    /**
-    * Validate text in element
-    */
-  this.Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
+/**
+* Validate text in element
+*/
+Then(/^the '(.+)-(.+)' has text (equals to|not equals to|which contains|which not contains) '(.*)'$/, async (container, key, comparison, value) => {
+  const elementFinder = element.getElementFinder(container, key);
+  const text = common.getTreatedValue(value);
 
-    text = helperCommon.getTreatedValue(text);
+  const elementText = await elementFinder.getText();
 
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.getText().then(function getTextSuccess (elementText) {
-        var result;
-        var msg;
-
-        switch (comparison) {
-        case 'which contains':
-          result = elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
-          break;
-
-        case 'which not contains':
-          result = !elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
-          break;
-
-        case 'equals to':
-          result = elementText === text;
-          msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
-          break;
-
-        case 'not equals to':
-          result = elementText !== text;
-          msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
-          break;
-
-        default:
-          break;
-        }
-        if (!result) {
-          _this.handleError(msg, callback);
-        } else {
-          _this.delayCallback(callback);
-        }
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
-  });
-
-    /**
-     * Validate value in element
-     */
-  this.Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, comparison, text, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    text = helperCommon.getTreatedValue(text);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.getAttribute('value').then(function getTextSuccess (elementText) {
-        var result;
-        var msg;
-
-        switch (comparison) {
-        case 'which contains':
-          result = elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
-          break;
-
-        case 'which not contains':
-          result = !elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
-          break;
-
-        case 'equals to':
-          result = elementText === text;
-          msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
-          break;
-
-        case 'not equals to':
-          result = elementText !== text;
-          msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
-          break;
-
-        default:
-          break;
-        }
-        if (!result) {
-          _this.handleError(msg, callback);
-        } else {
-          _this.delayCallback(callback);
-        }
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
-  });
-
-    /**
-    * Validate text length in element
-    */
-  this.Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function (container, key, comparison, count, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.getText().then(function getTextSuccess (elementText) {
-        var result;
-        var msg;
-
-        switch (comparison) {
-        case 'equals to':
-          result = elementText.length === count;
-          msg = helperString.formatString('Text length [{0}] is not equals to [{1}]', [elementText, count]);
-          break;
-
-        case 'not equals to':
-          result = !elementText.length !== count;
-          msg = helperString.formatString('Text length [{0}] is equals to [{1}]', [elementText, count]);
-          break;
-
-        case 'greater than':
-          result = elementText.length > count;
-          msg = helperString.formatString('Text length [{0}] is not greater than [{1}]', [elementText, count]);
-          break;
-
-        case 'greater than or equal to':
-          result = elementText.length >= count;
-          msg = helperString.formatString('Text length [{0}] is not greater than or equal to [{1}]', [elementText, count]);
-          break;
-
-        case 'less than':
-          result = elementText.length < count;
-          msg = helperString.formatString('Text length [{0}] is not less than [{1}]', [elementText, count]);
-          break;
-
-        case 'less than or equal to':
-          result = elementText.length <= count;
-          msg = helperString.formatString('Text length [{0}] is not less than or equal to [{1}]', [elementText, count]);
-          break;
-
-        default:
-          break;
-        }
-        if (!result) {
-          _this.handleError(msg, callback);
-        } else {
-          _this.delayCallback(callback);
-        }
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
-  });
-
-    /**
-     * Validate value length in element
-    */
-  this.Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, function (container, key, comparison, count, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.getAttribute('value').then(function getTextSuccess (elementText) {
-        var result;
-        var msg;
-
-        switch (comparison) {
-        case 'equals to':
-          result = elementText.length === count;
-          msg = helperString.formatString('Value length [{0}] is not equals to [{1}]', [elementText, count]);
-          break;
-
-        case 'not equals to':
-          result = !elementText.length !== count;
-          msg = helperString.formatString('Value length [{0}] is equals to [{1}]', [elementText, count]);
-          break;
-
-        case 'greater than':
-          result = elementText.length > count;
-          msg = helperString.formatString('Value length [{0}] is not greater than [{1}]', [elementText, count]);
-          break;
-
-        case 'greater than or equals to':
-          result = elementText.length >= count;
-          msg = helperString.formatString('Value length [{0}] is not greater than or equal to [{1}]', [elementText, count]);
-          break;
-
-        case 'less than':
-          result = elementText.length < count;
-          msg = helperString.formatString('Value length [{0}] is not less than [{1}]', [elementText, count]);
-          break;
-
-        case 'less than or equals to':
-          result = elementText.length <= count;
-          msg = helperString.formatString('Value length [{0}] is not less than or equal to [{1}]', [elementText, count]);
-          break;
-
-        default:
-          break;
-        }
-        if (!result) {
-          _this.handleError(msg, callback);
-        } else {
-          _this.delayCallback(callback);
-        }
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
-  });
-
-    /**
-     * Validate attribute in element
-     */
-  this.Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (container, key, attributeName, comparison, text, callback) {
-    var _this = this;
-    var elementFinder = helperElement.getElementFinder(container, key);
-
-    text = helperCommon.getTreatedValue(text);
-
-    _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess () {
-      elementFinder.getAttribute(attributeName).then(function getTextSuccess (elementText) {
-        var result;
-        var msg;
-
-        switch (comparison) {
-        case 'which contains':
-          result = elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] not contains [{1}]', [elementText, text]);
-          break;
-
-        case 'which not contains':
-          result = !elementText.includes(text);
-          msg = helperString.formatString('Expected [{0}] contains [{1}]', [elementText, text]);
-          break;
-
-        case 'equals to':
-          result = elementText === text;
-          msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [elementText, text]);
-          break;
-
-        case 'not equals to':
-          result = elementText !== text;
-          msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [elementText, text]);
-          break;
-
-        default:
-          break;
-        }
-        if (!result) {
-          _this.handleError(msg, callback);
-        } else {
-          _this.delayCallback(callback);
-        }
-      });
-    }, function isPresentAndDisplayedError (errorMessage) {
-      _this.handleError(errorMessage, callback);
-    });
-  });
-
-    /**
-   * Compare two string values, can be used with expressions ${x}
-   */
-  this.Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, function (text1, comparison, text2, callback) {
-    var _this = this;
-
-    text1 = helperCommon.getTreatedValue(text1);
-    text2 = helperCommon.getTreatedValue(text2);
-
-    var result;
-    var msg;
-
-    switch (comparison) {
+  switch (comparison) {
     case 'which contains':
-      result = text1.includes(text2);
-      msg = helperString.formatString('Expected [{0}] not contains [{1}]', [text1, text2]);
+      assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
       break;
 
     case 'which not contains':
-      result = !text1.includes(text2);
-      msg = helperString.formatString('Expected [{0}] contains [{1}]', [text1, text2]);
+      assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
       break;
 
     case 'equals to':
-      result = text1 === text2;
-      msg = helperString.formatString('Expected [{0}] not equals to [{1}]', [text1, text2]);
+      assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
       break;
 
     case 'not equals to':
-      result = text1 !== text2;
-      msg = helperString.formatString('Expected [{0}] is equals to [{1}]', [text1, text2]);
+      assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
       break;
 
     default:
       break;
-    }
-    if (!result) {
-      _this.handleError(msg, callback);
-    } else {
-      _this.delayCallback(callback);
+  }
+});
+
+/**
+ * Validate value in element
+ */
+Then(/^the '(.+)-(.+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, async (container, key, comparison, value) => {
+  const elementFinder = element.getElementFinder(container, key);
+  const text = common.getTreatedValue(value);
+
+  const elementText = await elementFinder.getAttribute('value');
+
+  switch (comparison) {
+    case 'which contains':
+      assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
+      break;
+
+    case 'which not contains':
+      assert(!elementText.includes(text), `Expected [${elementText}] contains [${text}]`);
+      break;
+
+    case 'equals to':
+      assert.equal(elementText, text, `Expected [${elementText}] not equals to [${text}]`);
+      break;
+
+    case 'not equals to':
+      assert.notEqual(elementText, text, `Expected [${elementText}] is equals to [${text}]`);
+      break;
+
+    default:
+      break;
+  }
+});
+
+/**
+* Validate text length in element
+*/
+Then(/^the '(.+)-(.+)' has text length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, (container, key, comparison, count) => {
+  const elementFinder = element.getElementFinder(container, key);
+
+  elementFinder.getText().then((elementText) => {
+    switch (comparison) {
+      case 'equals to':
+        assert.equal(elementText.length, count, `Text length [${elementText}] is not equals to [${count}]`);
+        break;
+
+      case 'not equals to':
+        assert.notEqual(elementText.length, count, `Text length[${elementText}] is equals to[${count}]`);
+        break;
+
+      case 'greater than':
+        assert(elementText.length > count, `Text length [${elementText}] is not greater than [${count}]`);
+        break;
+
+      case 'greater than or equal to':
+        assert(elementText.length >= count, `Text length[${elementText}] is not greater than or equal to[${count}]`);
+        break;
+
+      case 'less than':
+        assert(elementText.length < count, `Text length [${elementText}] is not less than [${count}]`);
+        break;
+
+      case 'less than or equal to':
+        assert(elementText.length <= count, `Text length[${elementText}] is not less than or equal to[${count}]`);
+        break;
+
+      default:
+        break;
     }
   });
-};
+});
 
-module.exports = Validation;
+/**
+ * Validate value length in element
+*/
+Then(/^the '(.+)-(.+)' has value length (equals to|not equals to|greater than|greater than or equals to|less than|less than or equals to) '([0-9]+)'$/, (container, key, comparison, count) => {
+  const elementFinder = element.getElementFinder(container, key);
+
+  elementFinder.getAttribute('value').then((elementText) => {
+    const { length } = elementText;
+
+    switch (comparison) {
+      case 'equals to':
+        assert.equal(length, count, `Value length [${length}] is not equals to [${co$ucount}]`);
+        break;
+
+      case 'not equals to':
+        assert.notEqual(length, count, `Value length[${length}] is equals to[${count}]`);
+        break;
+
+      case 'greater than':
+        assert(length > count, `Value length [${length}] is not greater than [${count}]`);
+        break;
+
+      case 'greater than or equals to':
+        assert(length >= count, `Value length[${length}] is not greater than or equal to[${count}]`);
+        break;
+
+      case 'less than':
+        asserrt(length < count, `Value length [${length}] is not less than [${count}]`);
+        break;
+
+      case 'less than or equals to':
+        asserrt(length <= count, `Value length[${length}] is not less than or equal to[${count}]`);
+        break;
+
+      default:
+        break;
+    }
+  });
+});
+
+/**
+ * Validate attribute in element
+ */
+Then(/^the '(.+)-(.+)' has attribute '(.+)' (equals to|not equals to|which contains|which not contains) '(.*)'$/, (container, key, attributeName, comparison, value) => {
+  const elementFinder = element.getElementFinder(container, key);
+  const text = common.getTreatedValue(value);
+
+  elementFinder.getAttribute(attributeName).then((elementText) => {
+    switch (comparison) {
+      case 'which contains':
+        assert(elementText.includes(text), `Expected [${elementText}] not contains [${text}]`);
+        break;
+
+      case 'which not contains':
+        assert(!elementText.includes(text), `Expected[${elementText}] contains[${text}]`);
+        break;
+
+      case 'equals to':
+        assert.equal(elementText, text, `Expected[${elementText}]not equals to [${text}]`);
+        break;
+
+      case 'not equals to':
+        assert.notEqual(elementText, text, `Expected[${elementText}] is equals to[${text}]`);
+        break;
+
+      default:
+        break;
+    }
+  });
+});
+
+/**
+* Compare two string values, can be used with expressions ${x}
+*/
+Then(/^the '([^-]+)' has value (equals to|not equals to|which contains|which not contains) '(.*)'$/, (value1, comparison, value2) => {
+  const text1 = common.getTreatedValue(value1);
+  const text2 = common.getTreatedValue(value2);
+
+  switch (comparison) {
+    case 'which contains':
+      assert(text1.includes(text2), `Expected[${text1}] not contains[${text2}]`);
+      break;
+
+    case 'which not contains':
+      assert(!text1.includes(text2), `Expected[${text1}] contains[${text2}]`);
+      break;
+
+    case 'equals to':
+      assert.equal(text1, text2, `Expected[${text1}] not equals to[${text2}]`);
+      break;
+
+    case 'not equals to':
+      assert.notEqual(text1, text2, `Expected[${text1}] is equals to[${text2}]`);
+      break;
+
+    default:
+      break;
+  }
+});

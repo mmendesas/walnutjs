@@ -1,66 +1,16 @@
-var helperString = require('../helper/string');
+const string = require('../helpers/string');
 
-var expRandom = {
+/**
+* return a random value like number, letter or both
+*/
+const getRandomAlfaNumeric = (option, num) => {
+  const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numbers = '0123456789';
 
-	/**
-	 * Used to return a random value
-	 */
-  parseExpression: function (expression) {
-    var parts = expression.split('|');
-    var num = Math.floor((Math.random() * 9) + 1);
-    var retNum = '';
+  let ret = '';
+  let text = '';
 
-    if (parts.length == 2) {
-      var part01 = parts[0].trim().toLowerCase();
-
-			// random(n|8);
-      if (helperString.isLetter(part01[0])) {
-        retNum = this.getRandomAlfaNumeric(part01, parseInt(parts[1]));
-
-        return retNum;
-      }
-				// random(15.78|55.98);
-      var minimum = parseFloat(parts[0]);
-      var maximum = parseFloat(parts[1]);
-
-      var range = maximum - minimum;
-      var r = Math.floor((Math.random() * range) + 1);
-      var randomNum = minimum + r;
-
-      retNum = randomNum.tovar();
-
-      return retNum;
-    } else if (parts.length == 1) {
-      try {
-        var num = parseInt(expression);
-
-        retNum = Math.floor((Math.random() * num - 1) + 1);
-
-        return retNum;
-      } catch (err) {
-        var sb = [];
-
-        sb.push('[1] - random(num|num) - random(3|7) - 6');
-        sb.push('[2] - random(n|num)   - random(n|5) - 65871');
-        sb.push('[3] - random(l|num)   - random(l|5) - 6aS7x');
-        sb.push('[4] - random(a|num)   - random(a|3) - XyB');
-
-        throw sb.join('\n');
-      }
-    }
-  },
-
-	/**
-	 * return a random value like number, letter or both
-	 */
-  getRandomAlfaNumeric: function (option, num) {
-    var letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var numbers = '0123456789';
-
-    var ret = '';
-    var text = '';
-
-    switch (option.trim().toLowerCase()) {
+  switch (option.trim().toLowerCase()) {
     case 'l':
       text = letters;
       break;
@@ -72,17 +22,62 @@ var expRandom = {
       break;
     default:
       break;
-    }
-
-    for (var i = 0; i < num; i++) {
-      var idx = Math.floor((Math.random() * text.length - 1) + 1);
-
-      ret += text[idx];
-    }
-
-    return ret;
   }
 
+  for (let i = 0; i < num; i += 1) {
+    const idx = Math.floor((Math.random() * text.length - 1) + 1);
+    ret += text[idx];
+  }
+
+  return ret;
 };
 
-module.exports = expRandom;
+/**
+ * Used to return a random value
+ */
+const parseExpression = (expression) => {
+  const parts = expression.split('|');
+  let result = '';
+
+  if (parts.length === 2) {
+    const part01 = parts[0].trim().toLowerCase();
+
+    // random(n|8);
+    if (string.isLetter(part01[0])) {
+      result = getRandomAlfaNumeric(part01, parseInt(parts[1], 10));
+      return result;
+    }
+    // random(15.78|55.98);
+    const minimum = parseFloat(parts[0]);
+    const maximum = parseFloat(parts[1]);
+
+    const range = maximum - minimum;
+    const r = Math.floor((Math.random() * range) + 1);
+    const randomNum = minimum + r;
+
+    result = randomNum.tovar();
+
+    return result;
+  }
+  if (parts.length === 1) {
+    try {
+      const num = parseInt(expression, 10);
+      result = Math.floor((Math.random() * num - 1) + 1);
+      return result;
+    } catch (err) {
+      const sb = [];
+      sb.push('[1] - random(num|num) - random(3|7) - 6');
+      sb.push('[2] - random(n|num)   - random(n|5) - 65871');
+      sb.push('[3] - random(l|num)   - random(l|5) - 6aS7x');
+      sb.push('[4] - random(a|num)   - random(a|3) - XyB');
+
+      throw sb.join('\n');
+    }
+  }
+
+  return 0;
+};
+
+module.exports = {
+  parseExpression,
+};

@@ -1,46 +1,44 @@
-'use strict';
 
-var jp = require('jsonpath');
 
-var jsonparser = {
+const jp = require('jsonpath');
 
-    jsonObj: null,
+const jsonparser = {
 
-    /**
-     * Set the current JSON
-     */
-    init: function (jsonObj) {
-        this.jsonObj = jsonObj;
-    },
+  jsonObj: null,
 
-    /**
-    * Returns the value from a Key (find by jsonpath)
-    */
-    getValue: function (path) {
-        return jp.query(this.jsonObj, path);
-    },
+  /**
+   * Set the current JSON
+   */
+  init: (jsonObj) => {
+    this.jsonObj = jsonObj;
+  },
 
-    /**
-    * Set the value for a Key (find by jsonpath)
-    */
-    setValue: function (path, value) {
-        jp.value(this.jsonObj, path, value);
-    },
+  /**
+  * Returns the value from a Key (find by jsonpath)
+  */
+  getValue: path => jp.query(this.jsonObj, path),
 
-    /**
-    * Delete the Key (find by jsonpath)
-    */
-    deleteKey: function (path) {
-        const parent = jp.parent(this.jsonObj, path);
-        const paths = jp.paths(this.jsonObj, path);
-        const item = paths[0].pop();
+  /**
+  * Set the value for a Key (find by jsonpath)
+  */
+  setValue: (path, value) => {
+    jp.value(this.jsonObj, path, value);
+  },
 
-        if (Array.isArray(parent)) {
-            parent.splice(item, 1);
-        } else {
-            delete parent[item];
-        }
+  /**
+  * Delete the Key (find by jsonpath)
+  */
+  deleteKey: (path) => {
+    const parent = jp.parent(this.jsonObj, path);
+    const paths = jp.paths(this.jsonObj, path);
+    const item = paths[0].pop();
+
+    if (Array.isArray(parent)) {
+      parent.splice(item, 1);
+    } else {
+      delete parent[item];
     }
-}
+  },
+};
 
 module.exports = jsonparser;

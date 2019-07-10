@@ -1,0 +1,6 @@
+{
+  "name": "walnut-test",
+  "default": {
+    "base_url": "https://mmendesas.github.io/react-tutorial/"
+  }
+}

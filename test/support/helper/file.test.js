@@ -1,4 +1,4 @@
-const file = require('../../../src/support/helper/file');
+const file = require('../../../src/support/helpers/file');
 const fs = require('fs');
 
 describe('FILE Tests', () => {
@@ -20,8 +20,9 @@ describe('FILE Tests', () => {
     const filename = './test.txt';
     const content = 'test 123';
 
-    afterAll(() => {
-      fs.unlink(filename);
+    afterAll((done) => {
+      fs.unlinkSync(filename);
+      done()
     });
 
     it('should write simple file', () => {

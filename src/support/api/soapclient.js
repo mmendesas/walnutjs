@@ -1,80 +1,59 @@
-var soap = require('soap');
-var $q = require('q');
-var helperInfo = require('../helper/info');
-var jsonparser = require('../parser/jsonparser');
+/* eslint-disable no-undef */
+const soap = require('soap');
+const jsonparser = require('../parser/jsonparser');
 
-var soapclient = {
+const { logger } = helpers;
 
-  wsdlPath: null,
+class SoapClient {
+  constructor() {
+    this.wsdlPath = null;
+    this.jsonToSend = null;
+    this.jsonResponse = null;
+    this.client = null;
+  }
 
-  jsonToSend: null,
-
-  jsonResponse: null,
-
-  client: null,
-
-  startClient: function (wsdlPath) {
-    var _this = this;
-    var deferred = $q.defer();
-
-    soap.createClient(wsdlPath, function (err, client) {
-      _this.client = client;
-      _this.wsdlPath = wsdlPath;
-      deferred.resolve();
+  startClient(wsdlPath) {
+    soap.createClient(wsdlPath, (err, client) => {
+      this.client = client;
+      this.wsdlPath = wsdlPath;
     });
+  }
 
-    return deferred.promise;
-  },
+  getAllMethods() {
+    const methods = Reflect.ownKeys(this.client)
+      .filter(p => typeof this.client[p] === 'function');
 
-  getAllMethods: function () {
-    var _this = this;
-    var deferred = $q.defer();
-    var methods = Reflect.ownKeys(_this.client).filter(function (p) {
-      return typeof _this.client[p] === 'function';
-    });
+    return methods;
+  }
 
-    deferred.resolve(methods);
-
-    return deferred.promise;
-  },
-
-  getMethodByName: function (object, method) {
-    for (var item in object) {
+  static getMethodByName(object, method) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const item in object) {
       if (typeof object[item] === 'function') {
         if (item === method) {
           return object[item];
         }
       }
     }
-  },
-
-  executeMethod: function (methodName) {
-    var _this = this;
-    var deferred = $q.defer();
-    var methodToExec = _this.getMethodByName(this.client, methodName);
-
-    methodToExec(_this.jsonToSend, function (err, result) {
-      _this.jsonResponse = result;
-      helperInfo.logDebug('SOAP JSON Response:' + JSON.stringify(result));
-      deferred.resolve();
-    });
-
-    return deferred.promise;
-  },
-
-  describeMethod: function (methodName, type) {
-    var _this = this;
-    var deferred = $q.defer();
-
-    jsonparser.init(_this.client.describe());
-    var methodToFind = '$..' + methodName;
-    var myObj = jsonparser.getValue(methodToFind)[0];
-    var result = type.toLowerCase() === 'input' ? myObj.input : myObj.output;
-
-    deferred.resolve(result);
-
-    return deferred.promise;
+    return '';
   }
-};
 
-module.exports = soapclient;
+  executeMethod(methodName) {
+    const methodToExec = this.getMethodByName(this.client, methodName);
+
+    methodToExec(this.jsonToSend, (err, result) => {
+      this.jsonResponse = result;
+      logger.debug(`SOAP JSON Response: ${JSON.stringify(result)}`);
+    });
+  }
+
+  describeMethod(methodName, type) {
+    jsonparser.init(this.client.describe());
+    const methodToFind = `$..${methodName}`;
+    const myObj = jsonparser.getValue(methodToFind)[0];
+    const result = type.toLowerCase() === 'input' ? myObj.input : myObj.output;
+    return result;
+  }
+}
+
+module.exports = new SoapClient();

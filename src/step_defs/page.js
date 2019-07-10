@@ -1,98 +1,91 @@
-var helperElement = require('../support/helper/element');
-var helperString = require('../support/helper/string');
-var helperCommon = require('../support/helper/common');
+/* eslint-disable no-undef */
+const { Given, When } = require('cucumber');
 
-var pageSteps = function () {
+const { common, element, page } = helpers;
 
-    /**
-     * Navigate to a page
-     */
-    this.Given(/^user navigates to '(.*)'$/, function (url) {
-        var gotourl = helperCommon.getTreatedValue(url);
-        return browser.get(gotourl);
-    });
+/**
+ * Navigate to a page
+ */
+Given(/^user navigates to '(.*)'$/, (url) => {
+  const gotourl = common.getTreatedValue(url);
+  return page.loadPage(gotourl);
+});
 
-    /**
-     * Navigate to page with simple authentication
-     */
-    this.Given(/^user open url '(.*)' with user '(.*)' and pass '(.*)'$/, function (url, user, pass) {
-        var gotourl = helperCommon.getTreatedValue(url);
-        var myuser = helperCommon.getTreatedValue(myuser);
-        var mypass = helperCommon.getTreatedValue(mypass);
+/**
+ * Navigate to page with simple authentication
+ */
+Given(/^user open url '(.*)' with user '(.*)' and pass '(.*)'$/, (url, user, pass) => {
+  const gotourl = common.getTreatedValue(url);
+  const myuser = common.getTreatedValue(user);
+  const mypass = common.getTreatedValue(pass);
 
-        // http://username:password@server
-        var server = gotourl.substring(gotourl.indexOf("//") + 2);
-        var urlAuth = `http://${myuser}:${mypass}@${server}`;
+  // http://username:password@server
+  const server = gotourl.substring(gotourl.indexOf('//') + 2);
+  const urlAuth = `http://${myuser}:${mypass}@${server}`;
 
-        return browser.get(urlAuth);
-    });
+  return driver.get(urlAuth);
+});
 
-    /**
-     * Refreshes the page
-     */
-    this.Given(/^user refreshes the page$/, function (callback) {
-        var _this = this;
-        this.refresh().then(function () {
-            _this.delayCallback(callback);
-        });
-    });
+/**
+ * Refreshes the page
+ */
+Given(/^user refreshes the page$/, () => page.refresh());
 
-    /**
-     * Highlight element on the screen
-     */
-    this.When(/^user highlights the '(.+)-(.+)' on the screen$/, function (container, key, callback) {
-        var _this = this;
-        var elementFinder = helperElement.getElementFinder(container, key);
+/**
+ * Highlight element on the screen
+ */
+When(/^user highlights the '(.+)-(.+)' on the screen$/, (container, key) => {
+  const elementFinder = element.getElementFinder(container, key);
+  return element.nutHighlightElement(elementFinder);
+});
 
-        _this.isPresentAndDisplayed(elementFinder).then(function isPresentAndDisplayedSuccess() {
-            helperElement.nutHighlightElement(elementFinder);
-            _this.delayCallback(callback);
-        }, function isPresentAndDisplayedError(errorMessage) {
-            _this.handleError(errorMessage, callback);
-        });
-    });
+/**
+* scroll to element
+*/
+When(/^user scrolls to '(.+)-(.+)'$/, (container, key) => {
+  const elementFinder = element.getElementFinder(container, key);
 
-    /**
-    * scroll to element
-    */
-    this.When(/^user scrolls to '(.+)-(.+)'$/, function (container, key, callback) {
-        var _this = this;
-        var elementFinder = helperElement.getElementFinder(container, key);
+  elementFinder.getLocation().then((elementLocation) => {
+    driver.executeScript('window.scrollTo(0, 0);');
+    driver.executeScript(`window.scrollTo(${elementLocation.x},${elementLocation.y}`);
+  });
+});
 
-        elementFinder.getLocation().then(function locate(elementLocation) {
-            browser.executeScript('window.scrollTo(0, 0);');
-            browser.executeScript('window.scrollTo(' + elementLocation.x + ',' + elementLocation.y + ');');
-            _this.delayCallback(callback);
-        });
-    });
+/**
+* scrolls to direction x times
+*/
+When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, (direction, times) => {
+  for (let i = 0; i < times; i += 1) {
+    switch (direction) {
+      case 'up':
+        driver.executeScript('window.scrollBy(0, -50);');
+        break;
+      case 'down':
+        driver.executeScript('window.scrollBy(0, 50);');
+        break;
+      case 'left':
+        driver.executeScript('window.scrollBy(-100, 0);');
+        break;
+      case 'right':
+        driver.executeScript('window.scrollBy(100, 0);');
+        break;
+      default:
+        break;
+    }
+  }
+});
 
-    /**
-    * scrolls to direction x times
-    */
-    this.When(/^user scrolls (right|left|up|down) '([0-9]+)' times$/, function (direction, times, callback) {
-        var _this = this;
+/**
+ * Clears the current cookies
+ */
+When(/^user clears the cookies$/, () => page.clearCookies());
 
-        for (var i = 0; i < times; i++) {
-            switch (direction) {
-                case 'up':
-                    browser.executeScript("window.scrollBy(0, -50);");
-                    break;
-                case 'down':
-                    browser.executeScript("window.scrollBy(0, 50);");
-                    break;
-                case 'left':
-                    browser.executeScript("window.scrollBy(-100, 0);");
-                    break;
-                case 'right':
-                    browser.executeScript("window.scrollBy(100, 0);");
-                    break;
-                default:
-                    break;
-            }
-        }
-        _this.delayCallback(callback);
-    });
+/**
+ * Add a specific cookie to current session
+ */
+When(/^user add a cookie '(.*)' with value '(.*)'$/, (name, value) => page.addCookie(name, value));
 
-};
-
-module.exports = pageSteps;
+/**
+ * Executes a simple JS script
+ */
+Given(/^user executes the JS '(.*)'$/, code => page.executeScript(code));

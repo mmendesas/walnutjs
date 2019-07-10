@@ -1,26 +1,24 @@
-const helperParams = require('../../../src/support/helper/params');
-const config = require('../../../src/support/config');
-const context = require('../../../src/support/context');
+/* eslint-disable no-undef */
+/* eslint-disable global-require */
+const params = require('../../../src/support/helpers/params');
 
 describe('Params Tests', () => {
+  beforeAll(() => {
+    global.parameters = require('../../samples/params.json');
+  });
 
-    beforeAll(() => {
-        config.parametersPath = "../../samples/params.json";
-        context.parameters = require(config.parametersPath);
-    });
+  it('should process params correctly', () => {
+    const result = params.nutParseParams('url: params.[$.default.base_url]');
+    expect(result).toEqual('url: https://httpbin.org/get');
+  });
 
-    it('should process params correctly', () => {
-        var teste = helperParams.nutParseParams("url: params.[$.default.base_url]");
-        expect(teste).toEqual("url: https://httpbin.org/get");
-    });
+  it('should process multi params correctly', () => {
+    const result = params.nutParseParams('url: params.[$.default.base_url] name: [params.[$..name]]');
+    expect(result).toEqual('url: https://httpbin.org/get name: [walnutjs-test]');
+  });
 
-    it('should process multi params correctly', () => {
-        var teste = helperParams.nutParseParams("url: params.[$.default.base_url] name: [params.[$..name]]");
-        expect(teste).toEqual("url: https://httpbin.org/get name: [walnutjs-test]");
-    });
-
-    it('should return message when using wrong jsonpath', () => {
-        var teste = helperParams.nutParseParams("params.[$.wathever]");
-        expect(teste).toEqual("unknown-jsonpath");
-    });
+  it('should return message when using wrong jsonpath', () => {
+    const result = params.nutParseParams('params.[$.wathever]');
+    expect(result).toEqual('unknown-jsonpath');
+  });
 });

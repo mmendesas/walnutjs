@@ -1,130 +1,85 @@
-var helperCommon = require('../../support/helper/common');
-var helperInfo = require('../../support/helper/info');
-var helperVars = require('../../support/helper/variables');
-var trest = require('../../support/api/client');
+/* eslint-disable no-undef */
+const { Then } = require('cucumber');
 
-var jsonparser = require('../../support/parser/jsonparser');
-var xmlparser = require('../../support/parser/xmlparser');
+const api = require('../../support/api/client');
+const jsonparser = require('../../support/parser/jsonparser');
+const xmlparser = require('../../support/parser/xmlparser');
 
-var resSteps = function () {
-  /**
-   *  Validates the response status code
-   */
-  this.Then(/^\(api\) the response (status|statusText) should be '(\d+)'$/, function (type, statusCode, callback) {
-    var _this = this;
-    var recStatus = type === 'status' ? trest.response.status.toString() : trest.response.statusText;
+const { vars, common, logger } = helpers;
 
-    var result = statusCode === recStatus;
+/**
+ *  Validates the response status code
+ */
+Then(/^\(api\) the response (status|statusText) should be '(\d+)'$/, (type, statusCode) => {
+  const recStatus = type === 'status' ? api.response.status.toString() : api.response.statusText;
+  assert.equal(statusCode, recStatus);
+  logger.info(`User receives response status code [${recStatus}]`);
+});
 
-    if (!result) {
-      _this.handleError(trest.response.status.toString(), callback);
-    } else {
-      helperInfo.logDebugFormat('User receives response status code [{0}]', [trest.response.status]);
-      _this.delayCallback(callback);
-    }
-  });
+/**
+ * Compare the full value of body response
+ */
+Then(/^\(api\) the (JSON|XML) response should be:$/, (type, expectedContent) => {
+  api.responseContent = api.responseContent.replace(/(\r\n|\n|\r|\s)/gm, '');
+  const content = expectedContent.replace(/(\r\n|\n|\r|\s)/gm, '');
+  // compare
+  assert.equal(api.responseContent, content);
+});
 
-  /**
-   * Compare the full value of body response
-   */
-  this.Then(/^\(api\) the (JSON|XML) response should be:$/, function (type, content, callback) {
-    var _this = this;
+/**
+ * Validates a value in specific node in JSON response.body
+ */
+Then(/^\(api\) the JSON response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, (keyPath, comparissonType, expectedValue) => {
+  const key = common.getTreatedValue(keyPath);
+  const expected = common.getTreatedValue(expectedValue);
 
-    trest.responseContent = trest.responseContent.replace(/(\r\n|\n|\r|\s)/gm, '');
-    content = content.replace(/(\r\n|\n|\r|\s)/gm, '');
+  // get value from JSON using JSONPATH
+  jsonparser.init(api.response.data);
+  const jsonValue = jsonparser.getValue(key)[0];
 
-    // compare
-    var compareRes = helperCommon.compare(trest.responseContent, 'equalsto', content);
+  // compare
+  common.compare(jsonValue, comparissonType, expected);
+});
 
-    if (!compareRes.result) {
-      _this.handleError(compareRes.msg, callback);
-    } else {
-      _this.delayCallback(callback);
-    }
-  });
+/**
+ * Validates a value in specific node in XML response.body
+ */
+Then(/^\(api\) the XML response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, (keyPath, comparissonType, expectedValue) => {
+  const key = common.getTreatedValue(keyPath);
+  const expected = common.getTreatedValue(expectedValue);
 
-  /**
-   * Validates a value in specific node in JSON response.body
-   */
-  this.Then(/^\(api\) the JSON response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
-    var _this = this;
+  // get value from XML using XPATH
+  xmlparser.init(api.response.data);
+  const xmlValue = xmlparser.getTagValue(key) || '<path not found>';
 
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    expectedValue = helperCommon.getTreatedValue(expectedValue);
+  // compare
+  common.compare(xmlValue, comparissonType, expected);
+});
 
-    // get value from JSON using JSONPATH
-    jsonparser.init(trest.response.data);
-    var jsonValue = jsonparser.getValue(keyPath)[0];
+// Validates a value in specific node in response header.
+Then(/^\(api\) the header response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, (header, comparissonType, expectedValue) => {
+  // Treat the parameters informations
+  const headerName = common.getTreatedValue(header);
+  const expected = common.getTreatedValue(expectedValue);
 
-    // compare
-    var compareRes = helperCommon.compare(jsonValue, comparissonType, expectedValue);
+  // Get the header value response from parameter informed
+  const content = api.response.headers[headerName];
 
-    if (!compareRes.result) {
-      _this.handleError(compareRes.msg, callback);
-    } else {
-      _this.delayCallback(callback);
-    }
-  });
+  // compare
+  common.compare(content, comparissonType, expected);
+});
 
-  /**
-   * Validates a value in specific node in XML response.body
-   */
-  this.Then(/^\(api\) the XML response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (keyPath, comparissonType, expectedValue, callback) {
-    var _this = this;
+/**
+* Stores the value of the response field found by json path
+*/
+Then(/^\(api\) user stores the value '(.*)' from response in variable '(.*)'$/, (keyPath, name) => {
+  const key = common.getTreatedValue(keyPath);
+  const varName = common.getTreatedValue(name);
 
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    expectedValue = helperCommon.getTreatedValue(expectedValue);
+  // get value from JSON using JSONPATH
+  jsonparser.init(api.response.data);
+  const varValue = jsonparser.getValue(key)[0];
 
-    // get value from XML using XPATH
-    xmlparser.init(trest.response.data);
-    var xmlValue = xmlparser.getTagValue(keyPath) || '<path not found>';
-
-    // compare
-    var compareRes = helperCommon.compare(xmlValue, comparissonType, expectedValue);
-
-    if (!compareRes.result) {
-      _this.handleError(compareRes.msg, callback);
-    } else {
-      _this.delayCallback(callback);
-    }
-  });
-
-  // Validates a value in specific node in response header
-  this.Then(/^\(api\) the header response key '(.*)' should have value (equals to|not equals to|which contains|which not contains|which starts with|which ends with) '(.*)'$/, function (header, comparissonType, expectedValue, callback) {
-    var _this = this;
-
-    // Treat the parameters informations
-    header = helperCommon.getTreatedValue(header);
-    expectedValue = helperCommon.getTreatedValue(expectedValue);
-
-    // Get the header value response from parameter informed
-    var content = trest.response.headers[header];
-
-    // compare
-    var compareRes = helperCommon.compare(content, comparissonType, expectedValue);
-
-    if (!compareRes.result) {
-      _this.handleError(compareRes.msg, callback);
-    } else {
-      _this.delayCallback(callback);
-    }
-  });
-
-  /**
-  * Stores the value of the response field found by json path
-  */
-  this.Then(/^\(api\) user stores the value '(.*)' from response in variable '(.*)'$/, function (keyPath, name, callback) {
-    keyPath = helperCommon.getTreatedValue(keyPath);
-    var varName = helperCommon.getTreatedValue(name);
-
-    // get value from JSON using JSONPATH
-    jsonparser.init(trest.response.data);
-    var varValue = jsonparser.getValue(keyPath)[0];
-
-    // Add the value to variables
-    helperVars.addVariable(varName, varValue);
-    this.delayCallback(callback);
-  });
-};
-
-module.exports = resSteps;
+  // Add the value to variables
+  vars.addVariable(varName, varValue);
+});
