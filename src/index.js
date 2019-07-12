@@ -7,7 +7,6 @@ const Cucumber = require('cucumber');
 const program = require('commander');
 const reporter = require('cucumber-html-reporter');
 const { version, description } = require('../package.json');
-const logger = require('../src/support/helpers/logger');
 
 // set default configuration
 let config = {
@@ -17,6 +16,7 @@ let config = {
     reports: './reports',
     noScreenshot: false,
     launchReport: true,
+    logLevel: 'debug',
     paths: {
       locators: './example/locators',
       evidences: './example/photos',
@@ -170,5 +170,6 @@ cucumberCli.run()
     }
   })
   .catch((error) => {
+    const logger = require('../src/support/helpers/logger');
     logger.error(`\n${error.stack}`);
   });
