@@ -59,7 +59,7 @@ When(/^\(api\) user add the request BODY from the resource '(.*)'$/, (filepath) 
   } else {
     api.requestContent = file.readContentFromFile(resourcePath);
   }
-  logger.info(`Content Pattern used as body:\n${api.requestContent}\n`);
+  logger.debug(`Content Pattern used as body:\n${api.requestContent}\n`);
 });
 
 
@@ -69,7 +69,7 @@ When(/^\(api\) user add the request BODY from the resource '(.*)'$/, (filepath) 
 When(/^\(api\) user add the following value to BODY request:$/, (fileContent) => {
   const content = common.getTreatedValue(fileContent);
   api.requestContent = content;
-  logger.info(`Content Pattern used as body:\n${api.requestContent}\n`);
+  logger.debug(`Content Pattern used as body:\n${api.requestContent}\n`);
 });
 
 /**

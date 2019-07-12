@@ -12,7 +12,7 @@ const {
  */
 Given(/^\(soap\) user set the WSDL Path with value '(.*)'$/, (wsdlPath) => {
   const wsdlPathTreated = common.getTreatedValue(wsdlPath);
-  return soapclient.startClient(wsdlPathTreated).then(() => logger.info(`User uses the WSDL PATH: ${soapclient.wsdlPath}`));
+  return soapclient.startClient(wsdlPathTreated).then(() => logger.debug(`User uses the WSDL PATH: ${soapclient.wsdlPath}`));
 });
 
 /**
@@ -38,7 +38,7 @@ When(/^\(soap\) user add the JSON body from the resource '(.*)'$/, (path) => {
   soapclient.jsonToSend = '';
   const fileContent = file.readContentFromFile(filepath);
   soapclient.jsonToSend = JSON.parse(fileContent);
-  logger.info(`SOAP Content:\n${JSON.stringify(soapclient.jsonToSend)}`);
+  logger.debug(`SOAP Content:\n${JSON.stringify(soapclient.jsonToSend)}`);
 });
 
 /**
@@ -47,7 +47,7 @@ When(/^\(soap\) user add the JSON body from the resource '(.*)'$/, (path) => {
 When(/^\(soap\) user executes the SOAP Request with operation '(.*)'$/, async (operation) => {
   try {
     await soapclient.executeMethod(operation);
-    logger.info(`SOAP Operation: [${operation}]`);
+    logger.debug(`SOAP Operation: [${operation}]`);
   } catch (err) {
     throw new Error(err);
   }
