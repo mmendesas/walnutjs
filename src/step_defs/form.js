@@ -61,16 +61,15 @@ When(/^user selects in combo '(.+)-(.+)' the option '(.+)'$/, (container, key, o
     const num = options.length;
     let clickOk = false;
 
-    options.forEach((option, index) => {
-      option.getText().then((text) => {
-        if (text === value) {
-          clickOk = true;
-          option.click();
-        }
-        if (num === index + 1 && !clickOk) {
-          throw new Error(`Option ${text} not found in select!`);
-        }
-      });
+    options.forEach(async (option, index) => {
+      const text = await option.getText();
+      if (text === value) {
+        clickOk = true;
+        await option.click();
+      }
+      if ((num === index + 1) && !clickOk) {
+        throw new Error(`Option ${text} not found in select!`);
+      }
     });
   });
 });
