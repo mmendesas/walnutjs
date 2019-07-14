@@ -56,11 +56,14 @@ function getDriverInstance() {
  * Close the current instance of browser
  */
 function closeBrowser() {
-  return driver.close().then(() => {
-    if (config.selenium.browser !== 'firefox') {
-      driver.quit();
-    }
-  });
+  if (driver) {
+    return driver.close().then(() => {
+      if (config.selenium.browser !== 'firefox') {
+        driver.quit();
+      }
+    });
+  }
+  return 0;
 }
 
 /**
@@ -133,8 +136,10 @@ BeforeAll((done) => {
   loadUIMap();
   loadParameters();
 
-  if (!global.driver) {
+  if (!global.driver && !config.walnut.runOnlyAPI) {
     global.driver = getDriverInstance();
+    done();
+  } else {
     done();
   }
 });
@@ -166,11 +171,17 @@ Before(function (scenario) {
 
 // execute after each scenario
 After((scenario) => {
-  if (scenario.result.status !== 'passed' && !config.walnut.noScreenshot) {
-    return driver.takeScreenshot().then((screenShot) => {
-      world.attach(Buffer.from(screenShot, 'base64'), 'image/png');
-      return tearDownBrowser();
-    });
+  if (scenario.result.status !== 'passed') {
+    logger.error(`\n${scenario.result.exception.stack}`);
+
+    if (!config.walnut.noScreenshot) {
+      return driver
+        ? driver.takeScreenshot().then((screenShot) => {
+          world.attach(Buffer.from(screenShot, 'base64'), 'image/png');
+          return tearDownBrowser();
+        })
+        : 0;
+    }
   }
   return 0;
   // teardown after each scenario

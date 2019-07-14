@@ -42,6 +42,6 @@ module.exports = {
   readContentFromFile: filename => fs.readFileSync(filename, 'utf8'),
 
   writeContentToFile: (data, filename) => {
-    fs.writeFileSync(filename, data, 'utf8');
+    fs.writeFileSync(filename, data, { encoding: 'utf8', flag: 'w' });
   },
 };

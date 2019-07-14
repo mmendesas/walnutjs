@@ -22,11 +22,12 @@ let config = {
       evidences: './example/photos',
       parameters: './example/params/my-params.json',
     },
+    runOnlyAPI: false,
   },
   cucumber: {
     steps: './steps',
     timeout: 15000,
-    features: './example/features/sample.feature',
+    features: './example/features/**/*.feature',
     outputFormat: 'summary',
   },
   selenium: {
@@ -72,6 +73,7 @@ program
   .description(description)
   .option('-c, --config <path>', 'path to JSON config file')
   .option('-t, --tags <tagName>', 'name of tag to run', collectPaths, [])
+  .option('-m, --execMethod <method>', 'execution method [e.g runOnlyAPI]')
   .parse(process.argv);
 
 // read config from file
@@ -80,6 +82,10 @@ const configPath = program.config || configFileName;
 
 if (fs.isFileSync(configPath)) {
   config = Object.assign(config, require(configPath));
+}
+
+if (program.execMethod) {
+  config.walnut.runOnlyAPI = program.execMethod === 'runOnlyAPI';
 }
 
 // set config globally
@@ -123,7 +129,7 @@ process.argv.push(path.resolve(config.cucumber.steps));
 
 // process.argv.push(path.resolve(__dirname, '../example/features/**/*.feature'));
 // add path to import custom features
-process.argv.push(config.cucumber.features);
+process.argv.push(path.resolve(config.cucumber.features));
 
 // add tag
 if (program.tags) {

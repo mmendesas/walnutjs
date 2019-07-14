@@ -20,3 +20,5 @@ walnutjs.log
 walnut.log
 
 example/photos/*
+example/templates/*
+!example/templates/input_CalcPrazo.1.json

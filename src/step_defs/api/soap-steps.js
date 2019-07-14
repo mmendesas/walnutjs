@@ -44,8 +44,14 @@ When(/^\(soap\) user add the JSON body from the resource '(.*)'$/, (path) => {
 /**
  * Executes a operation with SOAP request
  */
-When(/^\(soap\) user executes the SOAP Request with operation '(.*)'$/, operation => soapclient.executeMethod(operation)
-  .then(() => logger.info(`SOAP Operation: [${operation}]`)));
+When(/^\(soap\) user executes the SOAP Request with operation '(.*)'$/, async (operation) => {
+  try {
+    await soapclient.executeMethod(operation);
+    logger.info(`SOAP Operation: [${operation}]`);
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 
 /**
 * Validates a value in specific node in JSON response.body
@@ -86,21 +92,20 @@ When(/^\(soap\) user fills the \(jsonpath\) key '(.*)' with value '(.*)'$/, (pat
 /**
 * Prints the list of methods inside this endpoint
 */
-When(/^\(soap\) user prints the list of methods in current endpoint$/, () => soapclient.getAllMethods()
-  .then(values => logger.info(`SOAP Methods in current endpoint:\n${JSON.stringify(values)}\n`)));
+When(/^\(soap\) user prints the list of methods in current endpoint$/, () => {
+  const methods = soapclient.getAllMethods();
+  logger.info(`SOAP Methods in current endpoint:\n${JSON.stringify(methods)}\n`);
+});
 
 /**
 * Export a template (input/output) from the method
 */
 When(/^\(soap\) user exports the (INPUT|OUTPUT) template of method '(.*)' to file '(.*)'$/, (type, method, path) => {
   const filepath = file.getTreatedPath(path);
-
-  soapclient.describeMethod(method, type)
-    .then((result) => {
-      const content = JSON.stringify(result, null, '\t');
-      logger.debug(`SOAP ${type} template in current endpoint:\n${content}\n`);
-      file.writeContentToFile(content, filepath);
-    });
+  const result = soapclient.describeMethod(method, type);
+  const content = JSON.stringify(result, null, '\t');
+  logger.debug(`SOAP ${type} template in current endpoint:\n${content}\n`);
+  file.writeContentToFile(content, filepath);
 });
 
 /**
@@ -108,23 +113,19 @@ When(/^\(soap\) user exports the (INPUT|OUTPUT) template of method '(.*)' to fil
 */
 When(/^\(soap\) user export all templates from current endpoint to folder '(.*)'$/, (path) => {
   const folderpath = file.getTreatedPath(path);
-  file.ensureDirectoryExistence(`${folderpath}/m.js`); // fake file for right operation
+  const methods = soapclient.getAllMethods();
 
-  soapclient.getAllMethods()
-    .then((values) => {
-      values.forEach((method) => {
-        soapclient.describeMethod(method, 'input')
-          .then((result) => {
-            const content = JSON.stringify(result, null, '\t');
-            const filepath = `${folderpath}/input_${method}.json`;
-            file.writeContentToFile(content, filepath);
-          });
-        soapclient.describeMethod(method, 'output')
-          .then((result) => {
-            const content = JSON.stringify(result, null, '\t');
-            const filepath = `${folderpath}/output_${method}.json`;
-            file.writeContentToFile(content, filepath);
-          });
-      });
-    });
+  methods.forEach((method) => {
+    // get all input templates
+    const descInput = soapclient.describeMethod(method, 'input');
+    const inputContent = JSON.stringify(descInput, null, '\t');
+    file.writeContentToFile(inputContent, `${folderpath}/input_${method}.json`);
+
+    // get all output templates
+    const descOutput = soapclient.describeMethod(method, 'output');
+    const content = JSON.stringify(descOutput, null, '\t');
+    file.writeContentToFile(content, `${folderpath}/output_${method}.json`);
+  });
+
+  logger.info(`All ${methods.length} templates were exported to ${path}`);
 });
