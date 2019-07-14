@@ -11,7 +11,7 @@
       "program": "${workspaceFolder}/src/index.js",
       "args": [
         "--tags",
-        "@simple_soap",
+        "@simple_web",
       ]
     },
     {

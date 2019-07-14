@@ -14,8 +14,8 @@ module.exports = {
   },
 
   waitUntilElementIsPresent: (elementBy, timeout = DEFAULT_TIMEOUT) => {
-    const msg = `Element ${elementBy} was not located in page`;
-    return driver.wait(until.elementLocated(elementBy), timeout, msg);
+    const element = driver.wait(until.elementLocated(elementBy), timeout, `Element ${elementBy} was not located in page`);
+    return driver.wait(until.elementIsVisible(element), timeout, `Element ${elementBy} was not visible in page`);
   },
 
   refresh: () => driver.navigate().refresh(),
