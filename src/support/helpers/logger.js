@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-shadow */
 const winston = require('winston');
 
@@ -10,6 +11,7 @@ const myFormat = printf(({
 }) => `${timestamp} [ ${label} ] ${level}: ${message}`);
 
 module.exports = winston.createLogger({
+  level: global.config ? config.walnut.logLevel : 'info',
   format: combine(
     label({ label: 'walnut' }),
     timestamp(),

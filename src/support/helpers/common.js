@@ -83,7 +83,7 @@ module.exports = {
       throw new Error(err.stack);
     }
     fs.writeFile(path.join(folderPath, `${name}.png`), screenshot, 'base64', (writeErr) => {
-      logger.info(writeErr);
+      logger.error(writeErr);
     });
   }),
 

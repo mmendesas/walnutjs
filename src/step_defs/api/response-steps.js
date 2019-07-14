@@ -13,7 +13,7 @@ const { vars, common, logger } = helpers;
 Then(/^\(api\) the response (status|statusText) should be '(\d+)'$/, (type, statusCode) => {
   const recStatus = type === 'status' ? api.response.status.toString() : api.response.statusText;
   assert.equal(statusCode, recStatus);
-  logger.info(`User receives response status code [${recStatus}]`);
+  logger.debug(`User receives response status code [${recStatus}]`);
 });
 
 /**
