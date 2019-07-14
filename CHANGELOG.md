@@ -1,3 +1,15 @@
+#### 2.0.1 (2019-07-14)
+
+##### Chores
+
+*  adds changelog scripts ([4c2e074f](https://github.com/mmendesas/walnutjs/commit/4c2e074fdedb170f323245f6364ffca8403c5b9a))
+*  adds loglevel support ([496b9a72](https://github.com/mmendesas/walnutjs/commit/496b9a721dd6d81f05447e66eab5657d920b8bda))
+
+##### New Features
+
+*  organize some logs in api methods ([68e4f5bc](https://github.com/mmendesas/walnutjs/commit/68e4f5bc8e85b46f78c5b5512c7103e79ea3d08f))
+*  updates soap client methods ([7621962a](https://github.com/mmendesas/walnutjs/commit/7621962a2098aaf10602ec770561324818aa147a))
+
 ## 2.0.0 (2019-07-02)
 
 ##### New Features
