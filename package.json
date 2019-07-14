@@ -1,6 +1,6 @@
 {
   "name": "walnutjs",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Walnut Framework - BDD Automated Tests for ES6 based applications",
   "main": "index.js",
   "bin": {
