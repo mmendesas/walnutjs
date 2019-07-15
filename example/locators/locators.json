@@ -16,6 +16,16 @@
       ]
     },
     {
+      "name": "GoogleResult",
+      "locators": [
+        {
+          "key": "SiteLink",
+          "type": "xpath",
+          "value": "(//div[@class='rc']//h3)[1]"
+        }
+      ]
+    },
+    {
       "name": "msite",
       "locators": [
         {

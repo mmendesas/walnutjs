@@ -28,6 +28,14 @@ Feature: Cucumber test
     Then the 'msite-job' has value equals to 'Developer'
     Then user saves a screenshot 'interact|my-screen'
 
+  @simple_web
+  Scenario: I want see the Google Page
+    Given user navigates to 'http://www.google.com.br'
+    When user fills 'GoogleHome-SearchInput' by replacing text with 'led zeppelin wikipedia'
+    And user clicks on 'GoogleHome-SearchButton:[Pesquisa]'
+    And user clicks on 'GoogleResult-SiteLink'
+    And user waits for 3 seconds
+
   @full_test
   Scenario: I want to test all the form method
     Then user prints the message 'other testssttst' to console
