@@ -1,3 +1,14 @@
+#### 2.0.2 (2019-07-15)
+
+##### Chores
+
+* **deps:**  bump lodash from 4.17.11 to 4.17.14 ([1ee63e0c](https://github.com/mmendesas/walnutjs/commit/1ee63e0c0cce4951d0b2981e769ef668fe07da7d))
+
+##### Bug Fixes
+
+*  waits for element to be visible before action ([11691858](https://github.com/mmendesas/walnutjs/commit/11691858b1000b0f0615bbf1dc0bed8a1c8e858f))
+*  update method to interact with select fields ([4addfc5f](https://github.com/mmendesas/walnutjs/commit/4addfc5f976557a85f2fc30ab859dfc465f438f1))
+
 #### 2.0.1 (2019-07-14)
 
 ##### Chores
