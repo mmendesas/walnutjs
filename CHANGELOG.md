@@ -1,3 +1,9 @@
+#### 2.0.3 (2019-07-15)
+
+##### Documentation Changes
+
+*  update readme file ([69ca91e7](https://github.com/mmendesas/walnutjs/commit/69ca91e7ea6d4374ad58f64c068f7d10193b2a71))
+
 #### 2.0.2 (2019-07-15)
 
 ##### Chores
