@@ -6,20 +6,20 @@ const { common, element, page } = helpers;
 /**
  * Fills the element in page
  */
-When(/^user fills '(.+)-(.+)' with '(.*)'$/, (container, key, value) => {
+When(/^user fills '(.+)-(.+)' with '(.*)'$/, async (container, key, value) => {
   const text = common.getTreatedValue(value);
-  const elementFinder = element.getElementFinder(container, key);
-  return elementFinder.sendKeys(text);
+  const elementFinder = await element.getElementFinder(container, key);
+  return driver.elementSendKeys(elementFinder.elementId, text);
 });
 
 /**
  * Fills the element in page by replacing the existing text in that element
  */
-When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, (container, key, value) => {
+When(/^user fills '(.+)-(.+)' by replacing text with '(.*)'$/, async (container, key, value) => {
   const text = common.getTreatedValue(value);
-  const elementFinder = element.getElementFinder(container, key);
-  elementFinder.clear();
-  return elementFinder.sendKeys(text);
+  const elementFinder = await element.getElementFinder(container, key);
+  await elementFinder.clearValue();
+  return elementFinder.sendKeys(text.split());
 });
 
 /**

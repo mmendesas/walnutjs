@@ -12,6 +12,7 @@ const { version, description } = require('../package.json');
 let config = {
   walnut: {
     name: 'walnut sample automation',
+    execMethod: 'web',
     enableDebug: false,
     reports: './reports',
     noScreenshot: false,
@@ -26,7 +27,7 @@ let config = {
   },
   cucumber: {
     steps: './steps',
-    timeout: 15000,
+    timeout: 120000,
     features: './example/features/**/*.feature',
     outputFormat: 'summary',
   },
@@ -34,12 +35,23 @@ let config = {
     browser: 'chrome',
     browserTeardownStrategy: 'always',
     remoteURL: 'http://localhost:4444/wd/hub',
-    caps: {
+    capabilities: {
       browserName: 'chrome',
-      chromeOptions: {
-        // args: ['--headless', '--disable-gpu'] //headless
-        args: ['start-maximized', 'disable-extensions'],
-      },
+      // chromeOptions: {
+      //   // args: ['--headless', '--disable-gpu'] //headless
+      //   args: ['start-maximized', 'disable-extensions'],
+      // },
+    },
+  },
+  mobile: {
+    host: 'localhost',
+    port: 4723,
+    capabilities: {
+      platformName: 'iOS',
+      platformVersion: '12.2',
+      deviceName: 'iPhone 6s',
+      app: './mobile/TestApp.app.zip',
+      automationName: 'XCUITest',
     },
   },
 };
@@ -73,7 +85,7 @@ program
   .description(description)
   .option('-c, --config <path>', 'path to JSON config file')
   .option('-t, --tags <tagName>', 'name of tag to run', collectPaths, [])
-  .option('-m, --execMethod <method>', 'execution method [e.g runOnlyAPI]')
+  .option('-m, --execMethod <method>', 'execution method [e.g mobile, web, api, mobile-web]')
   .parse(process.argv);
 
 // read config from file

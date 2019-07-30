@@ -3,7 +3,9 @@
 /* eslint-disable no-undef */
 const webdriver = require('selenium-webdriver');
 const { logging } = require('selenium-webdriver');
+const wdio = require('webdriverio');
 const fs = require('fs-plus');
+const path = require('path');
 const {
   setDefaultTimeout,
   BeforeAll,
@@ -44,12 +46,19 @@ function createWorld() {
  * @returns {webdriver} selenium webdriver
  */
 function getDriverInstance() {
-  const driver = new webdriver.Builder()
-    .usingServer(config.selenium.remoteURL)
-    .withCapabilities(config.selenium.caps)
-    .build();
+  // const driver = new webdriver.Builder()
+  //   .usingServer(config.selenium.remoteURL)
+  //   .withCapabilities(config.selenium.caps)
+  //   .build();
+  // return driver;
 
-  return driver;
+  return wdio.remote(config.selenium);
+}
+
+function getDriverMobileInstance() {
+  const { app } = config.mobile.capabilities;
+  config.mobile.capabilities.app = path.resolve(process.cwd(), app);
+  return wdio.remote(config.mobile);
 }
 
 /**
@@ -57,6 +66,9 @@ function getDriverInstance() {
  */
 function closeBrowser() {
   if (driver) {
+    if (config.walnut.execMethod === 'mobile') {
+      return driver.deleteSession();
+    }
     return driver.close().then(() => {
       if (config.selenium.browser !== 'firefox') {
         driver.quit();
@@ -126,7 +138,7 @@ const loadParameters = () => {
 };
 
 // load resources and create driver
-BeforeAll((done) => {
+BeforeAll(async () => {
   logger.info('Execution started...');
   // set loging level
   logging.installConsoleHandler();
@@ -137,10 +149,11 @@ BeforeAll((done) => {
   loadParameters();
 
   if (!global.driver && !config.walnut.runOnlyAPI) {
-    global.driver = getDriverInstance();
-    done();
-  } else {
-    done();
+    const method = config.walnut.execMethod || 'web';
+
+    global.driver = method === 'mobile'
+      ? await getDriverMobileInstance()
+      : getDriverInstance();
   }
 });
 

@@ -9,7 +9,7 @@ module.exports = {
 
     // load the url and wait for it to complete
     // and wait for the body element to be present
-    return driver.get(url)
+    return browser.url(url)
       .then(() => driver.wait(until.elementLocated(by.css('body')), timeout));
   },
 

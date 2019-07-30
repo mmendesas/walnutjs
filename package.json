@@ -41,6 +41,7 @@
     "protractor-cucumber-framework": "^1.0.2",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "soap": "^0.27.1",
+    "webdriverio": "^5.11.10",
     "winston": "^3.2.1",
     "xmldom": "^0.1.27",
     "xpath": "0.0.24"

@@ -37,7 +37,7 @@ const Element = {
   /**
    * Returns the elementFinder object to interact with in protractor
   */
-  getElementFinder(container, name) {
+  async getElementFinder(container, name) {
     // save current used container/name
     this.lastUsedLocator = [container, name];
     const locator = this.getLocator(container, name);
@@ -48,6 +48,11 @@ const Element = {
 
     // get Element By
     const { type, value } = locator;
+
+    if (config.walnut.execMethod === 'mobile') {
+      const element = await driver.$(value);
+      return element;
+    }
     const elementBy = this.getElementBy(type, value);
 
     // wait element displayed
@@ -89,7 +94,7 @@ const Element = {
   /**
    * Return the element By based on locator
    */
-  getElementBy(type, content) {
+  async getElementBy(type, content) {
     switch (type.toLowerCase()) {
       case 'classname':
         return by.className(content);
@@ -109,6 +114,9 @@ const Element = {
         return by.tagName(content);
       case 'xpath':
         return by.xpath(content);
+      case 'accessibilityid':
+        const element = await driver.findElement('accessibility id', content);
+        return element;
 
       default:
         throw Error('Locator Type not found.');

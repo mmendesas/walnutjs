@@ -64,6 +64,21 @@
           "value": "total"
         }
       ]
+    },
+    {
+      "name": "mobile",
+      "locators": [
+        {
+          "key": "field01",
+          "type": "accessibilityId",
+          "value": "~TextField1"
+        },
+        {
+          "key": "field02",
+          "type": "accessibilityId",
+          "value": "~TextField2"
+        }
+      ]
     }
   ]
 }
