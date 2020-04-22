@@ -36,6 +36,7 @@
     "cucumber-html-reporter": "^5.0.0",
     "fs-plus": "^3.1.1",
     "jsonpath": "^1.0.1",
+    "mathjs": "^6.2.2",
     "protractor": "^5.4.2",
     "protractor-cucumber": "^0.1.8",
     "protractor-cucumber-framework": "^1.0.2",

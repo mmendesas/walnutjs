@@ -6,6 +6,8 @@ const {
 } = helpers;
 const path = require('path');
 
+const { compile } = require('../support/helpers/math');
+
 /**
  * Sleeps the execution for a specific time in seconds
  */
@@ -88,4 +90,10 @@ Then(/^user saves a screenshot '(.*)'$/, (screenshotPath) => {
     common.saveScreenshot(folder, name);
     vars.addVariable('img_num', imgNum += 1);
   }
+});
+
+Given(/^user execute math\((.*)\)/, (exp) => {
+  const result = compile(exp);
+  logger.info(result);
+  return result;
 });

@@ -40,3 +40,7 @@ Feature: Cucumber test
   Scenario: I want to test all the form method
     Then user prints the message 'other testssttst' to console
 # Given user navigates to '${vars.base_url}'
+
+  @full_test
+  Scenario: I want to test math execute
+    Given user execute math(1+1)
